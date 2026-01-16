@@ -43,8 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 Route::get('category-list', [CategoryController::class, 'getList']);
 
-Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'search']);
-Route::get('/products/live-feed', [\App\Http\Controllers\Api\ProductController::class, 'liveFeed']);
+Route::get('/search', [\App\Http\Controllers\Api\SearchController::class, 'index']);
+Route::get('/feed/live', [\App\Http\Controllers\Api\SearchController::class, 'liveFeed']);
 Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 
 Route::post('/ai/remove-bg', [\App\Http\Controllers\Api\AiController::class, 'removeBackground']);

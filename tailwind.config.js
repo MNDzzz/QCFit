@@ -65,6 +65,11 @@ export default {
                 'title-sm': ['20px', '26px'],
                 'title-xsm': ['18px', '24px']
             },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                display: ['Space Grotesk', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace'],
+            },
             spacing: {
                 4.5: '1.125rem',
                 5.5: '1.375rem',

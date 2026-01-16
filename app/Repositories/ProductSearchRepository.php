@@ -2,30 +2,26 @@
 
 namespace App\Repositories;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
 interface ProductSearchRepository
 {
     /**
-     * Search products by text query (name or brand).
+     * Busca productos basándose en una query de texto y filtros opcionales.
      *
-     * @param string $query
-     * @param int $limit
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param string|null $query Texto de búsqueda (nombre, marca).
+     * @param array $filters Filtros adicionales (category_id, brand, marketplace, etc.)
+     * @param int $perPage Cantidad de resultados por página.
+     * @return LengthAwarePaginator
      */
-    public function search(string $query, int $limit = 20);
+    public function search(?string $query, array $filters = [], int $perPage = 20): LengthAwarePaginator;
 
     /**
-     * Search products similar to a vector (future implementation).
+     * Obtiene productos por búsqueda por ID (útil para scraping/import directos).
      *
-     * @param array $vector
-     * @return mixed
+     * @param string $sourceId
+     * @return \App\Models\Product|null
      */
-    public function vectorSearch(array $vector);
-
-    /**
-     * Get latest QC images for the live feed.
-     *
-     * @param int $limit
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getLatestQCImages(int $limit = 10);
+    public function findBySourceId(string $sourceId);
 }

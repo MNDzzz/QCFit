@@ -3,37 +3,37 @@
 namespace App\Repositories;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class EloquentProductSearchRepository implements ProductSearchRepository
 {
-    public function search(string $query, int $limit = 20): Collection
+    public function search(?string $query, array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
-        return Product::query()
-            ->where('name', 'LIKE', "%{$query}%")
-            ->orWhere('brand', 'LIKE', "%{$query}%")
-            ->with([
-                'images' => function ($q) {
-                    $q->where('type', 'qc')->take(1); // Prioritize QC images for thumbnails
-                }
-            ])
-            ->limit($limit)
-            ->get();
+        $products = Product::query()
+            ->with(['images', 'category']) // Eager loading para optimizar
+            ->when($query, function (Builder $q) use ($query) {
+                $q->where(function ($subQ) use ($query) {
+                    $subQ->where('name', 'LIKE', "%{$query}%")
+                        ->orWhere('brand', 'LIKE', "%{$query}%");
+                });
+            })
+            ->when(isset($filters['category_id']), function (Builder $q) use ($filters) {
+                $q->where('category_id', $filters['category_id']);
+            })
+            ->when(isset($filters['brand']), function (Builder $q) use ($filters) {
+                $q->where('brand', $filters['brand']);
+            })
+            ->when(isset($filters['marketplace']), function (Builder $q) use ($filters) {
+                $q->where('marketplace', $filters['marketplace']);
+            })
+            ->orderBy('id', 'desc'); // Los más recientes primero por defecto
+
+        return $products->paginate($perPage);
     }
 
-    public function vectorSearch(array $vector)
+    public function findBySourceId(string $sourceId)
     {
-        // Placeholder for future Qdrant/Meilisearch implementation
-        // For now, this could just return empty or throw an exception
-        return [];
-    }
-
-    public function getLatestQCImages(int $limit = 10)
-    {
-        return \App\Models\ProductImage::where('type', 'qc')
-            ->with('product')
-            ->latest()
-            ->limit($limit)
-            ->get();
+        return Product::where('source_id', $sourceId)->with('images')->first();
     }
 }

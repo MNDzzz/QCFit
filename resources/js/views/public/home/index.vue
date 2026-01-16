@@ -1,78 +1,146 @@
 <template>
-    <div class="min-h-screen bg-gray-50 flex flex-col">
+    <div class="min-h-screen bg-stone-50 flex flex-col font-sans">
         <!-- Hero Section -->
-        <div class="bg-indigo-700 text-white py-20 px-4 text-center relative overflow-hidden">
-            <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-            <h1 class="text-5xl font-extrabold mb-6 relative z-10 tracking-tight">
-                FindQC <span class="text-indigo-300 font-light">+ ShopLook</span>
-            </h1>
-            <p class="text-xl mb-10 max-w-2xl mx-auto text-indigo-100 relative z-10">
-                Busca productos con fotos reales (QC) de Taobao/Weidian y crea tus outfits en nuestro lienzo interactivo.
-            </p>
+        <div class="bg-slate-950 pt-32 pb-20 px-4 text-center relative overflow-hidden ring-1 ring-white/10 border-b border-white/5">
+            <!-- Background Gradients -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-violet-600/20 blur-[120px] rounded-full pointer-events-none"></div>
             
-            <!-- Smart Search Component -->
-            <div class="relative z-10 mb-12">
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <div class="flex justify-center mb-12 gap-8">
+                     <!-- Floating Cards Animation (Mock) -->
+                     <div class="hidden md:block w-48 h-64 bg-slate-900/80 backdrop-blur border border-slate-700 rounded-xl transform -rotate-6 shadow-2xl p-3">
+                         <div class="bg-emerald-500/20 text-emerald-400 text-xs font-mono py-1 px-2 rounded w-fit mb-2">QC VERIFIED</div>
+                         <div class="h-32 bg-slate-800 rounded-lg mb-3 flex items-center justify-center text-slate-600"><i class="pi pi-image text-2xl"></i></div>
+                         <div class="h-2 w-20 bg-slate-800 rounded mb-2"></div>
+                         <div class="h-2 w-12 bg-slate-800 rounded"></div>
+                     </div>
+                     <div class="hidden md:block w-48 h-64 bg-slate-900/80 backdrop-blur border border-slate-700 rounded-xl transform rotate-6 shadow-2xl p-3 translate-y-8">
+                         <div class="bg-emerald-500/20 text-emerald-400 text-xs font-mono py-1 px-2 rounded w-fit mb-2">QC VERIFIED</div>
+                         <div class="h-32 bg-slate-800 rounded-lg mb-3 flex items-center justify-center text-slate-600"><i class="pi pi-image text-2xl"></i></div>
+                         <div class="h-2 w-20 bg-slate-800 rounded mb-2"></div>
+                         <div class="h-2 w-12 bg-slate-800 rounded"></div>
+                     </div>
+                </div>
+
+                <h1 class="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight leading-tight">
+                    The Ultimate Weidian <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">& Taobao QC Finder</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-light">
+                    Search millions of real photos and build outfits. Stop buying blind.
+                </p>
+                
                 <SmartSearch />
             </div>
         </div>
 
-        <!-- Live QC Feed Section -->
-        <div class="container mx-auto px-4 py-12 flex-1">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 flex items-center">
-                <span class="mr-3">🟢</span> Live QC Feed
-                <span class="ml-4 text-sm font-normal text-gray-500 bg-gray-200 px-3 py-1 rounded-full animate-pulse">En tiempo real</span>
-            </h2>
-
-            <div v-if="loadingFeed" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <Skeleton v-for="i in 4" :key="i" height="300px" class="rounded-xl" />
+        <!-- Live Feed Ticker -->
+        <div class="bg-slate-900 border-b border-white/5 py-4 overflow-hidden flex relative z-20">
+            <div class="flex animate-marquee whitespace-nowrap gap-4 px-4 w-full">
+                <!-- Using a simple v-for range to mock multiple items if feed is empty, else realistic data -->
+                <template v-if="feedImages.length > 0">
+                    <div 
+                        v-for="img in feedImages" 
+                        :key="img.id"
+                        class="inline-flex items-center gap-3 bg-slate-800/50 border border-slate-700 rounded-lg pr-4 py-1.5 pl-1.5 shrink-0"
+                    >
+                        <img :src="img.url" class="w-10 h-10 rounded object-cover bg-slate-700" />
+                        <div class="flex flex-col">
+                            <span class="text-xs text-emerald-400 font-mono font-bold tracking-wide">JUST CHECKED</span>
+                            <span class="text-xs text-slate-300 truncate max-w-[150px]">{{ img.product?.name || 'Unknown Item' }}</span>
+                        </div>
+                    </div>
+                </template>
+                 <template v-else>
+                     <div v-for="i in 5" :key="i" class="inline-flex items-center gap-3 bg-slate-800/50 border border-slate-700 rounded-lg pr-4 py-1.5 pl-1.5 shrink-0 select-none">
+                        <div class="w-10 h-10 rounded bg-slate-700 animate-pulse"></div>
+                        <div class="flex flex-col gap-1">
+                             <div class="h-2 w-16 bg-slate-700 rounded"></div>
+                             <div class="h-2 w-24 bg-slate-700 rounded"></div>
+                        </div>
+                     </div>
+                 </template>
             </div>
-            
-            <div v-else-if="feedImages.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                <div 
-                    v-for="img in feedImages" 
-                    :key="img.id" 
-                    class="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1 cursor-pointer border border-gray-100"
-                    @click="goToProduct(img.product_id)"
-                >
-                    <div class="aspect-[3/4] bg-gray-100 overflow-hidden">
-                        <img 
-                            :src="img.url" 
-                            :alt="img.product?.name || 'QC Photo'" 
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            loading="lazy"
-                        >
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                        <p class="font-bold truncate text-sm">{{ img.product?.name }}</p>
-                        <p class="text-xs opacity-80">{{ formatDate(img.created_at) }}</p>
-                    </div>
-                    <div class="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
-                        QC
-                    </div>
+        </div>
+
+        <!-- Popular Section -->
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-display font-bold text-slate-900 mb-6">POPULAR RIGHT NOW</h2>
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <button class="px-6 py-2 rounded-full border border-slate-900 bg-slate-900 text-white font-medium text-sm transition-all shadow-lg shadow-slate-900/20">All</button>
+                    <button class="px-6 py-2 rounded-full border border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900 font-medium text-sm transition-all bg-white">👟 Shoes</button>
+                    <button class="px-6 py-2 rounded-full border border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900 font-medium text-sm transition-all bg-white">👕 Tops</button>
+                    <button class="px-6 py-2 rounded-full border border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900 font-medium text-sm transition-all bg-white">👖 Bottoms</button>
                 </div>
             </div>
 
-            <div v-else class="text-center py-20 text-gray-500 bg-white rounded-xl shadow-inner">
-                <p>No hay imágenes recientes en el feed.</p>
+            <!-- Grid (Mocking Popular Items with Feed Data for now) -->
+             <div v-if="loadingFeed" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <Skeleton v-for="i in 4" :key="i" height="300px" class="rounded-xl" />
             </div>
+            
+            <div v-else-if="feedImages.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                 <div 
+                    v-for="img in feedImages.slice(0, 8)" 
+                    :key="img.id" 
+                    class="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 relative"
+                >
+                    <div class="aspect-square bg-slate-100 relative overflow-hidden p-8 flex items-center justify-center">
+                         <!-- Mocking the floating shoe look -->
+                        <img 
+                            :src="img.url" 
+                            :alt="img.product?.name" 
+                            class="w-full h-full object-contain filter drop-shadow-xl group-hover:scale-110 transition-transform duration-500 mix-blend-multiply" 
+                        >
+                        
+                        <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
+                             <router-link :to="`/product/${img.product_id}`" class="bg-violet-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-lg shadow-violet-500/30">
+                                + Studio
+                             </router-link>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                         <h3 class="font-bold text-slate-900 text-sm truncate mb-1 font-sans">{{ img.product?.name }}</h3>
+                         <div class="flex justify-between items-center">
+                             <span class="text-violet-600 font-mono font-bold">¥{{ Math.floor(Math.random() * 300) + 100 }}</span> <!-- Mock Price -->
+                             <i class="pi pi-images text-slate-400"></i>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brands Ticker -->
+        <div class="py-12 border-t border-slate-200 bg-white">
+            <div class="text-center mb-8">
+                 <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">Browse by Brand</h3>
+            </div>
+             <div class="flex justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500 flex-wrap px-4">
+                 <!-- Just simple text placehhodlers resembling logos for speed -->
+                 <span class="text-2xl font-black font-display italic">NIKE</span>
+                 <span class="text-2xl font-black font-display">STUSSY</span>
+                 <span class="text-2xl font-black font-display tracking-tighter">BALENCIAGA</span>
+                 <span class="text-2xl font-black font-display">ARC'TERYX</span>
+                 <span class="text-2xl font-black font-display font-serif">Carhartt</span>
+             </div>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import SmartSearch from '@/components/SmartSearch.vue';
 import axios from 'axios';
+import Skeleton from 'primevue/skeleton';
 
 const feedImages = ref([]);
 const loadingFeed = ref(true);
-const router = useRouter();
 
 const fetchLiveFeed = async () => {
     loadingFeed.value = true;
     try {
-        const response = await axios.get('/api/products/live-feed?limit=10');
+        const response = await axios.get('/api/products/live-feed?limit=8');
         feedImages.value = response.data;
     } catch (error) {
         console.error('Error fetching live feed:', error);
@@ -81,26 +149,17 @@ const fetchLiveFeed = async () => {
     }
 };
 
-const goToProduct = (id) => {
-    if (id) {
-        // En el futuro redirigirá a /product/:id
-        console.log('Navegando a producto:', id);
-        // router.push({ name: 'ProductDetail', params: { id } });
-    }
-};
-
-const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-ES', { 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    }).format(date);
-};
-
 onMounted(() => {
     fetchLiveFeed();
 });
 </script>
+
+<style scoped>
+.animate-marquee {
+    animation: marquee 20s linear infinite;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+</style>

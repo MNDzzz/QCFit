@@ -2,10 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import { useAuthStore } from '@/store/auth';
+import { authStore } from '@/store/auth';
 
 const route = useRoute();
-const authStore = useAuthStore();
+const store = authStore();
 
 const profile = ref(null);
 const isFollowing = ref(false);
@@ -29,7 +29,7 @@ async function fetchProfile() {
 }
 
 async function toggleFollow() {
-    if (!authStore.user) {
+    if (!store.user) {
         // Redirect to login or show alert
         alert("Inicia sesión para seguir a usuarios.");
         return;

@@ -42,27 +42,28 @@ const handleSearch = async () => {
 </script>
 
 <template>
-    <div class="w-full max-w-2xl mx-auto">
-        <div class="relative">
-            <input 
-                v-model="query"
-                @keyup.enter="handleSearch"
-                type="text" 
-                class="w-full px-6 py-4 rounded-full border-2 border-gray-200 focus:border-indigo-500 focus:outline-none shadow-lg text-lg transition-all"
-                placeholder="Busca marcas (Nike, Stussy) o pega un link de Taobao/Weidian..."
-                :disabled="loading"
-            >
-            <button 
-                @click="handleSearch"
-                class="absolute right-2 top-2 bottom-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 rounded-full font-bold transition-colors flex items-center"
-                :disabled="loading"
-            >
-                <span v-if="!loading">Buscar</span>
-                <span v-else>...</span>
-            </button>
-        </div>
-        <div class="mt-2 text-center text-sm text-gray-500">
-            Inteligencia Artificial lista para escanear tus productos.
+    <div class="w-full max-w-3xl mx-auto">
+        <div class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <div class="relative flex items-center bg-slate-900 rounded-full border border-slate-700 shadow-2xl overflow-hidden p-1">
+                <i class="pi pi-search text-slate-500 ml-4 text-xl"></i>
+                <input 
+                    v-model="query"
+                    @keyup.enter="handleSearch"
+                    type="text" 
+                    class="w-full px-4 py-3 bg-transparent text-white placeholder-slate-500 focus:outline-none text-base font-sans"
+                    placeholder="Paste Weidian Link or search 'Travis Scott J1'..."
+                    :disabled="loading"
+                >
+                <button 
+                    @click="handleSearch"
+                    class="bg-violet-600 hover:bg-violet-500 text-white px-8 py-3 rounded-full font-bold font-display tracking-tight transition-all transform hover:scale-105 shadow-lg shadow-violet-900/20"
+                    :disabled="loading"
+                >
+                    <span v-if="!loading">Search</span>
+                    <i v-else class="pi pi-spin pi-spinner"></i>
+                </button>
+            </div>
         </div>
     </div>
 </template>
