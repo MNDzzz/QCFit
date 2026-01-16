@@ -66,8 +66,8 @@ const currentImages = computed(() => {
 });
 
 const handleW2C = () => {
-    if (!product.value?.original_link) return;
-    const link = preferenceStore.getAffiliateLink(product.value.original_link);
+    if (!product.value) return;
+    const link = preferenceStore.getAffiliateLink(product.value);
     window.open(link, '_blank');
 };
 

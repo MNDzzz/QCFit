@@ -67,10 +67,10 @@ La experiencia de búsqueda y exploración.
   [x] Grid de Productos.
   [x] Product Card: Hover effect (cambia de foto QC a Oficial).
 
-[ ] Product Detail View (/product/:id):
-  [ ] Galería de fotos (Tabs: QC / Oficial).
-  [ ] Botón "W2C" (Where to Cop) con lógica de Agentes.
-  [ ] Botón "Añadir al Studio".
+[x] Product Detail View (/product/:id):
+  [x] Galería de fotos (Tabs: QC / Oficial).
+  [x] Botón "W2C" (Where to Cop) con lógica de Agentes.
+  [x] Botón "Añadir al Studio".
 
 🔴 FASE 4: FRONTEND - THE STUDIO (ShopLook)
 El corazón del proyecto (Canvas Interactivo).

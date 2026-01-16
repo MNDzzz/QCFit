@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import axios from 'axios';
 
 export const usePreferenceStore = defineStore('preference', () => {
     // State
@@ -11,39 +12,47 @@ export const usePreferenceStore = defineStore('preference', () => {
         localStorage.setItem('preferredAgent', agent);
     }
 
-    function getAffiliateLink(originalUrl) {
-        // Logic to rewrite URL based on agent
-        // This is a placeholder logic based on the requirements
-        // "Affiliate Hijacking"
-        
-        let baseUrl = '';
-        let affiliateCode = '';
+    /**
+     * Genera un enlace de afiliado basado en el producto.
+     * @param {Object} product - Objeto producto con marketplace, source_id, original_link
+     * @returns {String} - URL de afiliado
+     */
+    function getAffiliateLink(product) {
+        // Si recibimos un producto completo del backend
+        if (product && product.marketplace && product.source_id) {
+            return generateAffiliateLinkLocal(product.marketplace, product.source_id);
+        }
 
-        switch (preferredAgent.value) {
-            case 'cnfans':
-                baseUrl = 'https://cnfans.com/product/?shop_type=taobao&id='; 
-                affiliateCode = '&ref=MY_CNFANS_CODE';
-                break;
+        // Fallback si solo recibimos una URL directa (legacy)
+        if (typeof product === 'string') {
+            return product;
+        }
+
+        return '#';
+    }
+
+    /**
+     * Genera el enlace localmente (replica lógica del AffiliateService)
+     */
+    function generateAffiliateLinkLocal(marketplace, sourceId) {
+        const refCode = 'QCFIT_ACADEMIC'; // Código de referido académico
+        const agent = preferredAgent.value;
+        const shopType = marketplace.toLowerCase(); // weidian, taobao, 1688
+
+        switch (agent) {
             case 'mulebuy':
-                baseUrl = 'https://mulebuy.com/product/?shop_type=taobao&id=';
-                affiliateCode = '&ref=MY_MULEBUY_CODE';
-                break;
+                return `https://mulebuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
+
             case 'hoobuy':
-                baseUrl = 'https://hoobuy.com/product/?shop_type=taobao&id=';
-                affiliateCode = '&ref=MY_HOOBUY_CODE';
-                break;
+                return `https://hoobuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
+
+            case 'pandabuy':
+                return `https://pandabuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
+
+            case 'cnfans':
             default:
-                return originalUrl; // Fallback
+                return `https://cnfans.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
         }
-
-        // Simplistic extraction of ID from original URL (assuming Taobao for now as example)
-        // Real implementation would need robust regex for Weidian/1688/Taobao
-        const idMatch = originalUrl.match(/id=(\d+)/);
-        if (idMatch && idMatch[1]) {
-            return `${baseUrl}${idMatch[1]}${affiliateCode}`;
-        }
-
-        return originalUrl;
     }
 
     return {

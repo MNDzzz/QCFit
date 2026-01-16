@@ -33,7 +33,7 @@ class ProductController extends Controller
     }
     public function show($id)
     {
-        $product = \App\Models\Product::with('images')->findOrFail($id);
-        return response()->json($product);
+        $product = \App\Models\Product::with(['images', 'category'])->findOrFail($id);
+        return new \App\Http\Resources\ProductResource($product);
     }
 }
