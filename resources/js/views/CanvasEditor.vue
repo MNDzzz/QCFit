@@ -32,7 +32,67 @@ const processingAi = ref(false);
 // --- Carga Inicial ---
 onMounted(async () => {
     fetchProducts();
+    checkRemixMode();
 });
+
+const route = useRoute();
+import { useRoute } from 'vue-router';
+
+// Remix Mode
+async function checkRemixMode() {
+    const outfitId = route.query.outfit_id;
+    if (!outfitId) return;
+
+    try {
+        const res = await axios.get(`/api/outfits/${outfitId}`);
+        const outfit = res.data;
+        
+        // Populate Canvas
+        // We need to recreate the items structure
+        const newItems = [];
+        
+        for (const prod of outfit.products) {
+            // Find the image URL. The pivot selected_image_id tells us which one
+            // But we might need to find it in the prod.images array
+            if (!prod.pivot) continue;
+
+            const targetImage = prod.images.find(img => img.id == prod.pivot.selected_image_id) || prod.images[0];
+            const imageUrl = targetImage ? targetImage.url : '';
+            
+            if (imageUrl) {
+                 await new Promise((resolve) => {
+                    const imageObj = new Image();
+                    imageObj.src = imageUrl;
+                    imageObj.crossOrigin = "Anonymous";
+                    imageObj.onload = () => {
+                        newItems.push({
+                            product_id: prod.id,
+                            selected_image_id: targetImage.id,
+                            id: `item_${Date.now()}_${Math.random()}`,
+                            x: parseFloat(prod.pivot.pos_x || 0),
+                            y: parseFloat(prod.pivot.pos_y || 0),
+                            scaleX: parseFloat(prod.pivot.scale_x || 1),
+                            scaleY: parseFloat(prod.pivot.scale_y || 1),
+                            rotation: parseFloat(prod.pivot.rotation || 0),
+                            draggable: true,
+                            image: imageObj,
+                            imageUrl: imageUrl
+                        });
+                        resolve();
+                    };
+                    imageObj.onerror = resolve; // Continue even if one fails
+                 });
+            }
+        }
+        
+        if (newItems.length > 0) {
+            canvasItems.value = newItems;
+        }
+
+    } catch (e) {
+        console.error("Error loading remix outfit", e);
+    }
+}
 
 async function fetchProducts() {
     try {

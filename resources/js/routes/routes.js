@@ -60,6 +60,11 @@ export default [
                 name: 'SearchResults',
                 component: () => import('../views/public/search/Results.vue'),
             },
+            {
+                path: 'explore',
+                name: 'ExploreOutfits',
+                component: () => import('../views/public/outfits/Index.vue'),
+            },
 
             {
                 path: 'login',

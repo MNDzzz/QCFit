@@ -49,3 +49,6 @@ Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class
 
 Route::post('/ai/remove-bg', [\App\Http\Controllers\Api\AiController::class, 'removeBackground']);
 
+Route::get('/outfits', [\App\Http\Controllers\Api\OutfitController::class, 'index']);
+Route::get('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'show']);
+
