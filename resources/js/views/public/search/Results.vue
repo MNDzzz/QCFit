@@ -23,10 +23,19 @@ const searchdev = async () => {
     
     loading.value = true;
     try {
-        const res = await axios.get(`/api/products/search?q=${searchQuery.value}`);
-        results.value = res.data;
+        const res = await axios.get('/api/search', {
+            params: { q: searchQuery.value }
+        });
+        
+        // Si la API devuelve un objeto paginado Laravel, extraer data
+        if (res.data.data) {
+            results.value = res.data.data;
+        } else {
+            results.value = res.data;
+        }
     } catch (e) {
-        console.error(e);
+        console.error('Error en búsqueda:', e);
+        results.value = [];
     } finally {
         loading.value = false;
     }

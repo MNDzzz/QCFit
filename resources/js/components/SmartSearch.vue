@@ -12,29 +12,42 @@ const handleSearch = async () => {
 
     loading.value = true;
     
-    // Regex for basic URL detection (Taobao, Weidian, 1688, or generico http)
-    const urlRegex = /^(http|https):\/\/[^ "]+$/;
+    // Regex for basic URL detection (Taobao, Weidian, 1688)
+    const urlRegex = /(weidian\.com|taobao\.com|1688\.com)/i;
 
     if (urlRegex.test(query.value)) {
-        // CASE URL: Mock Scraping Service redirection
-        console.log('URL detected, redirecting to scraping service...', query.value);
-        
-        // In a real app, you might call a backend endpoint here to scrape first
-        // or redirect to a specific 'product-view' page that handles the scraping on load
-        // For now, let's simulate a redirection to a product detail mock
-        
-        // Extract ID (very basic mock logic)
-        const idMatch = query.value.match(/id=(\d+)/); 
-        const mockId = idMatch ? idMatch[1] : 'temp-' + Date.now();
-        
-        router.push({ name: 'ProductDetail', params: { id: mockId }, query: { source_url: query.value } });
+        // CASE URL: API Call for "Smart Detection"
+        try {
+            const response = await axios.get('/api/search', {
+                params: { q: query.value }
+            });
+
+            const result = response.data;
+
+            if (result.type === 'single_product' && result.data.is_cached) {
+                // Producto encontrado en DB -> Ir directamente
+                router.push({ 
+                    name: 'public.product.show', 
+                    params: { id: result.data.id } 
+                });
+            } else if (result.type === 'single_product') {
+                // Producto escrapeado pero no guardado (Demo)
+                // TODO: En el futuro ir al "Import Wizard"
+                alert(`Producto Detectado: ${result.data.title}\n(Simulación de Importación)`);
+            } else {
+                // Fallback
+                router.push({ name: 'public.search.results', query: { q: query.value } });
+            }
+
+        } catch (error) {
+            console.error(error);
+            // Si falla, search normal
+            router.push({ name: 'public.search.results', query: { q: query.value } });
+        }
 
     } else {
-        // CASE TEXT: Internal Search
-        console.log('Text query detected, searching internal DB...', query.value);
-        
-        // Redirect to search results page
-        router.push({ name: 'SearchResults', query: { q: query.value } });
+        // CASE TEXT: Internal Search directly to results page
+        router.push({ name: 'public.search.results', query: { q: query.value } });
     }
 
     loading.value = false;

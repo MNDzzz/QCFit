@@ -18,7 +18,10 @@ class ProductImageResource extends JsonResource
             'id' => $this->id,
             'url' => $this->url,
             'type' => $this->type,
-            'created_at_human' => $this->created_at->diffForHumans(),
+            'product_id' => $this->product_id,
+            'title' => $this->product?->name, // Para LiveFeed
+            'date_human' => $this->created_at?->diffForHumans(),
+            'created_at_human' => $this->created_at?->diffForHumans(),
             // When loaded on feed, we might need parent product info
             'product' => new ProductResource($this->whenLoaded('product')),
         ];

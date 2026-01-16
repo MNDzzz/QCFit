@@ -37,6 +37,7 @@ class ScrapingService
         if ($existingProduct) {
             return [
                 'title' => $existingProduct->name,
+                'id' => $existingProduct->id, // ID interno para redirección
                 'price' => '¥' . rand(100, 900), // Precio simulado
                 'images' => $existingProduct->images->pluck('url')->toArray(),
                 'source_id' => $data['source_id'],

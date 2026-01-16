@@ -53,19 +53,19 @@ Cumplimiento estricto de requisitos académicos (MySQL + Eloquent).
 🟠 FASE 3: FRONTEND - DISCOVERY (FindQC)
 La experiencia de búsqueda y exploración.
 
-[ ] Componente SmartSearchBar:
-  [ ] Input principal con detección Regex (¿Es URL o Texto?).
-  [ ] Redirección automática si es URL.
+[x] Componente SmartSearchBar:
+  [x] Input principal con detección Regex (¿Es URL o Texto?).
+  [x] Redirección automática si es URL.
 
-[ ] Home View (/):
-  [ ] Hero Section con el buscador.
-  [ ] Componente LiveFeed (Carrusel horizontal de QCs recientes).
+[x] Home View (/):
+  [x] Hero Section con el buscador.
+  [x] Componente LiveFeed (Carrusel horizontal de QCs recientes).
   [ ] Listado "Trending Outfits" (Masonry Grid).
 
-[ ] Search Results View (/search):
-  [ ] Sidebar con filtros (Marca, Categoría).
-  [ ] Grid de Productos.
-  [ ] Product Card: Hover effect (cambia de foto QC a Oficial).
+[x] Search Results View (/search):
+  [x] Sidebar con filtros (Marca, Categoría).
+  [x] Grid de Productos.
+  [x] Product Card: Hover effect (cambia de foto QC a Oficial).
 
 [ ] Product Detail View (/product/:id):
   [ ] Galería de fotos (Tabs: QC / Oficial).

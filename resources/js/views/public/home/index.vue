@@ -35,33 +35,7 @@
         </div>
 
         <!-- Live Feed Ticker -->
-        <div class="bg-slate-900 border-b border-white/5 py-4 overflow-hidden flex relative z-20">
-            <div class="flex animate-marquee whitespace-nowrap gap-4 px-4 w-full">
-                <!-- Using a simple v-for range to mock multiple items if feed is empty, else realistic data -->
-                <template v-if="feedImages.length > 0">
-                    <div 
-                        v-for="img in feedImages" 
-                        :key="img.id"
-                        class="inline-flex items-center gap-3 bg-slate-800/50 border border-slate-700 rounded-lg pr-4 py-1.5 pl-1.5 shrink-0"
-                    >
-                        <img :src="img.url" class="w-10 h-10 rounded object-cover bg-slate-700" />
-                        <div class="flex flex-col">
-                            <span class="text-xs text-emerald-400 font-mono font-bold tracking-wide">JUST CHECKED</span>
-                            <span class="text-xs text-slate-300 truncate max-w-[150px]">{{ img.product?.name || 'Unknown Item' }}</span>
-                        </div>
-                    </div>
-                </template>
-                 <template v-else>
-                     <div v-for="i in 5" :key="i" class="inline-flex items-center gap-3 bg-slate-800/50 border border-slate-700 rounded-lg pr-4 py-1.5 pl-1.5 shrink-0 select-none">
-                        <div class="w-10 h-10 rounded bg-slate-700 animate-pulse"></div>
-                        <div class="flex flex-col gap-1">
-                             <div class="h-2 w-16 bg-slate-700 rounded"></div>
-                             <div class="h-2 w-24 bg-slate-700 rounded"></div>
-                        </div>
-                     </div>
-                 </template>
-            </div>
-        </div>
+        <LiveFeed />
 
         <!-- Popular Section -->
         <div class="container mx-auto px-4 py-16">
@@ -129,29 +103,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import SmartSearch from '@/components/SmartSearch.vue';
-import axios from 'axios';
+import LiveFeed from '@/components/LiveFeed.vue';
 import Skeleton from 'primevue/skeleton';
 
-const feedImages = ref([]);
-const loadingFeed = ref(true);
-
-const fetchLiveFeed = async () => {
-    loadingFeed.value = true;
-    try {
-        const response = await axios.get('/api/products/live-feed?limit=8');
-        feedImages.value = response.data;
-    } catch (error) {
-        console.error('Error fetching live feed:', error);
-    } finally {
-        loadingFeed.value = false;
-    }
-};
-
-onMounted(() => {
-    fetchLiveFeed();
-});
+// No need for logic here as LiveFeed component handles itself
 </script>
 
 <style scoped>
