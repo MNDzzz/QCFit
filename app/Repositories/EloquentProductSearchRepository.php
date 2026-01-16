@@ -27,4 +27,13 @@ class EloquentProductSearchRepository implements ProductSearchRepository
         // For now, this could just return empty or throw an exception
         return [];
     }
+
+    public function getLatestQCImages(int $limit = 10)
+    {
+        return \App\Models\ProductImage::where('type', 'qc')
+            ->with('product')
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
 }

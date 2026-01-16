@@ -10,10 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-Route::group(['middleware' => 'auth:sanctum'], function() {
+Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::apiResource('users', UserController::class);
-    Route::post('users/updateimg', [UserController::class,'updateimg']);
+    Route::post('users/updateimg', [UserController::class, 'updateimg']);
 
 
     Route::apiResource('categories', CategoryController::class);
@@ -23,12 +23,12 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::get('role-permissions/{id}', [PermissionController::class, 'getRolePermissions']);
     Route::put('/role-permissions', [PermissionController::class, 'updateRolePermissions']);
     Route::apiResource('permissions', PermissionController::class);
-    
+
     Route::get('/user', [ProfileController::class, 'user']);
     Route::get('/user/signin', [ProfileController::class, 'user']);
     Route::put('/user', [ProfileController::class, 'update']);
 
-    Route::get('abilities', function(Request $request) {
+    Route::get('abilities', function (Request $request) {
         return $request->user()->roles()->with('permissions')
             ->get()
             ->pluck('permissions')
@@ -41,4 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
 });
 
 Route::get('category-list', [CategoryController::class, 'getList']);
+
+Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'search']);
+Route::get('/products/live-feed', [\App\Http\Controllers\Api\ProductController::class, 'liveFeed']);
 

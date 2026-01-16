@@ -20,4 +20,12 @@ interface ProductSearchRepository
      * @return mixed
      */
     public function vectorSearch(array $vector);
+
+    /**
+     * Get latest QC images for the live feed.
+     *
+     * @param int $limit
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getLatestQCImages(int $limit = 10);
 }
