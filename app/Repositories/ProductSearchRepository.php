@@ -24,4 +24,12 @@ interface ProductSearchRepository
      * @return \App\Models\Product|null
      */
     public function findBySourceId(string $sourceId);
+
+    /**
+     * Obtiene las últimas imágenes QC subidas al sistema.
+     *
+     * @param int $limit
+     * @return Collection
+     */
+    public function getLatestQCImages(int $limit = 15);
 }

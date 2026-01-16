@@ -39,13 +39,13 @@ Cumplimiento estricto de requisitos académicos (MySQL + Eloquent).
   [x] Crear interfaz ProductSearchRepository.
   [x] Implementar EloquentProductSearchRepository (Búsqueda por texto LIKE + Búsqueda por Marca).
 
-[ ] Servicios:
-  [ ] ScrapingService (Mock o Real): Que reciba una URL de Taobao y devuelva título + fotos.
-  [ ] AffiliateService: Lógica para generar links de CNFans/Mulebuy inyectando tu código.
+[x] Servicios:
+  [x] ScrapingService (Mock o Real): Que reciba una URL de Taobao y devuelva título + fotos.
+  [x] AffiliateService: Lógica para generar links de CNFans/Mulebuy inyectando tu código.
 
-[ ] API Endpoints (Routes):
-  [ ] GET /api/search: El "Smart Search" (detecta URL o Texto).
-  [ ] GET /api/feed/live: Devuelve las últimas 10 imágenes QC (Live Feed).
+[x] API Endpoints (Routes):
+  [x] GET /api/search: El "Smart Search" (detecta URL o Texto).
+  [x] GET /api/feed/live: Devuelve las últimas 10 imágenes QC (Live Feed).
   [ ] GET /api/outfits/{id}: Para ver y hacer "Remix".
   [ ] POST /api/outfits: Guardar el canvas (recibe array de items y posiciones).
   [ ] POST /api/products/upload: Para subir fotos de usuario.

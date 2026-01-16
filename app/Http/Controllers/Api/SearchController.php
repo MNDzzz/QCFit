@@ -12,10 +12,14 @@ use Illuminate\Support\Facades\Log;
 class SearchController extends Controller
 {
     protected $repository;
+    protected $scrapingService;
 
-    public function __construct(ProductSearchRepository $repository)
-    {
+    public function __construct(
+        ProductSearchRepository $repository,
+        \App\Services\ScrapingService $scrapingService
+    ) {
         $this->repository = $repository;
+        $this->scrapingService = $scrapingService;
     }
 
     /**
@@ -29,25 +33,31 @@ class SearchController extends Controller
             return response()->json(['data' => []]);
         }
 
-        // 1. URL Detection Logic (Regex for Weidian/Taobao/1688)
-        // Detects patterns like: weidian.com/item.html?itemID=..., item.taobao.com..., etc.
-        $isUrl = preg_match('/(weidian\.com|taobao\.com|1688\.com)/i', $query);
+        try {
+            // 1. URL Detection Logic (Regex for Weidian/Taobao/1688)
+            $isUrl = preg_match('/(weidian\.com|taobao\.com|1688\.com)/i', $query);
 
-        if ($isUrl) {
-            // TODO: In Future, call scraping service here if product not found.
-            // For now, try to extract ID and search local DB or return specialized response.
+            if ($isUrl) {
+                $scrapedData = $this->scrapingService->scrapeUrl($query);
+
+                // Devolvemos una estructura especial para indicar "Producto Único Encontrado"
+                return response()->json([
+                    'type' => 'single_product',
+                    'data' => $scrapedData
+                ]);
+            }
+
+            // 2. Text Search
+            $results = $this->repository->search($query);
+
+            return ProductResource::collection($results);
+
+        } catch (\Exception $e) {
             return response()->json([
-                'type' => 'url_detected',
-                'message' => 'Scraping service not yet fully linked. Searching by name/brand fallback.',
-                // Fallback to text search for now to avoid empty results in demo
-                'data' => ProductResource::collection($this->repository->search($query))
-            ]);
+                'message' => 'Error en la búsqueda',
+                'error' => $e->getMessage()
+            ], 400);
         }
-
-        // 2. Text Search
-        $results = $this->repository->search($query);
-
-        return ProductResource::collection($results);
     }
 
     /**
