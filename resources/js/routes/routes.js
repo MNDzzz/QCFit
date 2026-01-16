@@ -65,6 +65,11 @@ export default [
                 name: 'ExploreOutfits',
                 component: () => import('../views/public/outfits/Index.vue'),
             },
+            {
+                path: 'u/:id',
+                name: 'PublicProfile',
+                component: () => import('../views/public/user/Profile.vue'),
+            },
 
             {
                 path: 'login',

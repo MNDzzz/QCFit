@@ -52,3 +52,7 @@ Route::post('/ai/remove-bg', [\App\Http\Controllers\Api\AiController::class, 're
 Route::get('/outfits', [\App\Http\Controllers\Api\OutfitController::class, 'index']);
 Route::get('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'show']);
 
+Route::post('/follow', [\App\Http\Controllers\Api\FollowController::class, 'toggle'])->middleware('auth:sanctum');
+
+Route::get('/public/user/{id}', [\App\Http\Controllers\Api\PublicProfileController::class, 'show']);
+
