@@ -147,4 +147,7 @@ app.directive('ripple', Ripple);
     document.body.classList.remove('dark');
 })();
 
+import VueKonva from 'vue-konva';
+app.use(VueKonva);
+
 app.mount('#app')

@@ -98,6 +98,14 @@ export default [
                     breadCrumb: 'Perfil',
                 },
             },
+            {
+                name: 'app.canvas',
+                path: 'canvas',
+                component: () => import('../views/CanvasEditor.vue'),
+                meta: {
+                    breadCrumb: 'Editor de Outfits',
+                },
+            },
 
         ]
     },
