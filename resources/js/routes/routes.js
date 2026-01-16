@@ -80,6 +80,11 @@ export default [
                 component: () => import('../views/auth/passwords/Reset.vue'),
                 beforeEnter: guest,
             },
+            {
+                path: 'product/:id',
+                name: 'ProductDetail',
+                component: () => import('../views/public/product/Show.vue'),
+            },
         ]
     },
 
