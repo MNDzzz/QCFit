@@ -55,6 +55,11 @@ export default [
                 name: 'home',
                 component: () => import('../views/public/home/index.vue'),
             },
+            {
+                path: 'search',
+                name: 'SearchResults',
+                component: () => import('../views/public/search/Results.vue'),
+            },
 
             {
                 path: 'login',

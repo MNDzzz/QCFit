@@ -1,3 +1,5 @@
+</script>
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -25,6 +27,9 @@ const showImageSelect = ref(false);
 const selectedProduct = ref(null);
 const productImages = ref({ qc: [], original: [], user_upload: [] });
 const dropPosition = ref({ x: 0, y: 0 });
+
+// AI State
+const processingAi = ref(false);
 
 // --- Carga Inicial ---
 onMounted(async () => {
@@ -58,6 +63,7 @@ function updateTransformer() {
 }
 
 function handleStageMouseDown(e) {
+    // Si hacemos click en una zona vacía, deseleccionamos
     if (e.target === e.target.getStage()) {
         selectedShapeName.value = '';
         updateTransformer();
@@ -123,11 +129,6 @@ async function openImageSelection(product) {
             }
         });
         
-        // Si no tiene imágenes, usar placeholder
-        if (images.length === 0) {
-            // Fallback mock
-        }
-
     } catch (e) {
         console.error("Error cargando imagenes del producto", e);
     }
@@ -157,8 +158,57 @@ function addImageToCanvas(url, imageId) {
             rotation: 0,
             image: imageObj,
             draggable: true,
+            imageUrl: url // Guardamos la URL para operaciones IA
         });
     };
+}
+
+// --- AI Background Removal ---
+async function removeBackground() {
+    if (!selectedShapeName.value) return;
+
+    const itemIndex = canvasItems.value.findIndex(i => i.id === selectedShapeName.value);
+    if (itemIndex === -1) return;
+    
+    const item = canvasItems.value[itemIndex];
+    if (!item.imageUrl) return;
+
+    processingAi.value = true;
+    try {
+        const res = await axios.post('/api/ai/remove-bg', {
+             image_url: item.imageUrl
+        });
+
+        // En un caso real, la URL cambiaría. 
+        // Aquí simulamos que se "actualiza" la imagen.
+        // Forzamos update de la imagen en Konva
+        const newUrl = res.data.processed_url; 
+        
+        const imageObj = new Image();
+        imageObj.src = newUrl;
+        imageObj.crossOrigin = "Anonymous";
+        
+        imageObj.onload = () => {
+            // Actualizamos la referencia de imagen en el item
+            canvasItems.value[itemIndex].image = imageObj;
+            // Hack para forzar reactividad si fuera necesario, 
+            // pero Konva suele reaccionar al cambio de objeto Image.
+            processingAi.value = false;
+            alert(res.data.message);
+        };
+        
+    } catch (e) {
+        console.error(e);
+        processingAi.value = false;
+        alert("Error al quitar fondo");
+    }
+}
+
+function deleteSelectedItem() {
+     if (!selectedShapeName.value) return;
+     canvasItems.value = canvasItems.value.filter(i => i.id !== selectedShapeName.value);
+     selectedShapeName.value = '';
+     updateTransformer();
 }
 </script>
 
@@ -203,6 +253,24 @@ function addImageToCanvas(url, imageId) {
         >
             <div class="absolute top-2 left-2 z-10 text-xs text-gray-400 bg-white/80 p-1 rounded">
                 Arrastra prendas aquí. Haz click para transformar.
+            </div>
+
+            <!-- Toolbar Contextual -->
+            <div v-if="selectedShapeName" class="absolute top-2 right-2 z-20 flex gap-2">
+                 <button 
+                    @click="removeBackground" 
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded shadow flex items-center gap-1 transition-colors"
+                >
+                    <i v-if="processingAi" class="pi pi-spin pi-spinner"></i>
+                    <i v-else class="pi pi-sparkles"></i>
+                    IA Remove BG
+                </button>
+                <button 
+                    @click="deleteSelectedItem" 
+                    class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded shadow flex items-center gap-1 transition-colors"
+                >
+                    <i class="pi pi-trash"></i>
+                </button>
             </div>
 
             <v-stage 

@@ -47,3 +47,5 @@ Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::cla
 Route::get('/products/live-feed', [\App\Http\Controllers\Api\ProductController::class, 'liveFeed']);
 Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 
+Route::post('/ai/remove-bg', [\App\Http\Controllers\Api\AiController::class, 'removeBackground']);
+
