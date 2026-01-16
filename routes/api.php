@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,4 +45,5 @@ Route::get('category-list', [CategoryController::class, 'getList']);
 
 Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'search']);
 Route::get('/products/live-feed', [\App\Http\Controllers\Api\ProductController::class, 'liveFeed']);
+Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class, 'show']);
 

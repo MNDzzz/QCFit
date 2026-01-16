@@ -31,4 +31,9 @@ class ProductController extends Controller
         $results = $this->searchRepository->getLatestQCImages((int) $limit);
         return response()->json($results);
     }
+    public function show($id)
+    {
+        $product = \App\Models\Product::with('images')->findOrFail($id);
+        return response()->json($product);
+    }
 }

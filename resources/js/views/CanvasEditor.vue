@@ -1,78 +1,74 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import Konva from 'konva';
 
 const width = window.innerWidth * 0.8;
 const height = 600;
 
 const stageConfig = ref({
-  width: width,
-  height: height,
+    width: width,
+    height: height,
 });
 
 // Referencias a las capas y transformador
 const transformer = ref(null);
 const selectedShapeName = ref('');
 
-// Lista de prendas disponibles (Mock para pruebas)
-const availableProducts = ref([
-    {
-        id: 'prod1',
-        name: 'Camiseta Nike',
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-    },
-    {
-        id: 'prod2',
-        name: 'Pantalones Cargo',
-        image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-    },
-    {
-        id: 'prod3',
-        name: 'Sneakers Jordan',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-    }
-]);
-
-// Elementos colocados en el canvas
+// Estado
+const availableProducts = ref([]);
 const canvasItems = ref([]);
+const draggingItem = ref(null);
+
+// Modal de Selección de Imagen
+const showImageSelect = ref(false);
+const selectedProduct = ref(null);
+const productImages = ref({ qc: [], original: [], user_upload: [] });
+const dropPosition = ref({ x: 0, y: 0 });
+
+// --- Carga Inicial ---
+onMounted(async () => {
+    fetchProducts();
+});
+
+async function fetchProducts() {
+    try {
+        const res = await axios.get('/api/products/search?limit=20');
+        availableProducts.value = res.data;
+    } catch (e) {
+        console.error("Error cargando productos", e);
+    }
+}
 
 // --- Manejo del Transformer (Selección) ---
 function updateTransformer() {
-    // Aquí buscamos el nodo seleccionado en el stage
     const transformerNode = transformer.value.getNode();
     const stage = transformerNode.getStage();
-    const { selectedShapeName: selectedName } = selectedShapeName.value;
-
     const selectedNode = stage.findOne('.' + selectedShapeName.value);
 
-    // Si encontramos el nodo y no es el transformador mismo
     if (selectedNode === transformerNode) {
         return;
     }
 
     if (selectedNode) {
-        // Conectamos el transformador al nodo
         transformerNode.nodes([selectedNode]);
     } else {
-        // Desconectamos si no hay selección
         transformerNode.nodes([]);
     }
 }
 
 function handleStageMouseDown(e) {
-    // Si hacemos click en una zona vacía, deseleccionamos
     if (e.target === e.target.getStage()) {
         selectedShapeName.value = '';
         updateTransformer();
         return;
     }
 
-    // Si hacemos click en el transformador, no hacemos nada
     const clickedOnTransformer = e.target.getParent().className === 'Transformer';
     if (clickedOnTransformer) {
         return;
     }
 
-    // Buscamos el nombre de la imagen seleccionada
     const name = e.target.name();
     const item = canvasItems.value.find((i) => i.id === name);
     
@@ -84,10 +80,7 @@ function handleStageMouseDown(e) {
     updateTransformer();
 }
 
-// --- Manejo de Drag & Drop (HTML5 -> Canvas) ---
-
-// Variable para guardar qué estamos arrastrando desde el sidebar
-const draggingItem = ref(null);
+// --- Drag & Drop Flow ---
 
 function onDragStartSidebar(item) {
     draggingItem.value = item;
@@ -95,67 +88,121 @@ function onDragStartSidebar(item) {
 
 function onDrop(e) {
     e.preventDefault();
-    // Registramos la posición del stage para calcular coordenadas relativas
+    if (!draggingItem.value) return;
+
+    // Registramos la posición del drop
     const stage = transformer.value.getNode().getStage();
     stage.setPointersPositions(e);
-    
-    const pointerPosition = stage.getPointerPosition();
+    const pos = stage.getPointerPosition();
+    dropPosition.value = { x: pos.x - 50, y: pos.y - 50 };
 
-    if (draggingItem.value) {
-        // Cargamos la imagen
-        const imageObj = new Image();
-        imageObj.src = draggingItem.value.image;
-        
-        imageObj.onload = () => {
-            // Añadimos el item al array del canvas
-            canvasItems.value.push({
-                product_id: draggingItem.value.id,
-                id: `item_${Date.now()}`, // ID único para Konva
-                x: pointerPosition.x - 50, // Centrar aprox
-                y: pointerPosition.y - 50,
-                scaleX: 1,
-                scaleY: 1,
-                rotation: 0,
-                image: imageObj,
-                draggable: true,
-            });
-        };
-    }
+    // Abrimos modal de selección
+    openImageSelection(draggingItem.value);
 }
 
 function onDragOver(e) {
-    e.preventDefault(); // Necesario para permitir el drop
+    e.preventDefault();
 }
 
+// --- Lógica del Modal ---
+
+async function openImageSelection(product) {
+    selectedProduct.value = product;
+    showImageSelect.value = true;
+    productImages.value = { qc: [], original: [], user_upload: [] };
+
+    try {
+        // Cargar detalle del producto con sus imágenes
+        const res = await axios.get(`/api/products/${product.id}`);
+        const images = res.data.images || [];
+        
+        // Clasificar imágenes
+        images.forEach(img => {
+            if (productImages.value[img.type]) {
+                productImages.value[img.type].push(img);
+            }
+        });
+        
+        // Si no tiene imágenes, usar placeholder
+        if (images.length === 0) {
+            // Fallback mock
+        }
+
+    } catch (e) {
+        console.error("Error cargando imagenes del producto", e);
+    }
+}
+
+function selectImage(img) {
+    addImageToCanvas(img.url, img.id);
+    showImageSelect.value = false;
+    selectedProduct.value = null;
+    draggingItem.value = null;
+}
+
+function addImageToCanvas(url, imageId) {
+    const imageObj = new Image();
+    imageObj.src = url;
+    imageObj.crossOrigin = "Anonymous"; // Importante para Canvas export
+
+    imageObj.onload = () => {
+        canvasItems.value.push({
+            product_id: selectedProduct.value.id,
+            selected_image_id: imageId,
+            id: `item_${Date.now()}`,
+            x: dropPosition.value.x,
+            y: dropPosition.value.y,
+            scaleX: 1,
+            scaleY: 1,
+            rotation: 0,
+            image: imageObj,
+            draggable: true,
+        });
+    };
+}
 </script>
 
 <template>
     <div class="flex h-screen bg-gray-100 p-4 gap-4">
         <!-- Sidebar de Productos -->
-        <div class="w-1/4 bg-white rounded-xl shadow-lg p-4 overflow-y-auto">
+        <div class="w-1/4 bg-white rounded-xl shadow-lg p-4 overflow-y-auto flex flex-col">
             <h2 class="text-xl font-bold mb-4 text-gray-800">Mi Armario</h2>
+            
+            <div v-if="availableProducts.length === 0" class="text-gray-400 text-center py-4">
+                No hay productos. Busca en Home para añadir.
+            </div>
+
             <div class="grid grid-cols-2 gap-2">
                 <div 
                     v-for="prod in availableProducts" 
                     :key="prod.id"
-                    class="bg-gray-50 rounded p-2 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow"
+                    class="bg-gray-50 rounded p-2 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow border border-gray-100"
                     draggable="true"
                     @dragstart="onDragStartSidebar(prod)"
                 >
-                    <img :src="prod.image" class="w-full h-24 object-cover rounded mb-2 pointer-events-none">
+                    <!-- Mostrar thumbnail (usar primera imagen si existe) -->
+                    <div class="h-24 bg-gray-200 rounded mb-2 overflow-hidden">
+                         <img 
+                            v-if="prod.images && prod.images.length" 
+                            :src="prod.images[0].url" 
+                            class="w-full h-full object-cover pointer-events-none"
+                        >
+                        <div v-else class="flex items-center justify-center h-full text-xs text-gray-400">Sin foto</div>
+                    </div>
                     <p class="text-xs font-semibold text-center truncate">{{ prod.name }}</p>
+                    <p class="text-[10px] text-center text-gray-500">{{ prod.brand }}</p>
                 </div>
             </div>
         </div>
 
         <!-- Área del Canvas -->
         <div 
-            class="flex-1 bg-white rounded-xl shadow-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 relative"
+            class="flex-1 bg-white rounded-xl shadow-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 relative bg-[url('https://www.transparenttextures.com/patterns/graphy.png')]"
             @drop="onDrop"
             @dragover="onDragOver"
         >
-            <div class="absolute top-2 left-2 z-10 text-xs text-gray-400">
-                Arrastra prendas aquí. Haz click para redimensionar (Konva).
+            <div class="absolute top-2 left-2 z-10 text-xs text-gray-400 bg-white/80 p-1 rounded">
+                Arrastra prendas aquí. Haz click para transformar.
             </div>
 
             <v-stage 
@@ -164,7 +211,6 @@ function onDragOver(e) {
                 @touchstart="handleStageMouseDown"
             >
                 <v-layer>
-                    <!-- Renderizamos las imágenes -->
                     <v-image 
                         v-for="item in canvasItems" 
                         :key="item.id"
@@ -179,11 +225,50 @@ function onDragOver(e) {
                             draggable: true,
                         }"
                     />
-                    
-                    <!-- Transformador (Resize/Rotate) -->
                     <v-transformer ref="transformer" />
                 </v-layer>
             </v-stage>
         </div>
+
+        <!-- Modal de Selección de Imagen -->
+        <Dialog 
+            v-model:visible="showImageSelect" 
+            modal 
+            header="Elige la variante" 
+            :style="{ width: '50vw' }"
+            :draggable="false"
+        >
+            <div v-if="selectedProduct">
+                <p class="mb-4 text-gray-600">Selecciona la imagen para: <span class="font-bold">{{ selectedProduct.name }}</span></p>
+                
+                <div class="mb-6">
+                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">QCs (Control de Calidad)</h3>
+                    <div class="flex gap-2 overflow-x-auto pb-2">
+                        <div v-if="productImages.qc.length === 0" class="text-sm text-gray-400 italic">No hay QCs disponibles</div>
+                        <img 
+                            v-for="img in productImages.qc" 
+                            :key="img.id"
+                            :src="img.url" 
+                            class="w-24 h-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-indigo-500"
+                            @click="selectImage(img)"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">Oficial / Marketing</h3>
+                    <div class="flex gap-2 overflow-x-auto pb-2">
+                        <div v-if="productImages.original.length === 0" class="text-sm text-gray-400 italic">No hay fotos oficiales</div>
+                        <img 
+                            v-for="img in productImages.original" 
+                            :key="img.id"
+                            :src="img.url" 
+                            class="w-24 h-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-indigo-500"
+                            @click="selectImage(img)"
+                        >
+                    </div>
+                </div>
+            </div>
+        </Dialog>
     </div>
 </template>
