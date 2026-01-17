@@ -1,12 +1,13 @@
-# Próxima Sesión: Backend - Outfit Controller
+# Próxima Sesión: Funcionalidad Remix y Exportar Imagen
 
 ## Objetivo
-Implementar la persistencia de outfits en la base de datos con el backend de Laravel.
+Implementar la carga de outfits existentes en el canvas (Remix) y la exportación de imágenes.
 
 ## Estado Actual ✅
 
 ### ✅ COMPLETADO en Sesión 2026-01-17:
 
+#### Parte 1: Componentes Canvas Editor
 1. **CanvasEditor.vue Component** ✅
    - Setup de vue-konva (Stage, Layer, Image, Transformer)
    - Renderizar items desde canvasStore
@@ -32,71 +33,89 @@ Implementar la persistencia de outfits en la base de datos con el backend de Lar
    - Modal de guardado
    - Ruta '/studio' añadida
 
+#### Parte 2: Backend OutfitController
+5. **OutfitController.php** ✅ (CRUD completo)
+   - `index()`: Listar outfits públicos
+   - `show($id)`: Mostrar outfit para Remix
+   - `store()`: Crear outfit con datos pivote
+   - `update()`: Actualizar outfit
+   - `destroy()`: Eliminar outfit
+   - `myOutfits()`: Listar outfits del usuario
+
+6. **StoreOutfitRequest.php** ✅
+   - Validación completa de datos del canvas
+   - Mensajes de error en español
+
+7. **OutfitResource.php** ✅
+   - Serialización con datos pivote
+   - Incluye productos con imágenes
+
+8. **Rutas API** ✅
+   - GET/POST/PUT/DELETE para outfits
+   - Protegidas con auth:sanctum
+
+9. **Frontend conectado** ✅
+   - POST /api/outfits funcional
+   - Manejo de errores 401/422
+
+---
+
 ## Tareas Pendientes (Próxima Sesión)
-- Crear `OutfitController.php`
-- Método `store()` que guarde en `outfits` + pivote `outfit_product`
-- Método `show()` para cargar outfits existentes (Remix)
 
-### 5. Guardar/Cargar Outfit
-- Botón "Save Outfit" que serialice el canvas
-- Guardar posiciones (`x, y`), transformaciones (`rotation, scale`), z-index
-- Cargar outfit existente en el canvas (parámetro de ruta)
+### 1. Funcionalidad Remix (Prioridad Alta)
+- [ ] Cargar outfit existente desde query param `?outfit_id=X`
+- [ ] Parsear datos pivote al formato del canvasStore
+- [ ] Precargar imágenes de productos
+- [ ] Test: Remix desde un outfit existente
 
-## Checklist Técnico
+### 2. Exportar como Imagen
+- [ ] Implementar `stage.toDataURL()` de Konva
+- [ ] Descargar como PNG/JPEG
+- [ ] Opcional: Subir a servidor para thumbnail_url
 
-- [ ] Instalar vue-konva (✅ Ya instalado)
-- [ ] Crear CanvasStore (✅ Ya creado en `resources/js/store/canvas.js`)
-- [ ] Crear `resources/js/components/canvas/CanvasEditor.vue`
-- [ ] Crear `resources/js/components/canvas/CanvasSidebar.vue`
-- [ ] Crear `resources/js/components/canvas/CanvasToolbar.vue`
-- [ ] Crear `app/Http/Controllers/Api/OutfitController.php`
-- [ ] Crear `app/Http/Requests/StoreOutfitRequest.php`
-- [ ] Crear rutas API: `POST /api/outfits`, `GET /api/outfits/{id}`
-- [ ] Actualizar vista `/studio` o `/canvas` en rutas web
-- [ ] Probar drag & drop
-- [ ] Probar guardar outfit
+### 3. Vista Detalle de Outfit
+- [ ] Crear vista `/outfit/{id}` 
+- [ ] Mostrar imagen del outfit
+- [ ] Botón "Remix This Fit"
+- [ ] Sección "Shop the Look" con productos
+
+### 4. Testing de Guardado
+- [ ] Crear usuario de prueba
+- [ ] Probar guardado completo con auth
+- [ ] Verificar datos pivote en DB
+
+---
+
+## Checklist Técnico (Actualizado)
+
+- [x] Instalar vue-konva
+- [x] Crear CanvasStore
+- [x] Crear `CanvasEditor.vue`
+- [x] Crear `CanvasSidebar.vue`
+- [x] Crear `CanvasToolbar.vue`
+- [x] Crear `OutfitController.php`
+- [x] Crear `StoreOutfitRequest.php`
+- [x] Crear `OutfitResource.php`
+- [x] Crear rutas API completas
+- [x] Actualizar vista `/studio`
+- [x] Probar drag & drop
+- [ ] Probar guardar outfit (con auth)
 - [ ] Probar cargar outfit (Remix)
+- [ ] Exportar imagen
 
-## Notas de Implementación
-
-### VueKonva Ejemplo Mínimo
-```vue
-<template>
-  <v-stage :config="stageConfig">
-    <v-layer>
-      <v-image 
-        v-for="item in canvasItems" 
-        :key="item.id"
-        :config="item"
-        @click="selectItem(item.id)"
-      />
-      <v-transformer ref="transformer" />
-    </v-layer>
-  </v-stage>
-</template>
-```
-
-### Pivot Table Save
-```php
-$outfit->products()->attach($productId, [
-    'pos_x' => $item['x'],
-    'pos_y' => $item['y'],
-    'rotation' => $item['rotation'],
-    'scale_x' => $item['scaleX'],
-    'scale_y' => $item['scaleY'],
-    'z_index' => $item['zIndex'],
-    'is_flipped' => $item['isFlipped'],
-    'selected_image_id' => $imageId
-]);
-```
+---
 
 ## Git Flow
-1. Commit cada componente por separado
-2. Merge a `develop` cuando funcione (sin errores)
-3. NO acumular múltiples features en una rama
+1. Crear rama `feat/remix-functionality`
+2. Implementar carga de outfit en canvas
+3. Verificar en navegador
+4. Commit y merge a develop
+
+---
 
 ## Referencia Académica
 Esta implementación cumple con:
-- **Relación N:M Compleja**: `outfit_product` con atributos pivote
-- **Frontend Avanzado**: vue-konva + Pinia state management
-- **Backend Laravel**: Resource Controllers + Form Requests
+- **Relación N:M Compleja**: `outfit_product` con atributos pivote ✅
+- **Frontend Avanzado**: vue-konva + Pinia state management ✅
+- **Backend Laravel**: Resource Controllers + Form Requests ✅
+- **API RESTful**: CRUD completo con autenticación ✅
