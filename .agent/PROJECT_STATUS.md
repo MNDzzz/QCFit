@@ -959,6 +959,22 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 
 ---
 
+### ✅ Feature: Backend QC Scraper Service
+
+**Fecha:** 2026-01-17 20:15-20:25
+**Rama:** `feat/qc-scraper-service`
+**Estado:** ✅ Implementado (Pendiente de Merge)
+
+**Funcionalidad:**
+- Servicio `QcScraperService.php` que busca imágenes en `qc.photos` dado un link de Weidian/Taobao.
+- Integración en `ProductController@show`:
+  - Si un producto NO tiene fotos QC al visitarlo, el backend las busca en tiempo real.
+  - Las guarda en `product_images` con `type='qc'`.
+  - Lazy Loading transparente para el usuario.
+- Evita el problema de productos "vacíos" al importarlos.
+
+---
+
 ## Próximos pasos
 1. **Siguiente feature:** Tab "UPLOADS" para el sidebar del Studio
 2. **Alternativo:** Home Hero Redesign (Floating 3D Cards)
