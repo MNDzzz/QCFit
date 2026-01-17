@@ -53,23 +53,39 @@ async function confirmSave() {
             })),
         };
 
-        // TODO: Implementar endpoint POST /api/outfits
-        // const response = await axios.post('/api/outfits', outfitData);
-        
-        // Por ahora, simulamos el guardado
-        console.log('Outfit guardado:', outfitData);
-        alert(`Outfit "${outfitTitle.value}" guardado con éxito!\n(Implementar endpoint POST /api/outfits)`);
+        // Enviar al endpoint de la API
+        const response = await axios.post('/api/outfits', outfitData);
 
-        // Cerrar modal
+        // Éxito: mostrar mensaje y cerrar modal
+        alert(`¡Outfit "${outfitTitle.value}" guardado con éxito!`);
+
+        // Cerrar modal y limpiar
         showSaveModal.value = false;
         outfitTitle.value = '';
 
-        // Opcional: redirigir al perfil o a la vista del outfit
-        // router.push({ name: 'PublicProfile', params: { id: 'me' } });
+        // Opcional: limpiar el canvas después de guardar
+        // canvasStore.clearCanvas();
+
+        // Opcional: redirigir al detalle del outfit creado
+        // if (response.data?.id) {
+        //     router.push({ name: 'OutfitDetail', params: { id: response.data.id } });
+        // }
 
     } catch (error) {
         console.error('Error guardando outfit:', error);
-        alert('Error al guardar el outfit. Intenta nuevamente.');
+        
+        // Manejar errores específicos
+        if (error.response?.status === 401) {
+            alert('Debes iniciar sesión para guardar outfits.');
+            router.push({ name: 'auth.login' });
+        } else if (error.response?.status === 422) {
+            // Errores de validación
+            const errors = error.response.data.errors;
+            const firstError = Object.values(errors)[0][0];
+            alert(`Error de validación: ${firstError}`);
+        } else {
+            alert('Error al guardar el outfit. Intenta nuevamente.');
+        }
     } finally {
         saving.value = false;
     }
