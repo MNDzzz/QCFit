@@ -932,6 +932,33 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 
 ---
 
+### ✅ 🚑 HOTFIX: Solución Error 403 en Imágenes (Hotlinking)
+
+**Fecha:** 2026-01-17 20:00-20:05
+**Rama:** `hotfix/image-referrer-policy`
+**Estado:** ✅ Mergeado a `develop`
+
+**Problema:**
+- Las imágenes externas (Weidian, Imgur, etc.) devolvían error 403 Forbidden.
+- Causa: Servidores bloqueando peticiones con `Referer: localhost`.
+
+**Solución:**
+- Se añadió el atributo `referrerpolicy="no-referrer"` a todas las etiquetas `<img>` de productos dinámicos.
+- Esto oculta el origen de la petición, permitiendo la carga de imágenes.
+
+**Componentes Modificados:**
+- `ProductCard.vue`
+- `LiveFeed.vue`
+- `Product/Show.vue`
+- `Profile/Show.vue`
+- `Home/index.vue`
+- `CanvasSidebar.vue`
+- `CanvasLayersPanel.vue`
+- `CanvasEditor.vue` (Legacy + Actual)
+- `Outfits (Index + Show)`
+
+---
+
 ## Próximos pasos
 1. **Siguiente feature:** Tab "UPLOADS" para el sidebar del Studio
 2. **Alternativo:** Home Hero Redesign (Floating 3D Cards)
