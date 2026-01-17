@@ -1,45 +1,34 @@
 # QCFit - Planificación de Próxima Sesión
 
 **Estado Actual:**
-- ✅ Fase 4 (Studio & Remix) COMPLETADA 100%.
-- ✅ Testing Functional E2E COMPLETADO (Login, Create, Save, Remix).
-- ✅ Bug crítico 405 (Method Not Allowed) solucionado.
+- ✅ Fase 4 (Studio) COMPLETADA.
+- ✅ Fase 5 (Social) COMPLETADA:
+    - Perfiles Públicos (`/u/:id`) funcionales con grid de outfits.
+    - Sistema Follow/Unfollow operativo (Backend y Frontend).
+- ✅ Testing E2E: Validado guardado de outfits y funcionalidad social básica.
 
 ---
 
-## 🎯 OBJETIVOS DE LA SESIÓN (Fase 5: Social & Community)
+## 🎯 OBJETIVO PRINCIPAL: Monetización (Fase 6)
 
-### 1. Sistema de Seguidores (Social)
-Implementar la lógica completa de "Followers/Following" para cumplir con el requisito académico N:M Users<->Users.
-- [ ] Botón "Follow/Unfollow" en el componente `Show.vue` (Outfit Detail).
-- [ ] Vista de Perfil Público (`/u/{username}`):
-    - Avatar, Bio, Estadísticas (Seguidores/Seguidos).
-    - Grid de sus outfits creados.
-- [ ] API Endpoint para listar seguidores/seguidos (ya existen las relaciones en Modelo).
+Ahora que tenemos tráfico potencial (Social) y contenido (Outfits), es hora de implementar el modelo de negocio "Affiliate Hijacking".
 
-### 2. Feed de Actividad (Discovery)
-- [ ] Añadir pestaña "Following" en el Feed principal (`/outfits`).
-- [ ] Filtrar outfits para mostrar solo los de usuarios seguidos.
+### 1. Inyección de Enlaces de Afiliados
+- [ ] Modificar `ProductCard` y `OutfitDetail` para que los botones de compra generen enlaces de afiliados.
+- [ ] Implementar soporte para múltiples agentes (CNFans, Mulebuy, etc.) en el Frontend (actualmente lógica solo en Store de Pinia).
+- [ ] Lógica backend para generar enlaces profundos (Deep Links) a los agentes.
 
-### 3. Refinamiento de UX (Studio)
-- [ ] Implementar Toast Notifications (reemplazar `alert()` feos).
-    - Al guardar outfit.
-    - Al añadir items al canvas.
-- [ ] Skeleton Loaders mientras cargan las imágenes del canvas o grids.
+### 2. Feed de Actividad (Social++)
+- [ ] Mejorar el Dashboard de usuario para mostrar un feed de los usuarios seguidos.
+- [ ] Endpoint backend para `getFollowedUsersOutfits()`.
+
+### 3. Refinamiento Final (UX/UI Polishing)
+- [ ] Implementar Toast Notifications (PrimeVue Toast) para reemplazar todos los `alert()`.
+- [ ] Añadir Skeleton Loaders en Perfil y Buscador.
+- [ ] Revisión de móviles.
 
 ---
 
-## 📝 Notas Técnicas Importantes
-
-1. **Rutas API:**
-   Recordar que las rutas protegidas (`POST /outfits`, etc.) requieren auth. Si fallan con 405, revisar `php artisan route:list` y limpiar chache.
-
-2. **Relaciones:**
-   La relación de followers ya está en el modelo `User.php`.
-   ```php
-   public function followers() { return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id'); }
-   ```
-   Usar esto para el controlador de Social.
-
-3. **Componentes Reutilizables:**
-   Considerar extraer el grid de outfits (`ProductCard` se usa para productos, necesitaremos `OutfitCard` si no existe ya o adaptar `ProductCard` para outfits).
+## 📝 Notas Técnicas
+- **Perfil Público**: La paginación devuelve `{ data: [...], meta: {...} }`. El frontend espera esta estructura.
+- **Seguidores**: La relación es `user.followers()` y `user.following()`.

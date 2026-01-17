@@ -68,7 +68,7 @@ export default [
             {
                 path: 'u/:id',
                 name: 'PublicProfile',
-                component: () => import('../views/public/user/Profile.vue'),
+                component: () => import('../views/public/profile/Show.vue'),
             },
 
             {

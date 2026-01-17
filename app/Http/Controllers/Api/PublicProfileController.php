@@ -7,27 +7,39 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Resources\PublicUserResource;
+use App\Http\Resources\OutfitSimpleResource;
+
 class PublicProfileController extends Controller
 {
     public function show($id)
     {
         $user = User::withCount(['followers', 'following', 'outfits'])
-            ->with([
-                'outfits' => function ($q) {
-                    $q->latest()->limit(10);
-                },
-                'outfits.products.images'
-            ])
             ->findOrFail($id);
 
+        // Check if authenticated user is following this profile
         $isFollowing = false;
         if (Auth::guard('sanctum')->check()) {
-            $isFollowing = Auth::guard('sanctum')->user()->following()->where('following_id', $user->id)->exists();
+            $authUser = Auth::guard('sanctum')->user();
+            if ($authUser) {
+                // Optimización: usar exists() en la relación
+                $isFollowing = $authUser->following()->where('following_id', $user->id)->exists();
+            }
         }
 
+        // Inyectar atributo temporal para el Resource
+        $user->is_following = $isFollowing;
+
+        // Cargar outfits del usuario (paginados)
+        $outfits = $user->outfits()
+            ->with('user') // Eager load user for the simple resource
+            ->withCount('products')
+            ->latest()
+            ->paginate(12);
+
         return response()->json([
-            'user' => $user,
-            'is_following' => $isFollowing
+            'user' => new PublicUserResource($user),
+            'outfits' => OutfitSimpleResource::collection($outfits)->response()->getData(true),
         ]);
     }
 }

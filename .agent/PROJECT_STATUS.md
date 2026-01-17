@@ -761,25 +761,41 @@ npm run dev
 
 ---
 
-### ✅ Parte 6 - Testing E2E y Fixes (Completado)
+### ✅ Parte 6 - Testing E2E (Completado)
 
 **Acciones Realizadas:**
 1. **Testing Funcional Completo**:
    - ✅ Flujo Login -> Create Outfit -> Save -> Remix verificado.
-   - ✅ Problema de rutas (405) solucionado mediante limpieza de cache.
+   - ✅ Problema de rutas (405) solucionado.
    - ✅ Verificación de persistencia en DB exitosa.
 
 ---
 
-### 🎯 Próximos pasos (Próxima Sesión - Fase 5):
+### ✅ Parte 7 - Social & Community (Fase 5 - Implementado)
 
-1. **Social Features (Seguidores)**
-   - Implementar botón "Follow" en vista detalle.
-   - Vista de Perfil Público de Usuario.
-   - Feed de actividad.
+**1. Perfil Público de Usuario (`/u/:id`)**
+- ✅ Backend: `PublicProfileController` refactorizado con `PublicUserResource` y `OutfitSimpleResource`.
+- ✅ Backend: Paginación correcta de outfits con metadatos.
+- ✅ Frontend: Nueva vista `Show.vue` con diseño moderno (Cover, Avatar, Stats).
+- ✅ Routing: Ruta `/u/:id` configurada.
 
-2. **Monetización (Affiliate Hijacking)**
-   - Inyección de enlaces de afiliados al hacer click en productos.
+**2. Sistema de Seguidores (Follow)**
+- ✅ Relaciones N:M `followers`/`following` funcional.
+- ✅ API `POST /api/follow` verificada.
+- ✅ Botón "Seguir/Dejar de seguir" interactivo con estados de carga.
+- ✅ Contadores de seguidores en tiempo real (Optimistic UI).
+
+---
+
+### 🎯 Próximos pasos (Próxima Sesión):
+
+1. **Monetización (Affiliate Hijacking)**
+   - Prioridad máxima ahora que la base social está lista.
+   - Inyección de enlaces de afiliados.
+
+2. **Refinamiento de UX**
+   - Toast Notifications.
+   - Skeleton Loaders.
 
 
 
