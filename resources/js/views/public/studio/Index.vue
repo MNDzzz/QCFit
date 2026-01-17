@@ -17,6 +17,7 @@ const saving = ref(false);
 const showSaveModal = ref(false);
 const loadingRemix = ref(false);
 const remixSourceTitle = ref(''); // Título del outfit que estamos remixeando
+const canvasEditorRef = ref(null); // Referencia al componente CanvasEditor
 
 // Cargar outfit si viene con query param outfit_id (Modo Remix)
 onMounted(async () => {
@@ -135,11 +136,32 @@ async function confirmSave() {
     }
 }
 
-// Manejar exportar como imagen
+/**
+ * Manejar exportar como imagen.
+ * Llama a la función downloadImage del CanvasEditor.
+ */
 function handleExport() {
-    // TODO: Implementar exportación del canvas como imagen
-    // Usar stage.toDataURL() de Konva
-    alert('Función de exportar imagen próximamente');
+    // Validar que haya items en el canvas
+    if (canvasStore.canvasItems.length === 0) {
+        alert('Añade productos al canvas antes de exportar');
+        return;
+    }
+
+    // Verificar referencia al CanvasEditor
+    if (!canvasEditorRef.value) {
+        console.error('No hay referencia al CanvasEditor');
+        alert('Error al exportar. Intenta recargar la página.');
+        return;
+    }
+
+    // Generar nombre de archivo
+    const timestamp = new Date().toISOString().slice(0, 10);
+    const filename = canvasStore.isRemixMode 
+        ? `remix-${remixSourceTitle.value || 'outfit'}-${timestamp}`
+        : `mi-outfit-${timestamp}`;
+
+    // Llamar a la función de descarga
+    canvasEditorRef.value.downloadImage(filename, 'png');
 }
 
 // Cancelar modal de guardado
@@ -212,7 +234,7 @@ function cancelSave() {
 
             <!-- Canvas Editor -->
             <div class="flex-1 overflow-hidden">
-                <CanvasEditor />
+                <CanvasEditor ref="canvasEditorRef" />
             </div>
         </div>
 

@@ -136,6 +136,83 @@ function updateTransformer() {
     }
 }
 
+/**
+ * Exportar el canvas como imagen.
+ * Genera un Data URL de la imagen que puede descargarse o enviarse al servidor.
+ * 
+ * @param {Object} options - Opciones de exportación
+ * @param {string} options.mimeType - Tipo de imagen ('image/png' o 'image/jpeg')
+ * @param {number} options.quality - Calidad para JPEG (0-1)
+ * @param {number} options.pixelRatio - Ratio de píxeles para mayor resolución
+ * @returns {string|null} Data URL de la imagen o null si falla
+ */
+function exportToImage(options = {}) {
+    const {
+        mimeType = 'image/png',
+        quality = 0.92,
+        pixelRatio = 2,
+    } = options;
+
+    if (!stageRef.value) {
+        console.error('No hay referencia al Stage de Konva');
+        return null;
+    }
+
+    try {
+        // Ocultar el transformer antes de exportar
+        if (transformerRef.value) {
+            const transformerNode = transformerRef.value.getNode();
+            transformerNode.nodes([]);
+        }
+
+        // Obtener el stage de Konva
+        const stage = stageRef.value.getNode();
+
+        // Generar Data URL de la imagen
+        const dataURL = stage.toDataURL({
+            mimeType: mimeType,
+            quality: quality,
+            pixelRatio: pixelRatio,
+        });
+
+        // Restaurar la selección después de exportar
+        updateTransformer();
+
+        return dataURL;
+
+    } catch (error) {
+        console.error('Error al exportar imagen:', error);
+        return null;
+    }
+}
+
+/**
+ * Descargar el canvas como archivo de imagen.
+ * Genera la imagen y la descarga automáticamente.
+ * 
+ * @param {string} filename - Nombre del archivo (sin extensión)
+ * @param {string} format - Formato de imagen ('png' o 'jpeg')
+ */
+function downloadImage(filename = 'outfit', format = 'png') {
+    const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
+    const dataURL = exportToImage({ mimeType });
+
+    if (!dataURL) {
+        alert('Error al generar la imagen. Intenta nuevamente.');
+        return;
+    }
+
+    // Crear enlace de descarga
+    const link = document.createElement('a');
+    link.download = `${filename}.${format}`;
+    link.href = dataURL;
+    
+    // Simular click para descargar
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
 // Watch: Actualizar transformer cuando cambia la selección
 watch(selectedItemId, () => {
     updateTransformer();
@@ -146,6 +223,12 @@ onMounted(() => {
     canvasStore.canvasItems.forEach(item => {
         loadImage(item.id, item.imageUrl);
     });
+});
+
+// Exponer funciones al componente padre
+defineExpose({
+    exportToImage,
+    downloadImage,
 });
 </script>
 
