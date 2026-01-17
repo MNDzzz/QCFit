@@ -154,6 +154,7 @@ function truncateName(name, maxLength = 18) {
                     <img 
                         v-if="item.imageUrl" 
                         :src="item.imageUrl" 
+                        referrerpolicy="no-referrer"
                         :alt="item.productName"
                         class="w-full h-full object-cover"
                         :class="{ 'scale-x-[-1]': item.isFlipped }"

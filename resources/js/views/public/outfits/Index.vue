@@ -40,6 +40,7 @@ onMounted(async () => {
                                 v-for="prod in outfit.products.slice(0, 4)" 
                                 :key="prod.id"
                                 :src="prod.images && prod.images[0] ? prod.images[0].url : ''" 
+                                referrerpolicy="no-referrer"
                                 class="w-1/2 h-1/2 object-cover"
                             >
                         </div>

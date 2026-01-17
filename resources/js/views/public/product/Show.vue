@@ -136,6 +136,7 @@ const agents = [
                         
                         <img 
                             :src="activeImage" 
+                            referrerpolicy="no-referrer"
                             class="max-h-full max-w-full object-contain filter drop-shadow-2xl transition-all duration-500"
                             :class="{'mix-blend-multiply': isQcMode}" 
                         >
@@ -150,7 +151,7 @@ const agents = [
                             class="w-16 h-16 rounded-lg border-2 overflow-hidden shrink-0 transition-all hover:scale-105"
                             :class="activeImage === img.url ? 'border-violet-600 ring-2 ring-violet-200' : 'border-slate-200 opacity-60 hover:opacity-100'"
                         >
-                            <img :src="img.url" class="w-full h-full object-cover">
+                            <img :src="img.url" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         </button>
                     </div>
                 </div>
