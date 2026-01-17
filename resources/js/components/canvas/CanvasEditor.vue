@@ -233,20 +233,21 @@ defineExpose({
 </script>
 
 <template>
-    <div class="canvas-editor-container relative w-full h-full bg-stone-50">
-        <!-- Patrón de fondo tipo Photoshop -->
-        <div class="absolute inset-0 opacity-10" 
-             style="background-image: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 20px 20px;">
+    <div class="canvas-editor-container relative w-full h-full bg-transparent">
+        <!-- Patrón de fondo tipo Checkerboard (Dark Mode Subtler) -->
+         <div class="absolute inset-0 opacity-[0.03]" 
+             style="background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;">
         </div>
 
         <!-- Canvas Stage -->
-        <div class="relative flex items-center justify-center w-full h-full p-8">
+        <div class="relative flex items-center justify-center w-full h-full overflow-hidden">
+            <!-- Stage sin sombra ni fondo blanco, flotando en el espacio -->
             <Stage 
                 ref="stageRef"
                 :config="stageConfig"
                 @mousedown="handleStageClick"
                 @touchstart="handleStageClick"
-                class="bg-white shadow-2xl rounded-lg"
+                class="bg-transparent"
             >
                 <Layer>
                     <!-- Renderizar todas las imágenes ordenadas por z-index -->
@@ -269,8 +270,9 @@ defineExpose({
                             borderStrokeWidth: 2,
                             anchorFill: '#8B5CF6',
                             anchorStroke: '#FFFFFF',
-                            anchorSize: 12,
-                            anchorCornerRadius: 6,
+                            anchorSize: 10,
+                            anchorCornerRadius: 5,
+                            keepRatio: true
                         }"
                     />
                 </Layer>
@@ -282,20 +284,20 @@ defineExpose({
             v-if="sortedItems.length === 0"
             class="absolute inset-0 flex items-center justify-center pointer-events-none"
         >
-            <div class="text-center text-slate-400">
-                <i class="pi pi-image text-6xl mb-4 opacity-20"></i>
-                <p class="text-lg font-medium">Arrastra productos aquí para crear tu outfit</p>
-                <p class="text-sm mt-2">Busca productos en el sidebar y arrástralos al canvas</p>
+            <div class="text-center text-slate-700">
+                <i class="pi pi-plus-circle text-6xl mb-4 opacity-20"></i>
+                <p class="text-lg font-bold uppercase tracking-widest opacity-40">Start Creating</p>
+                <p class="text-xs mt-2 opacity-30">Drag items from wardrobe</p>
             </div>
         </div>
 
-        <!-- Indicador de item seleccionado -->
+        <!-- Indicador de item seleccionado (Floating Tag) -->
         <div 
             v-if="selectedItemId && canvasStore.selectedItem"
-            class="absolute top-4 left-4 bg-slate-900/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg shadow-lg"
+            class="absolute top-4 left-4 bg-violet-600 text-white px-3 py-1.5 rounded-lg shadow-xl shadow-violet-900/20 text-xs font-bold flex items-center gap-2 animate-fade-in"
         >
-            <p class="text-xs font-medium opacity-75">Seleccionado:</p>
-            <p class="text-sm font-bold">{{ canvasStore.selectedItem.productName }}</p>
+             <i class="pi pi-box"></i>
+            <span>{{ canvasStore.selectedItem.productName }}</span>
         </div>
     </div>
 </template>

@@ -174,59 +174,81 @@ function cancelSave() {
 </script>
 
 <template>
-    <div class="studio-view flex flex-col h-screen bg-slate-950">
+    <div class="studio-view flex flex-col h-screen bg-slate-950 text-white overflow-hidden">
         <!-- Loading Overlay para Remix -->
-        <div v-if="loadingRemix" class="fixed inset-0 bg-slate-950/80 flex items-center justify-center z-50">
+        <div v-if="loadingRemix" class="fixed inset-0 bg-slate-950/90 flex items-center justify-center z-50 backdrop-blur-sm">
             <div class="text-center">
-                <i class="pi pi-spin pi-spinner text-4xl text-violet-500 mb-4"></i>
-                <p class="text-white font-medium">Cargando outfit para remix...</p>
+                <i class="pi pi-spin pi-spinner text-5xl text-violet-600 mb-6"></i>
+                <p class="text-slate-300 font-display text-lg tracking-wide">Cargando outfit para remix...</p>
             </div>
         </div>
 
-        <!-- Header del Studio -->
-        <div class="studio-header flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800">
+        <!-- Header del Studio (Dark & Premium) -->
+        <div class="studio-header flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-slate-900/50">
             <!-- Logo y navegación -->
             <div class="flex items-center gap-6">
-                <router-link to="/" class="flex items-center gap-2 hover:opacity-75 transition-opacity">
-                    <i class="pi pi-arrow-left text-slate-400"></i>
-                    <span class="text-white font-display font-bold text-xl">
-                        QCFit<span class="text-violet-500">.</span>
-                    </span>
+                <router-link to="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity group">
+                    <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-violet-600/50 transition-colors">
+                        <i class="pi pi-arrow-left text-slate-400 group-hover:text-white text-xs"></i>
+                    </div>
                 </router-link>
-                <div class="h-6 w-px bg-slate-700"></div>
-                <h1 class="text-white font-medium text-lg">The Studio</h1>
                 
-                <!-- Badge de Remix Mode -->
-                <div 
-                    v-if="canvasStore.isRemixMode" 
-                    class="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full text-white text-xs font-bold"
-                >
-                    <i class="pi pi-refresh"></i>
-                    <span>Remix Mode</span>
+                <div class="flex flex-col">
+                    <h1 class="text-white font-display font-bold text-xl tracking-tight leading-none">
+                        QCFit<span class="text-violet-500">.</span> Studio
+                    </h1>
+                     <!-- Badge de Remix Mode -->
+                    <div v-if="canvasStore.isRemixMode" class="flex items-center gap-1 mt-1">
+                        <span class="text-[10px] items-center gap-1 text-fuchsia-400 font-bold uppercase tracking-wider flex">
+                             <i class="pi pi-refresh text-[10px]"></i> Remixing
+                        </span>
+                        <span v-if="remixSourceTitle" class="text-[10px] text-slate-500 truncate max-w-[150px]">
+                            • {{ remixSourceTitle }}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Stats del canvas -->
-            <div class="flex items-center gap-4 text-sm text-slate-400">
-                <!-- Remix Source -->
-                <div v-if="remixSourceTitle" class="flex items-center gap-2 text-fuchsia-400">
-                    <i class="pi pi-palette"></i>
-                    <span>Basado en: {{ remixSourceTitle }}</span>
+            <!-- Stats Centrales (Opcional) -->
+            <div class="hidden md:flex items-center gap-6 text-sm">
+                 <div class="flex items-center gap-2 text-slate-400 bg-slate-900/50 px-3 py-1.5 rounded-full border border-slate-800/50">
+                    <i class="pi pi-layers text-xs"></i>
+                    <span class="font-mono text-xs">{{ canvasStore.canvasItems.length }} layers</span>
                 </div>
-                
-                <div class="flex items-center gap-2">
-                    <i class="pi pi-images"></i>
-                    <span>{{ canvasStore.canvasItems.length }} items</span>
+                 <div v-if="canvasStore.selectedItem" class="flex items-center gap-2 text-violet-400 bg-violet-900/10 px-3 py-1.5 rounded-full border border-violet-500/20 animate-fade-in">
+                    <i class="pi pi-check-circle text-xs"></i>
+                    <span class="font-bold text-xs">{{ canvasStore.selectedItem.productName }}</span>
                 </div>
-                <div v-if="canvasStore.selectedItem" class="flex items-center gap-2 text-violet-400">
-                    <i class="pi pi-check-circle"></i>
-                    <span>{{ canvasStore.selectedItem.productName }}</span>
-                </div>
+            </div>
+
+            <!-- Acciones Header -->
+            <div class="flex items-center gap-3">
+                 <button 
+                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 flex items-center justify-center transition-all"
+                    title="Undo (WIP)"
+                >
+                    <i class="pi pi-undo"></i>
+                 </button>
+                 <button 
+                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 flex items-center justify-center transition-all"
+                    title="Redo (WIP)"
+                >
+                    <i class="pi pi-refresh transform rotate-180"></i>
+                 </button>
+                 
+                 <div class="h-6 w-px bg-slate-800 mx-1"></div>
+
+                 <button 
+                    @click="handleSave"
+                    class="px-5 py-2 bg-white text-black font-bold text-sm rounded-full hover:bg-slate-200 transition-colors shadow-lg shadow-white/5"
+                >
+                    Publish
+                 </button>
             </div>
         </div>
 
 
-        <!-- Toolbar -->
+        <!-- Toolbar (Ahora integrada o separada, mantendremos la existente por ahora pero adaptada) -->
         <CanvasToolbar @save="handleSave" @export="handleExport" />
 
         <!-- Área principal: Sidebar + Canvas -->
@@ -235,21 +257,28 @@ function cancelSave() {
             <CanvasSidebar />
 
             <!-- Canvas Editor -->
-            <div class="flex-1 overflow-hidden">
+            <div class="flex-1 overflow-hidden relative bg-[#0f1014]"> <!-- Background muy oscuro -->
                 <CanvasEditor ref="canvasEditorRef" />
             </div>
         </div>
 
-        <!-- Modal de Guardar Outfit -->
+        <!-- Modal de Guardar Outfit (Dark Theme) -->
         <Dialog 
             v-model:visible="showSaveModal"
             modal
             header="Guardar Outfit"
             :style="{ width: '450px' }"
             :draggable="false"
+            :pt="{
+                root: { class: 'bg-slate-900 border border-slate-800 text-white' },
+                header: { class: 'bg-slate-900 text-white border-b border-slate-800' },
+                content: { class: 'bg-slate-900 text-white' },
+                footer: { class: 'bg-slate-900 border-t border-slate-800' },
+                closeButton: { class: 'text-slate-400 hover:text-white focus:ring-0' }
+            }"
         >
             <div class="py-4">
-                <label for="outfit-title" class="block text-sm font-medium text-slate-700 mb-2">
+                <label for="outfit-title" class="block text-sm font-medium text-slate-400 mb-2">
                     Título del Outfit
                 </label>
                 <input
@@ -257,31 +286,30 @@ function cancelSave() {
                     v-model="outfitTitle"
                     type="text"
                     placeholder="Ej: Summer Street Style 2024"
-                    class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-600 focus:border-transparent"
+                    class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 placeholder-slate-600 transition-all"
                     @keyup.enter="confirmSave"
                     autofocus
                 >
-                <p class="mt-2 text-xs text-slate-500">
-                    Este título será visible para otros usuarios cuando compartas tu outfit
+                <p class="mt-3 text-xs text-slate-500">
+                    Este título será visible en tu perfil y en la galería pública.
                 </p>
             </div>
 
             <template #footer>
-                <div class="flex justify-end gap-2">
+                <div class="flex justify-end gap-3 pt-2">
                     <button
                         @click="cancelSave"
-                        class="px-4 py-2 text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                        class="px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
                     >
                         Cancelar
                     </button>
                     <button
                         @click="confirmSave"
                         :disabled="saving || !outfitTitle.trim()"
-                        class="px-6 py-2 text-sm bg-violet-600 hover:bg-violet-500 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors flex items-center gap-2"
+                        class="px-6 py-2 text-sm bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-violet-900/20"
                     >
                         <i v-if="saving" class="pi pi-spin pi-spinner"></i>
-                        <i v-else class="pi pi-check"></i>
-                        {{ saving ? 'Guardando...' : 'Guardar Outfit' }}
+                        <span v-else>Guardar & Publicar</span>
                     </button>
                 </div>
             </template>
@@ -290,12 +318,5 @@ function cancelSave() {
 </template>
 
 <style scoped>
-.studio-view {
-    /* Asegurar que ocupe toda la pantalla */
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
+/* No extra styles needed, using Tailwind */
 </style>
