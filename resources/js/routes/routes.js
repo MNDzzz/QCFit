@@ -105,6 +105,11 @@ export default [
                 name: 'Studio',
                 component: () => import('../views/public/studio/Index.vue'),
             },
+            {
+                path: 'outfit/:id',
+                name: 'OutfitDetail',
+                component: () => import('../views/public/outfits/Show.vue'),
+            },
         ]
     },
 
