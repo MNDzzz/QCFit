@@ -100,6 +100,11 @@ export default [
                 name: 'ProductDetail',
                 component: () => import('../views/public/product/Show.vue'),
             },
+            {
+                path: 'studio',
+                name: 'Studio',
+                component: () => import('../views/public/studio/Index.vue'),
+            },
         ]
     },
 
