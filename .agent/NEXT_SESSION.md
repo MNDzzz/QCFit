@@ -1,7 +1,7 @@
-# Próxima Sesión: Exportar Imagen y Vista Detalle de Outfit
+# Próxima Sesión: Vista Detalle de Outfit y Testing
 
 ## Objetivo
-Implementar la exportación de imágenes del canvas y la vista detalle de outfit.
+Implementar la vista detalle de outfit y realizar testing con usuario autenticado.
 
 ## Estado Actual ✅
 
@@ -58,7 +58,7 @@ Implementar la exportación de imágenes del canvas y la vista detalle de outfit
    - POST /api/outfits funcional
    - Manejo de errores 401/422
 
-#### Parte 3: Funcionalidad Remix ✅ (NUEVO)
+#### Parte 3: Funcionalidad Remix ✅
 10. **canvasStore.loadOutfit()** ✅
     - Método para cargar outfit existente en canvas
     - Parsea datos pivote correctamente
@@ -75,29 +75,48 @@ Implementar la exportación de imágenes del canvas y la vista detalle de outfit
 
 12. **OutfitSeeder.php** ✅
     - Seeder para crear outfits de prueba
-    - Attach productos con posiciones aleatorias
     - Requiere usuarios existentes
+
+#### Parte 4: Exportar Imagen ✅ (NUEVO)
+13. **CanvasEditor - exportToImage()** ✅
+    - Usa stage.toDataURL() de Konva
+    - Soporta PNG y JPEG
+    - Calidad configurable
+    - pixelRatio para alta resolución
+
+14. **CanvasEditor - downloadImage()** ✅
+    - Genera enlace de descarga
+    - Simula click para descargar
+    - Nombre de archivo personalizable
+
+15. **Vista Studio - handleExport()** ✅
+    - Valida que hay items antes de exportar
+    - Genera nombre con fecha y título
+    - Usa referencia canvasEditorRef
+    - Conectado con botón "Exportar"
 
 ---
 
 ## Tareas Pendientes (Próxima Sesión)
 
-### 1. Exportar como Imagen (Prioridad Alta)
-- [ ] Implementar `stage.toDataURL()` de Konva
-- [ ] Descargar como PNG/JPEG
-- [ ] Opcional: Subir a servidor para thumbnail_url
-
-### 2. Vista Detalle de Outfit
+### 1. Vista Detalle de Outfit (Prioridad Alta)
 - [ ] Crear vista `/outfit/{id}` 
-- [ ] Mostrar imagen del outfit
-- [ ] Botón "Remix This Fit"
+- [ ] Mostrar imagen/preview del outfit
+- [ ] Botón "Remix This Fit" 
 - [ ] Sección "Shop the Look" con productos
+- [ ] Enlaces de afiliado en productos
 
-### 3. Testing de Usuario Autenticado
+### 2. Testing con Usuario Autenticado
 - [ ] Crear usuario de prueba manualmente
 - [ ] Probar guardado completo con auth
 - [ ] Ejecutar OutfitSeeder
-- [ ] Probar funcionalidad Remix con datos reales
+- [ ] Probar Remix con datos reales
+- [ ] Probar exportar imagen con items
+
+### 3. Mejoras de UX
+- [ ] Toast notifications en lugar de alerts
+- [ ] Skeleton loading para búsquedas
+- [ ] Confirmación antes de limpiar canvas
 
 ---
 
@@ -114,17 +133,18 @@ Implementar la exportación de imágenes del canvas y la vista detalle de outfit
 - [x] Crear rutas API completas
 - [x] Actualizar vista `/studio`
 - [x] Implementar Remix (loadOutfit)
+- [x] Implementar exportar imagen
 - [x] Probar drag & drop
 - [ ] Probar guardado con auth
 - [ ] Probar Remix con datos reales
-- [ ] Exportar imagen
 - [ ] Vista detalle outfit
+- [ ] Probar exportar con items
 
 ---
 
 ## Git Flow
-1. Crear rama `feat/export-image`
-2. Implementar exportación del canvas
+1. Crear rama `feat/outfit-detail-view`
+2. Implementar vista detalle
 3. Verificar en navegador
 4. Commit y merge a develop
 
@@ -137,3 +157,4 @@ Esta implementación cumple con:
 - **Backend Laravel**: Resource Controllers + Form Requests ✅
 - **API RESTful**: CRUD completo con autenticación ✅
 - **Funcionalidad Remix**: Cargar y modificar outfits existentes ✅
+- **Exportar Imagen**: stage.toDataURL() de Konva ✅
