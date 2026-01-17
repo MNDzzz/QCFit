@@ -12,15 +12,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        // Crear usuario de prueba
+        \App\Models\User::factory()->create([
+            'name' => 'QCFit Tester',
+            'email' => 'test@qcfit.com',
+            'password' => bcrypt('password'), // Contraseña conocida
+        ]);
 
         $this->call([
             ProductSeeder::class,
+                // OutfitSeeder depende de que existan usuarios y productos
+            OutfitSeeder::class,
         ]);
     }
 }
