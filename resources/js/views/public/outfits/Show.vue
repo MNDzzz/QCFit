@@ -166,6 +166,7 @@ const formattedDate = computed(() => {
                             <img 
                                 v-if="outfit.thumbnail_url" 
                                 :src="outfit.thumbnail_url" 
+                                referrerpolicy="no-referrer"
                                 :alt="outfit.title"
                                 class="w-full h-full object-cover"
                             />
@@ -180,6 +181,7 @@ const formattedDate = computed(() => {
                                     <img 
                                         v-if="item.product?.images?.length"
                                         :src="item.product.images[0].url" 
+                                        referrerpolicy="no-referrer"
                                         class="w-full h-full object-cover"
                                         :alt="item.product.name"
                                     />
@@ -202,6 +204,7 @@ const formattedDate = computed(() => {
                         <div v-if="outfit.user" class="flex items-center gap-3 mb-6">
                             <img 
                                 :src="outfit.user.avatar || '/images/default-avatar.png'" 
+                                referrerpolicy="no-referrer"
                                 class="w-12 h-12 rounded-full object-cover border-2 border-slate-200"
                                 :alt="outfit.user.name"
                             />
@@ -279,6 +282,7 @@ const formattedDate = computed(() => {
                             <img 
                                 v-if="item.product?.images?.length"
                                 :src="item.product.images[0].url" 
+                                referrerpolicy="no-referrer"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                 :alt="item.product.name"
                             />

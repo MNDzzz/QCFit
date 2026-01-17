@@ -171,6 +171,7 @@ function addProductToCanvas(product) {
                             <img
                                 v-if="product.images && product.images.length"
                                 :src="product.images[0].url"
+                                referrerpolicy="no-referrer"
                                 :alt="product.name"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             >
@@ -217,6 +218,7 @@ function addProductToCanvas(product) {
                             <img
                                 v-if="product.images && product.images.length"
                                 :src="product.images[0].url"
+                                referrerpolicy="no-referrer"
                                 :alt="product.name"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             >

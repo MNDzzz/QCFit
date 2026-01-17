@@ -58,6 +58,7 @@ onMounted(() => {
                 >
                     <img 
                         :src="img.url" 
+                        referrerpolicy="no-referrer"
                         loading="lazy" 
                         class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                     >

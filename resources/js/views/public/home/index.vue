@@ -114,13 +114,14 @@ async function loadOutfits() {
                     <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
                         <img 
                             :src="outfit.thumbnail_url || (outfit.products && outfit.products[0]?.images[0]?.url) || '/images/placeholder-outfit.jpg'" 
+                            referrerpolicy="no-referrer"
                             :alt="outfit.title"
                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             loading="lazy"
                         >
                         <!-- Creator Badge -->
                         <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-xs font-bold text-slate-800 shadow-sm">
-                            <img :src="outfit.user?.avatar || '/images/default-avatar.png'" class="w-5 h-5 rounded-full object-cover">
+                            <img :src="outfit.user?.avatar || '/images/default-avatar.png'" referrerpolicy="no-referrer" class="w-5 h-5 rounded-full object-cover">
                             {{ outfit.user?.name }}
                         </div>
                         

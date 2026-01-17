@@ -54,6 +54,7 @@ const price = computed(() => {
             <!-- Images -->
             <img 
                 :src="qcImage" 
+                referrerpolicy="no-referrer"
                 class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
                 :class="{'opacity-0': isHovered && marketingImage !== qcImage, 'opacity-100': !isHovered || marketingImage === qcImage}"
                 alt="QC"
@@ -61,6 +62,7 @@ const price = computed(() => {
             <img 
                 v-if="marketingImage !== qcImage"
                 :src="marketingImage" 
+                referrerpolicy="no-referrer"
                 class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
                  :class="{'opacity-100': isHovered, 'opacity-0': !isHovered}"
                  alt="Original"

@@ -293,6 +293,7 @@ function deleteSelectedItem() {
                          <img 
                             v-if="prod.images && prod.images.length" 
                             :src="prod.images[0].url" 
+                            referrerpolicy="no-referrer"
                             class="w-full h-full object-cover pointer-events-none"
                         >
                         <div v-else class="flex items-center justify-center h-full text-xs text-gray-400">Sin foto</div>
@@ -375,6 +376,7 @@ function deleteSelectedItem() {
                             v-for="img in productImages.qc" 
                             :key="img.id"
                             :src="img.url" 
+                            referrerpolicy="no-referrer"
                             class="w-24 h-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-indigo-500"
                             @click="selectImage(img)"
                         >
@@ -389,6 +391,7 @@ function deleteSelectedItem() {
                             v-for="img in productImages.original" 
                             :key="img.id"
                             :src="img.url" 
+                            referrerpolicy="no-referrer"
                             class="w-24 h-24 object-cover rounded cursor-pointer border-2 border-transparent hover:border-indigo-500"
                             @click="selectImage(img)"
                         >

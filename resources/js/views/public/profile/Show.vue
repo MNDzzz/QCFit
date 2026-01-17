@@ -175,6 +175,7 @@ const isMe = computed(() => {
                         <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden bg-white shadow-xl">
                             <img 
                                 :src="user.avatar || '/images/placeholder-user.jpg'" 
+                                referrerpolicy="no-referrer"
                                 :alt="user.name"
                                 class="w-full h-full object-cover"
                             >
@@ -262,6 +263,7 @@ const isMe = computed(() => {
                         <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
                             <img 
                                 :src="outfit.thumbnail_url || '/images/placeholder-outfit.jpg'" 
+                                referrerpolicy="no-referrer"
                                 :alt="outfit.title"
                                 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 loading="lazy"
