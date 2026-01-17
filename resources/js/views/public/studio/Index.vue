@@ -5,6 +5,7 @@ import { useCanvasStore } from '@/store/canvas';
 import CanvasEditor from '@/components/canvas/CanvasEditor.vue';
 import CanvasSidebar from '@/components/canvas/CanvasSidebar.vue';
 import CanvasToolbar from '@/components/canvas/CanvasToolbar.vue';
+import CanvasLayersPanel from '@/components/canvas/CanvasLayersPanel.vue';
 import axios from 'axios';
 import { useToast } from "primevue/usetoast";
 
@@ -251,15 +252,18 @@ function cancelSave() {
         <!-- Toolbar (Ahora integrada o separada, mantendremos la existente por ahora pero adaptada) -->
         <CanvasToolbar @save="handleSave" @export="handleExport" />
 
-        <!-- Área principal: Sidebar + Canvas -->
+        <!-- Área principal: Sidebar + Canvas + Layers Panel -->
         <div class="flex-1 flex overflow-hidden">
-            <!-- Sidebar -->
+            <!-- Sidebar Izquierda (Assets) -->
             <CanvasSidebar />
 
-            <!-- Canvas Editor -->
+            <!-- Canvas Editor (Centro) -->
             <div class="flex-1 overflow-hidden relative bg-[#0f1014]"> <!-- Background muy oscuro -->
                 <CanvasEditor ref="canvasEditorRef" />
             </div>
+
+            <!-- Panel de Capas (Derecha) -->
+            <CanvasLayersPanel />
         </div>
 
         <!-- Modal de Guardar Outfit (Dark Theme) -->
