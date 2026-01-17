@@ -657,11 +657,11 @@ npm run dev
 **Verificaciones:**
 - ✅ Build de Vite exitoso
 - ✅ API /api/outfits devuelve JSON válido: `{"data":[]}`
-- **Estado:** Feature Complete (RC).
+- **Estado:** Feature Complete (RC) + Rediseño en progreso.
 - **Logros:**
-  - SEO optimizado con meta tags dinámicos.
-  - UX robusta con manejo de errores y estados de carga.
-  - Todas las funcionalidades core implementadas.
+  - Studio transformado a "Dark Professional Tool".
+  - Canvas infinito con patrón checkerboard sutil.
+  - Diseño alineado con los mockups de "QCFit 2.0".
 - ✅ Studio interface carga correctamente
 - ✅ Sin errores de consola
 
@@ -803,7 +803,10 @@ npm run dev
 - [x] **Feed de Actividad Social:** `GET /api/feed/following` y pestañas en Home.
 - [x] **Refinamiento de UX/UI:** Implementado sistema completo (Toasts, Skeletons, Animaciones).
 - [x] **Optimización SEO:** Implementado `@vueuse/head` con metadatos dinámicos en vistas principales.
-- [x] **Documentación Final:** README.md actualizado para entrega.
+- [x] **Documentación Final:** README.md actualizado para entrega (v2.0 branding).
+- [x] **Studio Overhaul (Fase 1):** Dark Mode Base + Transparent Canvas + Header V2.
+- [x] **Studio Overhaul:** Implementado Dark Mode completo (bg-slate-950) y Canvas transparente.
+- [x] **Studio UX:** Mejorado Header con breadcrumbs y badges de Remix.
 
 ## Próximos pasos
 1. **Verificación manual en navegador:** Confirmar flujo de "Follow" y feed.
