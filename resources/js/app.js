@@ -9,6 +9,7 @@ import useAuth from './composables/auth';
 import { installI18n, loadMessages } from "./plugins/i18n";
 import { langStore } from "@/store/lang";
 import './plugins/axios.js';
+import { createHead } from '@vueuse/head'
 import App from './main.vue'
 
 /*PRIMEVUE */
@@ -66,7 +67,11 @@ app.use(VueSweetalert2)
 app.use(abilitiesPlugin, ability)
 app.use(ToastService);
 app.use(DialogService);
+app.use(DialogService);
 app.use(ConfirmationService);
+
+const head = createHead()
+app.use(head)
 
 const i18n = installI18n(app);
 const l = langStore();

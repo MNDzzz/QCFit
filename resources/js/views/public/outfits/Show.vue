@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { usePreferenceStore } from '@/store/preference';
+import { useHead } from '@vueuse/head';
 
 const route = useRoute();
 const router = useRouter();
@@ -28,6 +29,29 @@ async function fetchOutfit() {
     try {
         const response = await axios.get(`/api/outfits/${route.params.id}`);
         outfit.value = response.data.data || response.data;
+
+        // SEO Meta Tags
+        useHead({
+            title: computed(() => outfit.value ? `${outfit.value.title} - QCFit` : 'Outfit - QCFit'),
+            meta: [
+                {
+                    name: 'description',
+                    content: computed(() => outfit.value?.description || 'Build your own outfits with real QC photos.')
+                },
+                {
+                    property: 'og:title',
+                    content: computed(() => outfit.value?.title)
+                },
+                {
+                    property: 'og:description',
+                    content: computed(() => outfit.value?.description)
+                },
+                {
+                    property: 'og:image',
+                    content: computed(() => outfit.value?.thumbnail_url || '/images/og-default.jpg')
+                }
+            ]
+        });
     } catch (err) {
         console.error('Error cargando outfit:', err);
         

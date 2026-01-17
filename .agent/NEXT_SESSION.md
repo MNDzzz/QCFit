@@ -23,11 +23,11 @@ Para que el proyecto parezca un SaaS real y premium, necesitamos mejorar la expe
 - [ ] Feedback visual al guardar outfit, login error, etc.
 
 ## Objetivos para la próxima sesión
-1. **Verificación UX/UI:** Comprobar visualmente los Toasts y Skeletons en el navegador.
-2. **Animaciones:** Añadir animaciones de entrada (`animate-fade-in-up`) en listas de productos.
-3. **Limpieza y Optimización:** Revisar código muerto y optimizar imports.
+1. **QA Final (Critical Path):** Verificar funcionamiento de meta tags por inspección (view source).
+2. **Documentación Final:** Generar README.md pulido para entrega/portfolio.
+3. **Limpieza:** Eliminar archivos temporales y verificar `.env.example`.
 
 ## Notas Técnicas
-- PrimeVue Toast ya está configurado globalmente.
-- Revisar si hay más `alert()` olvidados.
-- La rama actual es `feat/ux-refinement`. features.
+- El proyecto está listo para demo.
+- Browser Agent sigue dando 429, confiar en verificación manual.
+- `@vueuse/head` es la librería elegida para SEO. features.

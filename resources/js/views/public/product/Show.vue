@@ -3,6 +3,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { usePreferenceStore } from '@/store/preference';
+import { useHead } from '@vueuse/head';
 
 const route = useRoute();
 const preferenceStore = usePreferenceStore();
@@ -23,6 +24,25 @@ async function fetchProduct() {
         const res = await axios.get(`/api/products/${id}`);
         product.value = res.data.data || res.data;
         updateActiveImage();
+
+        // SEO Meta Tags
+        useHead({
+            title: computed(() => product.value ? `${product.value.name} - QCFit` : 'Producto - QCFit'),
+            meta: [
+                {
+                    name: 'description',
+                    content: computed(() => `Find QC photos for ${product.value?.name}.`)
+                },
+                {
+                    property: 'og:title',
+                    content: computed(() => product.value?.name)
+                },
+                {
+                    property: 'og:image',
+                    content: computed(() => activeImage.value || '/images/og-default.jpg')
+                }
+            ]
+        });
     } catch (e) {
         console.error("Error loading product", e);
     } finally {

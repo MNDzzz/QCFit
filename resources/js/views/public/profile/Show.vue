@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { authStore } from '../../../store/auth';
 import { useToast } from "primevue/usetoast";
+import { useHead } from '@vueuse/head';
 
 const route = useRoute();
 const auth = authStore();
@@ -35,6 +36,25 @@ async function fetchProfile(userId) {
         const response = await axios.get(`/api/public/user/${userId}`);
         
         user.value = response.data.user;
+
+        // SEO Meta Tags
+        useHead({
+            title: computed(() => user.value ? `${user.value.name} (@${user.value.alias}) - QCFit` : 'Perfil - QCFit'),
+            meta: [
+                {
+                    name: 'description',
+                    content: computed(() => user.value?.bio || `Check out ${user.value?.name}'s outfits on QCFit.`)
+                },
+                {
+                    property: 'og:title',
+                    content: computed(() => user.value?.name)
+                },
+                {
+                    property: 'og:image',
+                    content: computed(() => user.value?.avatar || '/images/default-avatar.png')
+                }
+            ]
+        });
         
         // Handle pagination structure verification with extreme safety
         const outfitsData = response.data.outfits;
