@@ -31,18 +31,18 @@ async function fetchProfile(userId) {
     error.value = null;
     try {
         const response = await axios.get(`/api/public/user/${userId}`);
-        console.log('Profile Data Loaded:', response.data);
         
         user.value = response.data.user;
         
-        // Handle pagination structure verification
-        if (response.data.outfits && response.data.outfits.data) {
-            outfits.value = response.data.outfits.data;
-            lastPage.value = response.data.outfits.meta?.last_page || 1;
-        } else if (Array.isArray(response.data.outfits)) {
-            outfits.value = response.data.outfits;
+        // Handle pagination structure verification with extreme safety
+        const outfitsData = response.data.outfits;
+        if (outfitsData?.data) {
+            outfits.value = outfitsData.data;
+            lastPage.value = outfitsData.meta?.last_page || 1;
+        } else if (Array.isArray(outfitsData)) {
+            outfits.value = outfitsData;
         } else {
-            console.warn('Unexpected outfits structure', response.data.outfits);
+            console.warn('Unexpected outfits structure, defaulting to empty array', outfitsData);
             outfits.value = [];
         }
     } catch (e) {
@@ -204,7 +204,8 @@ const isMe = computed(() => {
                 </div>
 
                 <!-- Outfits Grid -->
-                <div v-if="outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Defensive check added -->
+                <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
                     <div 
                         v-for="outfit in outfits" 
                         :key="outfit.id"
@@ -255,9 +256,3 @@ const isMe = computed(() => {
     </div>
 </template>
 
-<style scoped>
-/* Gradient Text for special badges if needed */
-.text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600;
-}
-</style>
