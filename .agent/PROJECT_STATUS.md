@@ -808,8 +808,62 @@ npm run dev
 - [x] **Studio Overhaul:** Implementado Dark Mode completo (bg-slate-950) y Canvas transparente.
 - [x] **Studio UX:** Mejorado Header con breadcrumbs y badges de Remix.
 
+---
+
+## 📝 Changelog - Sesión 2026-01-17 (Continuación)
+
+### ✅ Studio Design Overhaul - Layers Panel
+
+**Fecha:** 2026-01-17 19:00-19:30
+**Rama:** `feat/studio-layers-panel`
+**Estado:** ✅ Mergeado a `develop`
+
+**Nuevo Componente: `CanvasLayersPanel.vue`**
+- ✅ Panel lateral derecho que muestra lista de capas del canvas
+- ✅ Ordenamiento por z-index (mayor z-index = más arriba en la lista)
+- ✅ Thumbnails de cada item con reflejo del estado de flip
+- ✅ Drag & drop para reordenar capas (intercambia z-index)
+- ✅ Botones de acción: Subir capa, Bajar capa, Eliminar
+- ✅ Click en capa para seleccionar el item en el canvas
+- ✅ Estado vacío con mensaje informativo
+- ✅ Sincronización bidireccional con `canvasStore`
+- ✅ Diseño Dark Mode acorde al tema del Studio
+
+**Integración:**
+- ✅ Componente importado en `Index.vue` (vista Studio)
+- ✅ Posicionado a la derecha del canvas central
+- ✅ Build de Vite exitoso
+- ✅ Verificación en navegador completada
+
+**Verificaciones realizadas:**
+1. ✅ Home Page: Hero, SmartSearch, LiveFeed, Trending - funcional
+2. ✅ Search Page: Sidebar filtros, Grid productos - funcional
+3. ✅ Product Detail: Toggle QC/Original, Agent Widget - funcional
+4. ✅ Studio: Canvas, Toolbar, Sidebar, **Layers Panel** - funcional
+5. ✅ Profile: Avatar, Stats, Grid outfits - funcional
+
+---
+
+## 🎯 Próximos Pasos (Design Alignment)
+
+Según `DESIGN_ALIGNMENT_PLAN.md` y las imágenes de diseño:
+
+### Pendiente para Studio:
+- [ ] **Floating Toolbar Contextual**: Mover toolbar actual a menú flotante cerca del item seleccionado
+- [ ] **Tab "UPLOADS"** en sidebar izquierdo (actualmente solo Buscar/Armario)
+- [ ] **Undo/Redo**: Implementar historial en Pinia store
+
+### Pendiente para Home:
+- [ ] **Floating 3D Cards**: Efecto de tarjetas flotantes en el hero
+- [ ] **Search Bar Pill**: Diseño rounded-full con botón interno
+
+### Pendiente para Profile:
+- [ ] **Auth Modal Glassmorphism**: Modal con blur de fondo
+
+---
+
 ## Próximos pasos
-1. **Verificación manual en navegador:** Confirmar flujo de "Follow" y feed.
-2. **Refinamiento UX:** Mejorar transiciones y estados de carga.
-3. **Despliegue:** Preparar para producción (opcional).
-```
+1. **Siguiente feature:** Floating Toolbar contextual para el Studio
+2. **Verificación:** Confirmar funcionalidad completa del Layers Panel con múltiples items
+3. **Documentación:** Actualizar README si es necesario
+

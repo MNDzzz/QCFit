@@ -1,41 +1,77 @@
 # QCFit - Planificación de Próxima Sesión
 
-**Estado Actual:**
-- ✅ Fase 4 (Studio) COMPLETADA.
-- ✅ Fase 5 (Social) COMPLETADA (Perfiles, Follow).
-- ✅ Fase 6 (Monetización) COMPLETADA:
-    - Generación de links de afiliados robusta.
-    - Botones de compra integrados en todas las vistas clave.
-    - Soporte multi-agente (CNFans, Mulebuy, etc.).
+**Última Actualización:** 2026-01-17 19:30
+**Rama Actual:** `develop`
+**Estado:** ✅ Layers Panel implementado y mergeado
 
 ---
 
-## 🎯 OBJETIVO PRINCIPAL: Refinamiento de UX/UI y Social++ (Fase 7)
+## ✅ Completado en esta sesión:
 
-Para que el proyecto parezca un SaaS real y premium, necesitamos mejorar la experiencia de usuario y el "engagement".
+### Studio Design Overhaul - Layers Panel
+- ✅ Nuevo componente `CanvasLayersPanel.vue`
+- ✅ Panel lateral derecho con lista de capas ordenadas por z-index
+- ✅ Drag & drop para reordenar capas
+- ✅ Thumbnails, botones de acción, sincronización con store
+- ✅ Build exitoso y verificación en navegador
 
-### 1. Feed de Actividad (Social++)
-- [ ] Implementar feed en Home para usuarios logueados: "Outfits de gente que sigues".
-- [ ] Endpoint backend `getFollowedUsersOutfits()`.
+---
 
-### 2. Feedback de Usuario (Toasts)
-- [ ] Reemplazar `alert()` y `console.error` por un sistema de notificaciones Toast (ej: PrimeVue Toast).
-- [ ] Feedback visual al guardar outfit, login error, etc.
+## 🎯 PRÓXIMAS TAREAS (Design Alignment)
 
-## Objetivos para la próxima sesión (Design Polish)
-1. **Studio Polish (Priority High):**
-   - **Floating Toolbar:** Replace the top static styling with a contextual floating menu near selected items (Remove BG, Flip, Layer Up/Down).
-   - **Right Sidebar (Layers):** Create `CanvasLayersPanel.vue` (drag-to-reorder, visibility toggle).
-   - **Undo/Redo:** Implement history stack in Pinia store.
-2. **Home Redesign (Hero):**
-   - **Dark Background:** Update `Home.vue` background to `bg-slate-950`.
-   - **3D Cards:** Implement the floating "Nike Dunk/Jordan" cards effect (CSS 3D transforms).
-   - **Search Bar:** Round pill shape with internal purple button (`rounded-full`).
-3. **Profile Refinement:**
-   - **Auth Modal:** Replace standard modal with Glassmorphism (blur) dark modal.
+### 1. Floating Toolbar Contextual (Prioridad Alta)
+Según la Imagen 4 del diseño, la toolbar actual debe convertirse en un menú flotante que aparece cerca del item seleccionado.
 
-## Notas Técnicas para el Agente
-- **Estado Actual:** El `Studio` ya tiene la base Dark Mode (`bg-slate-950`) y el header actualizado.
-- **Limitación Browser:** `browser_subagent` devuelve error 429. **CONFÍA EN LA VERIFICACIÓN DE CÓDIGO (Static Analysis)** y pide al usuario confirmación visual si es crítico.
-- **Fuente de Verdad:** `DESIGN_ALIGNMENT_PLAN.md` contiene la lista completa de tareas de diseño.
-- **Git:** Usa ramas por feature (`feat/studio-layers`, `feat/home-redesign`). Mensajes en Español.
+**Elementos:**
+- Remove BG (con ícono de varita mágica)
+- Bring Front
+- Send Back
+- Flip
+- Trash (en rojo)
+
+**Implementación sugerida:**
+- Crear componente `CanvasFloatingToolbar.vue`
+- Posicionar relativo al `selectedItem` usando sus coordenadas x,y
+- Usar transiciones CSS para aparecer/desaparecer
+
+### 2. Tab "UPLOADS" en Sidebar
+Añadir tercera pestaña para subir imágenes propias.
+- Zona de drag & drop
+- Preview de imágenes subidas
+- Conexión con endpoint (mock o real)
+
+### 3. Undo/Redo
+- Implementar historial de acciones en `canvasStore`
+- Máximo 10-20 estados
+- Botones ya están en el header (solo necesitan lógica)
+
+---
+
+## 📋 Verificaciones Pendientes
+
+Las siguientes páginas fueron verificadas como funcionales:
+- ✅ Home
+- ✅ Search
+- ✅ Product Detail
+- ✅ Studio (con Layers Panel)
+- ✅ Profile
+
+---
+
+## 💡 Notas Técnicas
+
+- **Build:** Usar `cmd /c "npm run build"` para evitar problemas con PowerShell
+- **Server:** `C:\xampp\php\php.exe artisan serve`
+- **MySQL:** Funcionando en puerto 3306 via XAMPP
+- **Git Flow:** Crear rama por feature, verificar en browser, merge a develop
+
+---
+
+## 🔗 Referencias de Diseño
+
+Las 5 imágenes de diseño están en:
+- **Imagen 0:** User Profile + Auth Modal
+- **Imagen 1:** Home Page (Hero, Live Feed, Products)
+- **Imagen 2:** Product Detail
+- **Imagen 3:** Search Results
+- **Imagen 4:** Studio (Floating Toolbar, Layers Panel)
