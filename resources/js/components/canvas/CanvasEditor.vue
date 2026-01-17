@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import { Stage, Layer, Image as KonvaImage, Transformer } from 'vue-konva';
 import { useCanvasStore } from '@/store/canvas';
+import CanvasFloatingToolbar from './CanvasFloatingToolbar.vue';
 
 const canvasStore = useCanvasStore();
 
@@ -213,6 +214,17 @@ function downloadImage(filename = 'outfit', format = 'png') {
     document.body.removeChild(link);
 }
 
+/**
+ * Manejar la acción "Remove BG" del Floating Toolbar.
+ * Por ahora es un placeholder para futura integración con IA.
+ * @param {string} itemId - ID del item al que quitar el fondo
+ */
+function handleRemoveBg(itemId) {
+    console.log('Remove BG solicitado para item:', itemId);
+    // TODO: Integrar con endpoint /api/ai/remove-bg
+    alert('La función "Quitar Fondo" con IA estará disponible pronto.');
+}
+
 // Watch: Actualizar transformer cuando cambia la selección
 watch(selectedItemId, () => {
     updateTransformer();
@@ -291,14 +303,8 @@ defineExpose({
             </div>
         </div>
 
-        <!-- Indicador de item seleccionado (Floating Tag) -->
-        <div 
-            v-if="selectedItemId && canvasStore.selectedItem"
-            class="absolute top-4 left-4 bg-violet-600 text-white px-3 py-1.5 rounded-lg shadow-xl shadow-violet-900/20 text-xs font-bold flex items-center gap-2 animate-fade-in"
-        >
-             <i class="pi pi-box"></i>
-            <span>{{ canvasStore.selectedItem.productName }}</span>
-        </div>
+        <!-- Floating Toolbar Contextual (aparece sobre el item seleccionado) -->
+        <CanvasFloatingToolbar @remove-bg="handleRemoveBg" />
     </div>
 </template>
 
