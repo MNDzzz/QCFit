@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useCanvasStore } from '@/store/canvas';
 import CanvasEditor from '@/components/canvas/CanvasEditor.vue';
 import CanvasSidebar from '@/components/canvas/CanvasSidebar.vue';
@@ -8,12 +8,56 @@ import CanvasToolbar from '@/components/canvas/CanvasToolbar.vue';
 import axios from 'axios';
 
 const router = useRouter();
+const route = useRoute();
 const canvasStore = useCanvasStore();
 
 // Estado
 const outfitTitle = ref('');
 const saving = ref(false);
 const showSaveModal = ref(false);
+const loadingRemix = ref(false);
+const remixSourceTitle = ref(''); // Título del outfit que estamos remixeando
+
+// Cargar outfit si viene con query param outfit_id (Modo Remix)
+onMounted(async () => {
+    const outfitId = route.query.outfit_id;
+    
+    if (outfitId) {
+        await loadRemixOutfit(outfitId);
+    }
+});
+
+/**
+ * Cargar un outfit existente para remixear.
+ * Obtiene los datos de la API y los carga en el canvasStore.
+ */
+async function loadRemixOutfit(outfitId) {
+    loadingRemix.value = true;
+    
+    try {
+        const response = await axios.get(`/api/outfits/${outfitId}`);
+        const outfitData = response.data.data || response.data;
+        
+        // Guardar título para referencia
+        remixSourceTitle.value = outfitData.title || 'Outfit sin título';
+        
+        // Cargar items en el canvas
+        canvasStore.loadOutfit(outfitData);
+        
+        console.log(`Outfit "${remixSourceTitle.value}" cargado para Remix`);
+        
+    } catch (error) {
+        console.error('Error cargando outfit para remix:', error);
+        
+        if (error.response?.status === 404) {
+            alert('El outfit que intentas remixear no existe.');
+        } else {
+            alert('Error al cargar el outfit. Intenta nuevamente.');
+        }
+    } finally {
+        loadingRemix.value = false;
+    }
+}
 
 // Manejar guardar outfit
 async function handleSave() {
@@ -107,6 +151,14 @@ function cancelSave() {
 
 <template>
     <div class="studio-view flex flex-col h-screen bg-slate-950">
+        <!-- Loading Overlay para Remix -->
+        <div v-if="loadingRemix" class="fixed inset-0 bg-slate-950/80 flex items-center justify-center z-50">
+            <div class="text-center">
+                <i class="pi pi-spin pi-spinner text-4xl text-violet-500 mb-4"></i>
+                <p class="text-white font-medium">Cargando outfit para remix...</p>
+            </div>
+        </div>
+
         <!-- Header del Studio -->
         <div class="studio-header flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800">
             <!-- Logo y navegación -->
@@ -119,10 +171,25 @@ function cancelSave() {
                 </router-link>
                 <div class="h-6 w-px bg-slate-700"></div>
                 <h1 class="text-white font-medium text-lg">The Studio</h1>
+                
+                <!-- Badge de Remix Mode -->
+                <div 
+                    v-if="canvasStore.isRemixMode" 
+                    class="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full text-white text-xs font-bold"
+                >
+                    <i class="pi pi-refresh"></i>
+                    <span>Remix Mode</span>
+                </div>
             </div>
 
             <!-- Stats del canvas -->
             <div class="flex items-center gap-4 text-sm text-slate-400">
+                <!-- Remix Source -->
+                <div v-if="remixSourceTitle" class="flex items-center gap-2 text-fuchsia-400">
+                    <i class="pi pi-palette"></i>
+                    <span>Basado en: {{ remixSourceTitle }}</span>
+                </div>
+                
                 <div class="flex items-center gap-2">
                     <i class="pi pi-images"></i>
                     <span>{{ canvasStore.canvasItems.length }} items</span>
@@ -133,6 +200,7 @@ function cancelSave() {
                 </div>
             </div>
         </div>
+
 
         <!-- Toolbar -->
         <CanvasToolbar @save="handleSave" @export="handleExport" />
