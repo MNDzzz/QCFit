@@ -17,11 +17,11 @@ class OutfitSimpleResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'thumbnail_url' => $this->thumbnail_url,
+            'thumbnail_url' => $this->thumbnail_url ?? ($this->products->first()?->images->first()?->url),
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
-                'avatar' => $this->user->avatar, // O lógica de media library
+                'avatar' => $this->user->avatar,
             ],
             'created_at' => $this->created_at->toISOString(),
             'items_count' => $this->products_count, // Asumiendo que cargamos withCount('products')

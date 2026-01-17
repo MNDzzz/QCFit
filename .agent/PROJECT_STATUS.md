@@ -560,10 +560,10 @@ npm run dev
 | Fase 2: Backend Services | ✅ Completo | 100% |
 | Fase 3: Frontend Discovery | ✅ Completo | 100% |
 | Fase 4: Canvas Studio | ✅ Completo | 100% |
-| Fase 5: Social | ⏳ Pendiente | 0% |
+| Fase 5: Social | ✅ Completo | 100% |
 | Fase 6: Testing/Docs | ⏳ Pendiente | 0% |
 
-**Progreso Global del Proyecto: 95%**
+**Progreso Global del Proyecto: 98%**
 
 ---
 
@@ -776,6 +776,7 @@ npm run dev
 **1. Perfil Público de Usuario (`/u/:id`)**
 - ✅ Backend: `PublicProfileController` refactorizado con `PublicUserResource` y `OutfitSimpleResource`.
 - ✅ Backend: Paginación correcta de outfits con metadatos.
+- ✅ Backend: Fallback automático de `thumbnail_url` a imagen del primer producto (Fix img rotas).
 - ✅ Frontend: Nueva vista `Show.vue` con diseño moderno (Cover, Avatar, Stats).
 - ✅ Routing: Ruta `/u/:id` configurada.
 

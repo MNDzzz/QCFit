@@ -33,6 +33,7 @@ class PublicProfileController extends Controller
         // Cargar outfits del usuario (paginados)
         $outfits = $user->outfits()
             ->with('user') // Eager load user for the simple resource
+            ->with(['products.images'])
             ->withCount('products')
             ->latest()
             ->paginate(12);
