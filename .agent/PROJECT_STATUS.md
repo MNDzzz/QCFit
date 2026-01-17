@@ -844,12 +844,34 @@ npm run dev
 
 ---
 
+### ✅ Studio Design Overhaul - Floating Toolbar Contextual
+
+**Fecha:** 2026-01-17 19:30-19:40
+**Rama:** `feat/floating-toolbar`
+**Estado:** ✅ Mergeado a `develop`
+
+**Nuevo Componente: `CanvasFloatingToolbar.vue`**
+- ✅ Toolbar flotante que aparece sobre el item seleccionado
+- ✅ Botón "Remove BG" con gradiente violeta/fuchsia (para futura integración IA)
+- ✅ Botones: Traer frente, Enviar atrás, Voltear, Eliminar (rojo)
+- ✅ Transiciones animadas de entrada/salida
+- ✅ Posicionamiento dinámico basado en coordenadas del item
+- ✅ Sincronización con canvasStore
+
+**Integración:**
+- ✅ Componente integrado en `CanvasEditor.vue`
+- ✅ Función `handleRemoveBg` como placeholder para IA
+- ✅ Build de Vite exitoso
+- ✅ Verificación en navegador completada
+
+---
+
 ## 🎯 Próximos Pasos (Design Alignment)
 
 Según `DESIGN_ALIGNMENT_PLAN.md` y las imágenes de diseño:
 
 ### Pendiente para Studio:
-- [ ] **Floating Toolbar Contextual**: Mover toolbar actual a menú flotante cerca del item seleccionado
+- [x] **Floating Toolbar Contextual**: ✅ COMPLETADO
 - [ ] **Tab "UPLOADS"** en sidebar izquierdo (actualmente solo Buscar/Armario)
 - [ ] **Undo/Redo**: Implementar historial en Pinia store
 
@@ -863,7 +885,7 @@ Según `DESIGN_ALIGNMENT_PLAN.md` y las imágenes de diseño:
 ---
 
 ## Próximos pasos
-1. **Siguiente feature:** Floating Toolbar contextual para el Studio
-2. **Verificación:** Confirmar funcionalidad completa del Layers Panel con múltiples items
-3. **Documentación:** Actualizar README si es necesario
+1. **Siguiente feature:** Tab "UPLOADS" para el sidebar del Studio
+2. **Alternativo:** Home Hero Redesign (Floating 3D Cards)
+3. **Opcional:** Undo/Redo en Pinia store
 
