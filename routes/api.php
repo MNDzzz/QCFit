@@ -49,10 +49,20 @@ Route::get('/products/{id}', [\App\Http\Controllers\Api\ProductController::class
 
 Route::post('/ai/remove-bg', [\App\Http\Controllers\Api\AiController::class, 'removeBackground']);
 
+// Rutas públicas de outfits (lectura)
 Route::get('/outfits', [\App\Http\Controllers\Api\OutfitController::class, 'index']);
 Route::get('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'show']);
+
+// Rutas protegidas de outfits (escritura) - Requieren autenticación
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/outfits', [\App\Http\Controllers\Api\OutfitController::class, 'store']);
+    Route::put('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'update']);
+    Route::delete('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'destroy']);
+    Route::get('/my-outfits', [\App\Http\Controllers\Api\OutfitController::class, 'myOutfits']);
+});
 
 Route::post('/follow', [\App\Http\Controllers\Api\FollowController::class, 'toggle'])->middleware('auth:sanctum');
 
 Route::get('/public/user/{id}', [\App\Http\Controllers\Api\PublicProfileController::class, 'show']);
+
 
