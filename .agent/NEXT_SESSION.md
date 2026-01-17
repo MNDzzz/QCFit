@@ -2,33 +2,32 @@
 
 **Estado Actual:**
 - ✅ Fase 4 (Studio) COMPLETADA.
-- ✅ Fase 5 (Social) COMPLETADA:
-    - Perfiles Públicos (`/u/:id`) funcionales con grid de outfits.
-    - Sistema Follow/Unfollow operativo (Backend y Frontend).
-- ✅ Testing E2E: Validado guardado de outfits y funcionalidad social básica.
+- ✅ Fase 5 (Social) COMPLETADA (Perfiles, Follow).
+- ✅ Fase 6 (Monetización) COMPLETADA:
+    - Generación de links de afiliados robusta.
+    - Botones de compra integrados en todas las vistas clave.
+    - Soporte multi-agente (CNFans, Mulebuy, etc.).
 
 ---
 
-## 🎯 OBJETIVO PRINCIPAL: Monetización (Fase 6)
+## 🎯 OBJETIVO PRINCIPAL: Refinamiento de UX/UI y Social++ (Fase 7)
 
-Ahora que tenemos tráfico potencial (Social) y contenido (Outfits), es hora de implementar el modelo de negocio "Affiliate Hijacking".
+Para que el proyecto parezca un SaaS real y premium, necesitamos mejorar la experiencia de usuario y el "engagement".
 
-### 1. Inyección de Enlaces de Afiliados
-- [ ] Modificar `ProductCard` y `OutfitDetail` para que los botones de compra generen enlaces de afiliados.
-- [ ] Implementar soporte para múltiples agentes (CNFans, Mulebuy, etc.) en el Frontend (actualmente lógica solo en Store de Pinia).
-- [ ] Lógica backend para generar enlaces profundos (Deep Links) a los agentes.
+### 1. Feed de Actividad (Social++)
+- [ ] Implementar feed en Home para usuarios logueados: "Outfits de gente que sigues".
+- [ ] Endpoint backend `getFollowedUsersOutfits()`.
 
-### 2. Feed de Actividad (Social++)
-- [ ] Mejorar el Dashboard de usuario para mostrar un feed de los usuarios seguidos.
-- [ ] Endpoint backend para `getFollowedUsersOutfits()`.
+### 2. Feedback de Usuario (Toasts)
+- [ ] Reemplazar `alert()` y `console.error` por un sistema de notificaciones Toast (ej: PrimeVue Toast).
+- [ ] Feedback visual al guardar outfit, login error, etc.
 
-### 3. Refinamiento Final (UX/UI Polishing)
-- [ ] Implementar Toast Notifications (PrimeVue Toast) para reemplazar todos los `alert()`.
-- [ ] Añadir Skeleton Loaders en Perfil y Buscador.
-- [ ] Revisión de móviles.
+### 3. Polish Visual
+- [ ] Skeleton Loaders en lugar de spinners simples donde sea posible.
+- [ ] Revisión de responsive en móviles (Sidebar menu, Canvas controls).
 
 ---
 
-## 📝 Notas Técnicas
-- **Perfil Público**: La paginación devuelve `{ data: [...], meta: {...} }`. El frontend espera esta estructura.
-- **Seguidores**: La relación es `user.followers()` y `user.following()`.
+## 📝 Comandos Críticos
+- `npm run build`: Ejecutar siempre tras cambios en Stores o Config.
+- `git checkout develop`: Rama base para nuevos features.

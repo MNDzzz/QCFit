@@ -2,9 +2,11 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
+import { usePreferenceStore } from '@/store/preference';
 
 const route = useRoute();
 const router = useRouter();
+const preferenceStore = usePreferenceStore();
 
 // Estado
 const outfit = ref(null);
@@ -59,6 +61,16 @@ function goToProduct(productId) {
     });
 }
 
+function buyProduct(product, event) {
+    if (event) event.stopPropagation();
+    if (!product) return;
+    
+    // Usar la store para generar el link
+    const link = preferenceStore.getAffiliateLink(product);
+    window.open(link, '_blank');
+}
+
+// Computed: Primera imagen QC disponible para preview
 // Computed: Primera imagen QC disponible para preview
 const previewImage = computed(() => {
     if (!outfit.value?.items?.length) return null;
@@ -251,8 +263,17 @@ const formattedDate = computed(() => {
                             </div>
                             
                             <!-- Hover Overlay -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                                <span class="text-white text-sm font-medium">Ver producto →</span>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 justify-between gap-2">
+                                <span class="text-white text-sm font-medium">Ver detalles</span>
+                                
+                                <button 
+                                    @click="buyProduct(item.product, $event)"
+                                    class="bg-violet-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-violet-700 hover:scale-105 transition-all shadow-lg flex items-center gap-1"
+                                    title="Comprar ahora"
+                                >
+                                    <i class="pi pi-shopping-cart"></i>
+                                    {{ preferenceStore.preferredAgent }}
+                                </button>
                             </div>
                         </div>
                         

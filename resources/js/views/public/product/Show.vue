@@ -21,7 +21,7 @@ async function fetchProduct() {
     try {
         const id = route.params.id;
         const res = await axios.get(`/api/products/${id}`);
-        product.value = res.data;
+        product.value = res.data.data || res.data;
         updateActiveImage();
     } catch (e) {
         console.error("Error loading product", e);

@@ -18,9 +18,25 @@ export const usePreferenceStore = defineStore('preference', () => {
      * @returns {String} - URL de afiliado
      */
     function getAffiliateLink(product) {
+        if (!product) return '#';
+
         // Si recibimos un producto completo del backend
-        if (product && product.marketplace && product.source_id) {
-            return generateAffiliateLinkLocal(product.marketplace, product.source_id);
+        if (typeof product === 'object') {
+            let { marketplace, source_id, original_link } = product;
+
+            // Normalize marketplace
+            let shopType = marketplace ? marketplace.toLowerCase() : '';
+
+            // Fix: Mapear 'tmall' a 'taobao' para agentes que no distinguen
+            if (shopType === 'tmall') shopType = 'taobao';
+
+            if (shopType && source_id) {
+                return generateAffiliateLinkLocal(shopType, source_id);
+            }
+
+            // Fallback: Si tenemos link original pero no datos estructurados, devolver original
+            // TODO: Podríamos intentar parsear el link original aquí también
+            return original_link || '#';
         }
 
         // Fallback si solo recibimos una URL directa (legacy)
@@ -32,26 +48,27 @@ export const usePreferenceStore = defineStore('preference', () => {
     }
 
     /**
-     * Genera el enlace localmente (replica lógica del AffiliateService)
+     * Genera el enlace localmente
      */
-    function generateAffiliateLinkLocal(marketplace, sourceId) {
-        const refCode = 'QCFIT_ACADEMIC'; // Código de referido académico
+    function generateAffiliateLinkLocal(shopType, sourceId) {
+        const refCode = 'QCFIT_ACADEMIC'; // Código de referido
         const agent = preferredAgent.value;
-        const shopType = marketplace.toLowerCase(); // weidian, taobao, 1688
+
+        // Parametros comunes
+        const params = `shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
 
         switch (agent) {
             case 'mulebuy':
-                return `https://mulebuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
-
+                return `https://mulebuy.com/product/?${params}`;
             case 'hoobuy':
-                return `https://hoobuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
-
+                return `https://hoobuy.com/product/?${params}`;
             case 'pandabuy':
-                return `https://pandabuy.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
-
+                return `https://pandabuy.com/product/?${params}`;
             case 'cnfans':
             default:
-                return `https://cnfans.com/product/?shop_type=${shopType}&id=${sourceId}&ref=${refCode}`;
+                // CNFans a veces usa 'invite' en lugar de 'ref', verificaremos documentación. 
+                // Usaremos 'ref' por consistencia con lo pedido.
+                return `https://cnfans.com/product/?${params}`;
         }
     }
 

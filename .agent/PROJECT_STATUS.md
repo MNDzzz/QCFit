@@ -788,15 +788,18 @@ npm run dev
 
 ---
 
+### ✅ Parte 8 - Monetización (Fase 6 - Implementado)
+
+**Implementación de Affiliate Hijacking:**
+- ✅ `preference.js`: Generación robusta de links (CNFans, Mulebuy, Hoobuy).
+- ✅ UI: Botones "Buy via" en Producto y Outfit Detail.
+- ✅ Backend: Fix `source_id` en `OutfitResource`.
+
+---
+
 ### 🎯 Próximos pasos (Próxima Sesión):
 
-1. **Monetización (Affiliate Hijacking)**
-   - Prioridad máxima ahora que la base social está lista.
-   - Inyección de enlaces de afiliados.
-
-2. **Refinamiento de UX**
-   - Toast Notifications.
-   - Skeleton Loaders.
-
-
-
+1.  **Refinamiento de UX/UI (Fase 7)**
+    *   Toast Notifications.
+    *   Skeleton Loaders.
+2.  **Feed de Actividad (Social++)**

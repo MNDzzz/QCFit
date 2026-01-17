@@ -50,6 +50,8 @@ class OutfitResource extends JsonResource
                             'name' => $product->name,
                             'brand' => $product->brand,
                             'marketplace' => $product->marketplace,
+                            'source_id' => $product->source_id,
+                            'original_link' => $product->original_link,
                             // Obtener imágenes con sus tipos
                             'images' => $product->images->map(function ($image) {
                                 return [
