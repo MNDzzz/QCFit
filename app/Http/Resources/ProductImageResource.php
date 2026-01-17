@@ -22,8 +22,12 @@ class ProductImageResource extends JsonResource
             'title' => $this->product?->name, // Para LiveFeed
             'date_human' => $this->created_at?->diffForHumans(),
             'created_at_human' => $this->created_at?->diffForHumans(),
-            // When loaded on feed, we might need parent product info
-            'product' => new ProductResource($this->whenLoaded('product')),
+            // SOLO cuando se carga explícitamente el producto, devolver datos básicos (NO Resource completo para evitar recursión)
+            'product' => $this->when($this->relationLoaded('product'), [
+                'id' => $this->product?->id,
+                'name' => $this->product?->name,
+                'brand' => $this->product?->brand,
+            ]),
         ];
     }
 }
