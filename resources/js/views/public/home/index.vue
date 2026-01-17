@@ -1,3 +1,42 @@
+<script setup>
+import { ref, onMounted, watch } from 'vue';
+import axios from 'axios';
+import SmartSearch from '@/components/SmartSearch.vue';
+import LiveFeed from '@/components/LiveFeed.vue';
+import { authStore } from '@/store/auth';
+
+const useAuth = authStore();
+const activeTab = ref('trending');
+const outfits = ref([]);
+const loading = ref(false);
+
+onMounted(() => {
+    loadOutfits();
+});
+
+watch(activeTab, () => {
+    loadOutfits();
+});
+
+async function loadOutfits() {
+    loading.value = true;
+    outfits.value = [];
+    try {
+        const url = activeTab.value === 'following' 
+            ? '/api/feed/following'
+            : '/api/outfits';
+            
+        const response = await axios.get(url);
+        // Manejar estructura de respuesta de Resource (obj.data)
+        outfits.value = response.data.data;
+    } catch (e) {
+        console.error('Error loading outfits', e);
+    } finally {
+        loading.value = false;
+    }
+}
+</script>
+
 <template>
     <div class="min-h-screen bg-stone-50 flex flex-col font-sans">
         <!-- Hero Section -->
@@ -37,6 +76,76 @@
         <!-- Live Feed Ticker -->
         <LiveFeed />
 
+        <!-- Social Feed Section -->
+        <div class="max-w-7xl mx-auto px-4 py-16">
+            <!-- Tabs -->
+            <div class="flex items-center gap-8 mb-8 border-b border-slate-200 pb-4">
+                <button 
+                    @click="activeTab = 'trending'"
+                    class="text-2xl font-bold transition-colors pb-2 relative"
+                    :class="activeTab === 'trending' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                >
+                    Trending
+                    <span v-if="activeTab === 'trending'" class="absolute bottom-0 left-0 w-full h-1 bg-violet-600 rounded-t-full -mb-4"></span>
+                </button>
+                <button 
+                    v-if="useAuth.authenticated"
+                    @click="activeTab = 'following'"
+                    class="text-2xl font-bold transition-colors pb-2 relative"
+                    :class="activeTab === 'following' ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'"
+                >
+                    Following
+                    <span v-if="activeTab === 'following'" class="absolute bottom-0 left-0 w-full h-1 bg-violet-600 rounded-t-full -mb-4"></span>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div v-if="loading" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                 <div v-for="i in 4" :key="i" class="aspect-[4/5] bg-slate-100 rounded-2xl animate-pulse"></div>
+            </div>
+            
+            <div v-else-if="outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div 
+                    v-for="outfit in outfits" 
+                    :key="outfit.id"
+                    class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all border border-slate-100"
+                >
+                    <!-- Image -->
+                    <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
+                        <img 
+                            :src="outfit.thumbnail_url || (outfit.products && outfit.products[0]?.images[0]?.url) || '/images/placeholder-outfit.jpg'" 
+                            :alt="outfit.title"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            loading="lazy"
+                        >
+                        <!-- Creator Badge -->
+                        <div class="absolute bottom-3 left-3 flex items-center gap-2 bg-white/90 backdrop-blur px-2 py-1 rounded-full text-xs font-bold text-slate-800 shadow-sm">
+                            <img :src="outfit.user?.avatar || '/images/default-avatar.png'" class="w-5 h-5 rounded-full object-cover">
+                            {{ outfit.user?.name }}
+                        </div>
+                        
+                        <!-- Overlay actions -->
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                            <router-link :to="{name: 'OutfitDetail', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg">
+                                <i class="pi pi-eye"></i>
+                            </router-link>
+                        </div>
+                    </div>
+
+                    <!-- Simplified Footer -->
+                    <div class="p-4">
+                        <h3 class="font-bold text-slate-900 truncate">{{ outfit.title }}</h3>
+                        <p class="text-xs text-slate-500 mt-1">{{ outfit.items_count }} items</p>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else class="text-center py-20 text-slate-400">
+                <i class="pi pi-compass text-4xl mb-4 opacity-50"></i>
+                <p>No se encontraron outfits recientes.</p>
+            </div>
+        </div>
+
         <!-- Brands Ticker -->
         <div class="py-12 border-t border-slate-200 bg-white">
             <div class="text-center mb-8">
@@ -53,15 +162,6 @@
         </div>
     </div>
 </template>
-
-<script setup>
-import { onMounted } from 'vue';
-import SmartSearch from '@/components/SmartSearch.vue';
-import LiveFeed from '@/components/LiveFeed.vue';
-import Skeleton from 'primevue/skeleton';
-
-// No need for logic here as LiveFeed component handles itself
-</script>
 
 <style scoped>
 .animate-marquee {

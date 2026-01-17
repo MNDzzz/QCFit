@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOutfitRequest;
 use App\Http\Resources\OutfitResource;
+use App\Http\Resources\OutfitSimpleResource;
 use App\Models\Outfit;
 use Illuminate\Http\Request;
 
@@ -182,6 +183,26 @@ class OutfitController extends Controller
             ->get();
 
         return OutfitResource::collection($outfits);
+    }
+
+    /**
+     * Feed de outfits de usuarios seguidos.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function feed()
+    {
+        // Obtener IDs de usuarios seguidos
+        $followingIds = auth()->user()->following()->pluck('users.id');
+
+        // Obtener outfits de esos usuarios
+        $outfits = Outfit::with(['user', 'products.images'])
+            ->withCount('products')
+            ->whereIn('user_id', $followingIds)
+            ->latest()
+            ->paginate(10);
+
+        return OutfitSimpleResource::collection($outfits);
     }
 }
 

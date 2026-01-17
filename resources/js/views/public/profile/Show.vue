@@ -2,10 +2,10 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import { useAuthStore } from '../../../store/auth'; // Asumiendo que existe, o state global
+import { authStore } from '../../../store/auth';
 
 const route = useRoute();
-// const authStore = useAuthStore(); // Si usas Pinia para auth
+const auth = authStore();
 
 const user = ref(null);
 const outfits = ref([]);

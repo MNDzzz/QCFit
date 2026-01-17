@@ -22,12 +22,12 @@ Para que el proyecto parezca un SaaS real y premium, necesitamos mejorar la expe
 - [ ] Reemplazar `alert()` y `console.error` por un sistema de notificaciones Toast (ej: PrimeVue Toast).
 - [ ] Feedback visual al guardar outfit, login error, etc.
 
-### 3. Polish Visual
-- [ ] Skeleton Loaders en lugar de spinners simples donde sea posible.
-- [ ] Revisión de responsive en móviles (Sidebar menu, Canvas controls).
+## Objetivos para la próxima sesión
+1. **Verificación Visual:** Realizar pruebas manuales del Feed Social (Login -> Follow -> Feed).
+2. **Refinamiento UX/UI:** Pulir transiciones, animaciones y estados vacíos.
+3. **Optimización:** Revisar rendimiento de queries N+1 si las hay.
 
----
-
-## 📝 Comandos Críticos
-- `npm run build`: Ejecutar siempre tras cambios en Stores o Config.
-- `git checkout develop`: Rama base para nuevos features.
+## Notas Técnicas
+- El build del frontend (`npm run build`) ya pasa correctamente.
+- La ruta `/api/feed/following` está activa.
+- Revisar logs de Laravel si el feed no carga datos (`storage/logs/laravel.log`). features.

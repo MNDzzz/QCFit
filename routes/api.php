@@ -59,6 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'update']);
     Route::delete('/outfits/{id}', [\App\Http\Controllers\Api\OutfitController::class, 'destroy']);
     Route::get('/my-outfits', [\App\Http\Controllers\Api\OutfitController::class, 'myOutfits']);
+    Route::get('/feed/following', [\App\Http\Controllers\Api\OutfitController::class, 'feed']);
 });
 
 Route::post('/follow', [\App\Http\Controllers\Api\FollowController::class, 'toggle'])->middleware('auth:sanctum');

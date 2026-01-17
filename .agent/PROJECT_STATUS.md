@@ -655,6 +655,12 @@ npm run dev
 **Verificaciones:**
 - ✅ Build de Vite exitoso
 - ✅ API /api/outfits devuelve JSON válido: `{"data":[]}`
+- **Estado:** Implementado (Backend y Frontend).
+- **Pendiente:** Verificación final en navegador (Browser Agent tuvo problemas de conexión).
+- **Logros:**
+  - Endpoint `/api/feed/following` creado.
+  - Frontend actualizado con pestañas "Trending" y "Following".
+  - Build corregido (Error de importación `authStore`).
 - ✅ Studio interface carga correctamente
 - ✅ Sin errores de consola
 
@@ -792,14 +798,12 @@ npm run dev
 
 **Implementación de Affiliate Hijacking:**
 - ✅ `preference.js`: Generación robusta de links (CNFans, Mulebuy, Hoobuy).
-- ✅ UI: Botones "Buy via" en Producto y Outfit Detail.
-- ✅ Backend: Fix `source_id` en `OutfitResource`.
+- [x] **Monetización (Affiliate Hijacking):** Inyección de links y lógica backend.
+- [x] **Feed de Actividad Social:** `GET /api/feed/following` y pestañas en Home.
+- [ ] **Refinamiento de UX/UI:** Mejoras visuales y animaciones.
 
----
-
-### 🎯 Próximos pasos (Próxima Sesión):
-
-1.  **Refinamiento de UX/UI (Fase 7)**
-    *   Toast Notifications.
-    *   Skeleton Loaders.
-2.  **Feed de Actividad (Social++)**
+## Próximos pasos
+1. **Verificación manual en navegador:** Confirmar flujo de "Follow" y feed.
+2. **Refinamiento UX:** Mejorar transiciones y estados de carga.
+3. **Despliegue:** Preparar para producción (opcional).
+```
