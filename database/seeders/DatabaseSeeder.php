@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ProductSeeder::class,
+            RealProductImporterSeeder::class, // Productos reales desde CSV
                 // OutfitSeeder depende de que existan usuarios y productos
             OutfitSeeder::class,
         ]);
