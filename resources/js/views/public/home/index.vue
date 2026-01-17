@@ -104,7 +104,7 @@ async function loadOutfits() {
                  <div v-for="i in 4" :key="i" class="aspect-[4/5] bg-slate-100 rounded-2xl animate-pulse"></div>
             </div>
             
-            <div v-else-if="outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div v-else-if="outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
                 <div 
                     v-for="outfit in outfits" 
                     :key="outfit.id"

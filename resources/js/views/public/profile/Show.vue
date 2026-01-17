@@ -3,9 +3,11 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { authStore } from '../../../store/auth';
+import { useToast } from "primevue/usetoast";
 
 const route = useRoute();
 const auth = authStore();
+const toast = useToast();
 
 const user = ref(null);
 const outfits = ref([]);
@@ -74,7 +76,7 @@ async function toggleFollow() {
         user.value.stats.followers_count = previousCount;
         
         if (e.response && e.response.status === 401) {
-             alert('Debes iniciar sesión para seguir a usuarios.');
+             toast.add({ severity: 'info', summary: 'Acceso Restringido', detail: 'Debes iniciar sesión para seguir a usuarios.', life: 3000 });
              // O redirigir a login
         } else {
              console.error('Error following user:', e);
@@ -95,9 +97,34 @@ const isMe = computed(() => {
 <template>
     <div class="min-h-screen bg-slate-50 dark:bg-zinc-900 pb-20">
         <!-- Loading State -->
-        <div v-if="loading" class="flex flex-col items-center justify-center h-screen">
-            <i class="pi pi-spin pi-spinner text-4xl text-violet-600 mb-4"></i>
-            <p class="text-slate-500 font-secondary">Cargando perfil...</p>
+        <div v-if="loading" class="animate-fade-in">
+             <!-- Header Skeleton -->
+            <div class="h-48 md:h-64 bg-slate-200 dark:bg-zinc-800 w-full relative overflow-hidden"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+                <div class="flex flex-col md:flex-row items-center md:items-end gap-6 mb-8">
+                    <!-- Avatar Skeleton -->
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 bg-slate-200 dark:bg-zinc-800 overflow-hidden shadow-xl">
+                        <Skeleton width="100%" height="100%" />
+                    </div>
+
+                    <!-- User Info Skeleton -->
+                    <div class="flex-1 text-center md:text-left mb-4 md:mb-0 w-full max-w-md">
+                        <Skeleton width="12rem" height="2rem" class="mb-2 mx-auto md:mx-0" />
+                        <Skeleton width="8rem" height="1rem" class="mb-4 mx-auto md:mx-0" />
+                        
+                        <div class="flex items-center justify-center md:justify-start gap-6">
+                            <Skeleton width="4rem" height="2rem" />
+                            <Skeleton width="4rem" height="2rem" />
+                            <Skeleton width="4rem" height="2rem" />
+                        </div>
+                    </div>
+                </div>
+                 <!-- Bio Skeleton -->
+                 <div class="max-w-2xl mb-8">
+                    <Skeleton width="100%" height="4rem" />
+                 </div>
+            </div>
         </div>
 
         <!-- Error State -->
@@ -205,7 +232,7 @@ const isMe = computed(() => {
 
                 <!-- Outfits Grid -->
                 <!-- Defensive check added -->
-                <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
                     <div 
                         v-for="outfit in outfits" 
                         :key="outfit.id"

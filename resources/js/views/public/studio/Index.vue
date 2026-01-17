@@ -6,7 +6,9 @@ import CanvasEditor from '@/components/canvas/CanvasEditor.vue';
 import CanvasSidebar from '@/components/canvas/CanvasSidebar.vue';
 import CanvasToolbar from '@/components/canvas/CanvasToolbar.vue';
 import axios from 'axios';
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const router = useRouter();
 const route = useRoute();
 const canvasStore = useCanvasStore();
@@ -51,9 +53,9 @@ async function loadRemixOutfit(outfitId) {
         console.error('Error cargando outfit para remix:', error);
         
         if (error.response?.status === 404) {
-            alert('El outfit que intentas remixear no existe.');
+            toast.add({ severity: 'error', summary: 'Error', detail: 'El outfit que intentas remixear no existe.', life: 4000 });
         } else {
-            alert('Error al cargar el outfit. Intenta nuevamente.');
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar el outfit. Intenta nuevamente.', life: 4000 });
         }
     } finally {
         loadingRemix.value = false;
@@ -64,7 +66,7 @@ async function loadRemixOutfit(outfitId) {
 async function handleSave() {
     // Validar que haya items en el canvas
     if (canvasStore.canvasItems.length === 0) {
-        alert('Añade productos al canvas antes de guardar');
+        toast.add({ severity: 'warn', summary: 'Canvas vacío', detail: 'Añade productos al canvas antes de guardar', life: 3000 });
         return;
     }
 
@@ -75,7 +77,7 @@ async function handleSave() {
 // Confirmar guardado con título
 async function confirmSave() {
     if (!outfitTitle.value.trim()) {
-        alert('Por favor, ingresa un título para tu outfit');
+        toast.add({ severity: 'warn', summary: 'Atención', detail: 'Por favor, ingresa un título para tu outfit', life: 3000 });
         return;
     }
 
@@ -102,7 +104,7 @@ async function confirmSave() {
         const response = await axios.post('/api/outfits', outfitData);
 
         // Éxito: mostrar mensaje y cerrar modal
-        alert(`¡Outfit "${outfitTitle.value}" guardado con éxito!`);
+        toast.add({ severity: 'success', summary: '¡Éxito!', detail: `Outfit "${outfitTitle.value}" guardado correctamente`, life: 3000 });
 
         // Cerrar modal y limpiar
         showSaveModal.value = false;
@@ -121,15 +123,15 @@ async function confirmSave() {
         
         // Manejar errores específicos
         if (error.response?.status === 401) {
-            alert('Debes iniciar sesión para guardar outfits.');
+            toast.add({ severity: 'info', summary: 'Requiere Login', detail: 'Debes iniciar sesión para guardar outfits.', life: 4000 });
             router.push({ name: 'auth.login' });
         } else if (error.response?.status === 422) {
             // Errores de validación
             const errors = error.response.data.errors;
             const firstError = Object.values(errors)[0][0];
-            alert(`Error de validación: ${firstError}`);
+            toast.add({ severity: 'error', summary: 'Error de Validación', detail: firstError, life: 5000 });
         } else {
-            alert('Error al guardar el outfit. Intenta nuevamente.');
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Error al guardar el outfit. Intenta nuevamente.', life: 4000 });
         }
     } finally {
         saving.value = false;
@@ -143,14 +145,14 @@ async function confirmSave() {
 function handleExport() {
     // Validar que haya items en el canvas
     if (canvasStore.canvasItems.length === 0) {
-        alert('Añade productos al canvas antes de exportar');
+        toast.add({ severity: 'warn', summary: 'Canvas vacío', detail: 'Añade productos al canvas antes de exportar', life: 3000 });
         return;
     }
 
     // Verificar referencia al CanvasEditor
     if (!canvasEditorRef.value) {
         console.error('No hay referencia al CanvasEditor');
-        alert('Error al exportar. Intenta recargar la página.');
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al exportar. Intenta recargar la página.', life: 3000 });
         return;
     }
 

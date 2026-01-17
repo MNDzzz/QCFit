@@ -23,11 +23,11 @@ Para que el proyecto parezca un SaaS real y premium, necesitamos mejorar la expe
 - [ ] Feedback visual al guardar outfit, login error, etc.
 
 ## Objetivos para la próxima sesión
-1. **Verificación Visual:** Realizar pruebas manuales del Feed Social (Login -> Follow -> Feed).
-2. **Refinamiento UX/UI:** Pulir transiciones, animaciones y estados vacíos.
-3. **Optimización:** Revisar rendimiento de queries N+1 si las hay.
+1. **Verificación UX/UI:** Comprobar visualmente los Toasts y Skeletons en el navegador.
+2. **Animaciones:** Añadir animaciones de entrada (`animate-fade-in-up`) en listas de productos.
+3. **Limpieza y Optimización:** Revisar código muerto y optimizar imports.
 
 ## Notas Técnicas
-- El build del frontend (`npm run build`) ya pasa correctamente.
-- La ruta `/api/feed/following` está activa.
-- Revisar logs de Laravel si el feed no carga datos (`storage/logs/laravel.log`). features.
+- PrimeVue Toast ya está configurado globalmente.
+- Revisar si hay más `alert()` olvidados.
+- La rama actual es `feat/ux-refinement`. features.

@@ -3,9 +3,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
+import { useToast } from "primevue/usetoast";
+
 const query = ref('');
 const router = useRouter();
 const loading = ref(false);
+const toast = useToast();
 
 const handleSearch = async () => {
     if (!query.value) return;
@@ -33,7 +36,12 @@ const handleSearch = async () => {
             } else if (result.type === 'single_product') {
                 // Producto escrapeado pero no guardado (Demo)
                 // TODO: En el futuro ir al "Import Wizard"
-                alert(`Producto Detectado: ${result.data.title}\n(Simulación de Importación)`);
+                toast.add({ 
+                    severity: 'success', 
+                    summary: 'Producto Detectado', 
+                    detail: `${result.data.title} (Simulación de Importación)`, 
+                    life: 5000 
+                });
             } else {
                 // Fallback
                 router.push({ name: 'public.search.results', query: { q: query.value } });

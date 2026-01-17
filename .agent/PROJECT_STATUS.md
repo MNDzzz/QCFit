@@ -655,12 +655,12 @@ npm run dev
 **Verificaciones:**
 - ✅ Build de Vite exitoso
 - ✅ API /api/outfits devuelve JSON válido: `{"data":[]}`
-- **Estado:** Implementado (Backend y Frontend).
-- **Pendiente:** Verificación final en navegador (Browser Agent tuvo problemas de conexión).
+- **Estado:** En Refinamiento (UX/UI).
 - **Logros:**
-  - Endpoint `/api/feed/following` creado.
-  - Frontend actualizado con pestañas "Trending" y "Following".
-  - Build corregido (Error de importación `authStore`).
+  - `feat/social-feed` mergeado.
+  - Implementado sistema de notificaciones Toast (PrimeVue).
+  - Implementado Skeleton Loader en Perfil.
+  - `npm run build` pasando correctamente.
 - ✅ Studio interface carga correctamente
 - ✅ Sin errores de consola
 
@@ -800,7 +800,9 @@ npm run dev
 - ✅ `preference.js`: Generación robusta de links (CNFans, Mulebuy, Hoobuy).
 - [x] **Monetización (Affiliate Hijacking):** Inyección de links y lógica backend.
 - [x] **Feed de Actividad Social:** `GET /api/feed/following` y pestañas en Home.
-- [ ] **Refinamiento de UX/UI:** Mejoras visuales y animaciones.
+- [x] **Refinamiento de UX/UI:** Implementado sistema de Toasts y Skeleton Loaders.
+  - Reemplazados `alert()` por `Toast` (PrimeVue) en Studio, Profile y Search.
+  - Añadido `Skeleton` en Perfil de Usuario.
 
 ## Próximos pasos
 1. **Verificación manual en navegador:** Confirmar flujo de "Follow" y feed.
