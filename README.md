@@ -1,121 +1,105 @@
-# Laravel 10 + Vue 3 API Base Project
+# QCFit - The Ultimate Weidian & Taobao QC Finder
+> *Proyecto Académico: Desarrollo de Aplicaciones Web Híbridas*
 
-Este proyecto es una base sólida diseñada para estudiantes y desarrolladores que deseen aprender a construir aplicaciones SPA (Single Page Application) modernas utilizando Laravel como API backend y Vue 3 como frontend.
+**QCFit** es una plataforma integral diseñada para resolver el problema de la "compra a ciegas" en marketplaces asiáticos (Weidian, Taobao, 1688). Combina un buscador inteligente de fotos reales (QC Photos) con un estudio de diseño de outfits (Canvas), permitiendo a los usuarios visualizar sus compras antes de realizarlas.
 
-## 🚀 Características Principales
+![QCFit Banner](/public/images/og-default.jpg)
 
-### Backend (Laravel 10)
-- **API RESTful**: Estructura robusta para servir datos al frontend.
-- **Autenticación Sanctum**: Sistema seguro de autenticación basado en cookies/tokens.
-- **Roles y Permisos**: Implementación de `spatie/laravel-permission` para gestión granular de accesos.
-- **Recursos API**: Uso de API Resources para transformar datos de manera consistente.
+## 🚀 Funcionalidades Clave
 
-### Frontend (Vue 3)
-- **Composition API**: Uso moderno de Vue 3 con `<script setup>`.
-- **Pinia**: Gestión de estado modular y persistente.
-- **Vue Router**: Enrutamiento dinámico con protecciones de navegación (Guards).
-- **PrimeVue**: Suite de componentes UI profesional y personalizable.
-- **Tailwind CSS**: Estilizado utilitario para un diseño rápido y responsivo.
-- **i18n**: Soporte multi-idioma (Español, Inglés, Francés, etc.).
-- **Validación**: Formularios robustos con `yup`
+### 🔍 1. FindQC (Discovery)
+- **Smart Search**: Detecta automáticamente enlaces de marketplaces (Weidian/Taobao) y extrae su ID.
+- **Live Feed**: Carrusel en tiempo real con las últimas QC Photos encontradas.
+- **Toggle View**: Comparación instantánea entre foto original (marketing) y foto QC (realidad).
+- **Affiliate Integration**: Generación de enlaces para agentes populares (CNFans, Mulebuy, Hoobuy, Pandabuy).
 
-## 🛠️ Requisitos Previos
+### 🎨 2. The Studio (Outfit Builder)
+- **Canvas Interactivo**: Editor visual Drag & Drop potenciado por `vue-konva`.
+- **Layer System**: Control total de capas (z-index), rotación, escalado y volteo.
+- **Remix Mode**: Posibilidad de abrir cualquier outfit público y editarlo/mejorarlo.
+- **Wardrobe**: Panel lateral con favoritos y buscador integrado.
+- **Export**: Descarga de outfits en alta resolución (PNG/JPG).
 
+### 🌐 3. Social & Monetización
+- **Perfiles Públicos**: Portfolio de outfits creado por cada usuario.
+- **Sistema de Seguidores**: Follow/Unfollow con contadores en tiempo real.
+- **Affiliate Hijacking**: Inyección automática de códigos de referido en enlaces de salida.
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Backend (Laravel 10 API)
+- **Arquitectura**: Repository Pattern Service-Oriented.
+- **Base de Datos**: MySQL con relaciones N:M complejas (Pivots con atributos).
+- **Recursos**: API Resources para transformación de datos JSON.
+- **Validación**: FormRequests robustos con reglas personalizadas.
+- **Autenticación**: Laravel Sanctum (SPA Authentication).
+
+### Frontend (Vue 3 + Vite)
+- **Core**: Composition API + `<script setup>`.
+- **Estado**: Pinia con persistencia (localStorage).
+- **UI Framework**: Tailwind CSS v3 + PrimeVue 4 (Aura Theme).
+- **Gráficos**: Konva.js (Canvas 2D).
+- **SEO**: `@vueuse/head` para meta tags dinámicos.
+
+---
+
+## ⚙️ Instalación y Despliegue
+
+### Requisitos
 - PHP >= 8.1
 - Composer
-- Node.js >= 16
-- MySQL / MariaDB
+- Node.js >= 18
+- MySQL
 
-## ⚙️ Instalación y Configuración
-
-Sigue estos pasos para levantar el proyecto en tu entorno local:
-
-### 1. Clonar el Repositorio
+### 1. Clonar Repositorio
 ```bash
-git clone <url-del-repositorio>
-cd Laravel-VUE-API-Base-Clase
+git clone https://github.com/mndzzz/qcfit.git
+cd qcfit
 ```
 
-### 2. Configurar Backend (Laravel)
-
-Instalar dependencias de PHP:
-```bash
-composer install
-```
-
-Configurar variables de entorno:
+### 2. Configuración Backend
 ```bash
 cp .env.example .env
-```
-
-Generar clave de aplicación:
-```bash
+composer install
 php artisan key:generate
+php artisan migrate --seed # Importante: Carga productos de prueba
 ```
+*Asegúrate de configurar DB_DATABASE, DB_USERNAME, etc. en el .env*
 
-Configurar base de datos en `.env`:
-Abre el archivo `.env` y ajusta las credenciales de tu base de datos:
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nombre_de_tu_bd
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Configurar dominio para Sanctum (Importante para autenticación):
-```dotenv
-SANCTUM_STATEFUL_DOMAINS=localhost:8000
-APP_URL=http://localhost:8000
-FRONTEND_URL=http://localhost:8000
-```
-
-Ejecutar migraciones y seeders:
-```bash
-php artisan migrate --seed
-```
-*Esto creará, categorías para un blog, usuarios, roles y permisos iniciales.*
-
-### Credenciales de Acceso (Seeders)
-Los siguientes usuarios son creaados por defecto:
-- **Admin**: `admin@demo.com` / `12345678`
-- **Usuario**: `user@demo.com` / `12345678`
-
-### 3. Configurar Frontend (Vue)
-
-Instalar dependencias de Node:
+### 3. Configuración Frontend
 ```bash
 npm install
+npm run build # Para producción
+# o
+npm run dev # Para desarrollo
 ```
 
-### 4. Ejecutar la Aplicación
-
-Necesitarás dos terminales:
-
-Terminal 1 (Backend):
+### 4. Ejecución
 ```bash
 php artisan serve
 ```
+Acceder a: `http://127.0.0.1:8000`
 
-Terminal 2 (Frontend):
-```bash
-npm run dev
-```
+---
 
-Accede a la aplicación en: `http://localhost:8000`
+## 📚 Estructura del Proyecto
 
-## 📂 Estructura del Proyecto
+### Relaciones N:M (Requisito Académico)
+El proyecto implementa 3 relaciones Many-to-Many clave:
+1. **Outfits <-> Products**: Tabla `outfit_product`.
+   - Atributos Pivot: `pos_x`, `pos_y`, `rotation`, `scale_x`, `scale_y`, `z_index`, `is_flipped`.
+2. **Users <-> Products** (Wishlist): Tabla `product_user`.
+3. **Users <-> Users** (Followers): Tabla `followers`.
 
-### Backend (`app/`)
-- `Http/Controllers/Api`: Controladores que manejan las peticiones API.
-- `Http/Resources`: Transformadores de datos JSON.
-- `Models`: Modelos Eloquent.
+---
 
-### Frontend (`resources/js/`)
-- `components`: Componentes Vue reutilizables (Botones, Inputs, etc.).
-- `composables`: Lógica reutilizable (Hooks) para API, validación, etc.
-- `layouts`: Plantillas principales (Admin, User, Guest).
-- `pages` / `views`: Vistas de la aplicación organizadas por módulos.
-- `store`: Estados globales con Pinia (Auth, Lang, etc.).
-- `routes`: Definición de rutas y guards.
+## 👥 Créditos
+Desarrollado como Proyecto Final de Desarrollo Web.
+- **Autor**: [Tu Nombre]
+- **Asignatura**: Desarrollo Web Entorno Servidor / Cliente
+
+---
+
+*Nota: Este proyecto es educativo y no está afiliado a Weidian, Taobao ni a los agentes mencionados.*
