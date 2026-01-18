@@ -977,6 +977,19 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
   - El frontend mostró la galería (aunque las imágenes origen eran placeholders, la lógica funciona).
 - **Hotfix Verificado:** Las imágenes del Live Feed cargan correctamente con la nueva política de referer.
 
+### ✅ Feature: Canvas Uploads Tab
+
+**Fecha:** 2026-01-18 20:30
+**Rama:** `feat/canvas-uploads-tab` (Merged to `develop`)
+**Estado:** ✅ Completado y Verificado
+
+**Funcionalidad:**
+- Nueva pestaña "Subir" en `CanvasSidebar.vue`.
+- Zona de Drag & Drop para archivos locales (imágenes).
+- Procesamiento en cliente con `FileReader` (sin almacenamiento permanente por ahora, "session-only").
+- Los items subidos se comportan como productos en el canvas (drag & drop al stage, redimensionables).
+- UI consistente con el tema "Subir" (Icono Cloud Upload).
+
 ---
 
 ## Próximos pasos

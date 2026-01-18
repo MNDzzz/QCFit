@@ -40,36 +40,71 @@ async function loadOutfits() {
 <template>
     <div class="min-h-screen bg-stone-50 flex flex-col font-sans">
         <!-- Hero Section -->
-        <div class="bg-slate-950 pt-32 pb-20 px-4 text-center relative overflow-hidden ring-1 ring-white/10 border-b border-white/5">
+        <!-- Hero Section -->
+        <div class="relative bg-slate-950 pt-40 pb-32 px-4 text-center overflow-hidden border-b border-white/5">
             <!-- Background Gradients -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-violet-600/20 blur-[120px] rounded-full pointer-events-none"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-violet-600/20 blur-[150px] rounded-full pointer-events-none mix-blend-screen"></div>
+            <div class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
             
-            <div class="relative z-10 max-w-4xl mx-auto">
-                <div class="flex justify-center mb-12 gap-8">
-                     <!-- Floating Cards Animation (Mock) -->
-                     <div class="hidden md:block w-48 h-64 bg-slate-900/80 backdrop-blur border border-slate-700 rounded-xl transform -rotate-6 shadow-2xl p-3">
-                         <div class="bg-emerald-500/20 text-emerald-400 text-xs font-mono py-1 px-2 rounded w-fit mb-2">QC VERIFIED</div>
-                         <div class="h-32 bg-slate-800 rounded-lg mb-3 flex items-center justify-center text-slate-600"><i class="pi pi-image text-2xl"></i></div>
-                         <div class="h-2 w-20 bg-slate-800 rounded mb-2"></div>
-                         <div class="h-2 w-12 bg-slate-800 rounded"></div>
+            <div class="relative z-10 max-w-5xl mx-auto">
+                <!-- Floating Cards Animation -->
+                <div class="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0 opacity-50 md:opacity-100">
+                     <!-- Left Card: Jordan -->
+                     <div class="absolute left-[10%] top-1/2 -translate-y-1/2 -translate-x-12 w-64 md:w-80 animate-float-slow">
+                         <div class="relative transform -rotate-12 hover:rotate-0 transition-transform duration-700">
+                             <div class="absolute inset-0 bg-violet-500/20 blur-xl rounded-full"></div>
+                             <img src="/images/hero/jordan.png" alt="Jordan 4" class="relative z-10 drop-shadow-2xl rounded-2xl w-full">
+                             <!-- Floating UI Badge -->
+                             <div class="absolute -top-4 -right-4 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-lg px-3 py-2 shadow-xl animate-bounce-slow">
+                                 <div class="text-[10px] text-slate-400 font-mono">QC VERIFIED</div>
+                                 <div class="text-xs font-bold text-white">AJ4 Black Cat</div>
+                             </div>
+                         </div>
                      </div>
-                     <div class="hidden md:block w-48 h-64 bg-slate-900/80 backdrop-blur border border-slate-700 rounded-xl transform rotate-6 shadow-2xl p-3 translate-y-8">
-                         <div class="bg-emerald-500/20 text-emerald-400 text-xs font-mono py-1 px-2 rounded w-fit mb-2">QC VERIFIED</div>
-                         <div class="h-32 bg-slate-800 rounded-lg mb-3 flex items-center justify-center text-slate-600"><i class="pi pi-image text-2xl"></i></div>
-                         <div class="h-2 w-20 bg-slate-800 rounded mb-2"></div>
-                         <div class="h-2 w-12 bg-slate-800 rounded"></div>
+
+                     <!-- Right Card: Dunk -->
+                     <div class="absolute right-[10%] top-1/2 -translate-y-1/2 translate-x-12 w-64 md:w-80 animate-float-delayed">
+                         <div class="relative transform rotate-12 hover:rotate-0 transition-transform duration-700">
+                             <div class="absolute inset-0 bg-blue-500/20 blur-xl rounded-full"></div>
+                             <img src="/images/hero/dunk.png" alt="Nike Dunk" class="relative z-10 drop-shadow-2xl rounded-2xl w-full">
+                             <!-- Floating UI Badge -->
+                             <div class="absolute -bottom-4 -left-4 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-lg px-3 py-2 shadow-xl animate-bounce-slow" style="animation-delay: 1s;">
+                                 <div class="text-[10px] text-slate-400 font-mono">QC VERIFIED</div>
+                                 <div class="text-xs font-bold text-white">Dunk Low Kasina</div>
+                             </div>
+                         </div>
                      </div>
                 </div>
 
-                <h1 class="text-5xl md:text-7xl font-display font-bold text-white mb-6 tracking-tight leading-tight">
-                    The Ultimate Weidian <br/>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400">& Taobao QC Finder</span>
-                </h1>
-                <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-light">
-                    Search millions of real photos and build outfits. Stop buying blind.
-                </p>
-                
-                <SmartSearch />
+                <!-- Main Content -->
+                <div class="relative z-10 pt-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/50 border border-slate-800 backdrop-blur mb-8 animate-fade-in">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+                        </span>
+                        <span class="text-xs font-medium text-slate-300">v2.0 Now Live</span>
+                    </div>
+
+                    <h1 class="text-5xl md:text-8xl font-display font-bold text-white mb-8 tracking-tight leading-none drop-shadow-lg">
+                        Find QC Photos <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400">Before You Buy</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+                        The ultimate tool for Weidian, Taobao & 1688 reps. <br class="hidden md:block"/>
+                        Search millions of real warehouse photos instantly.
+                    </p>
+                    
+                    <div class="max-w-2xl mx-auto transform transition-all hover:scale-[1.02] duration-300">
+                        <SmartSearch />
+                    </div>
+
+                    <div class="mt-12 flex items-center justify-center gap-8 text-slate-500 text-sm font-medium">
+                        <span class="flex items-center gap-2"><i class="pi pi-check-circle text-emerald-500"></i> No Sign Up Required</span>
+                        <span class="flex items-center gap-2"><i class="pi pi-bolt text-amber-500"></i> Instant Search</span>
+                        <span class="flex items-center gap-2"><i class="pi pi-mobile text-blue-500"></i> Mobile Ready</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -153,7 +188,6 @@ async function loadOutfits() {
                  <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">Browse by Brand</h3>
             </div>
              <div class="flex justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500 flex-wrap px-4">
-                 <!-- Just simple text placehhodlers resembling logos for speed -->
                  <span class="text-2xl font-black font-display italic">NIKE</span>
                  <span class="text-2xl font-black font-display">STUSSY</span>
                  <span class="text-2xl font-black font-display tracking-tighter">BALENCIAGA</span>
@@ -171,5 +205,21 @@ async function loadOutfits() {
 @keyframes marquee {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+}
+
+.animate-float-slow {
+    animation: float 6s ease-in-out infinite;
+}
+.animate-float-delayed {
+    animation: float 7s ease-in-out infinite 1s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.animate-bounce-slow {
+    animation: bounce 3s infinite;
 }
 </style>

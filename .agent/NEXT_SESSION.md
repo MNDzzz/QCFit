@@ -40,17 +40,16 @@
 
 ## 🎯 PRÓXIMAS TAREAS (Design Alignment)
 
-### 1. Tab "UPLOADS" en Sidebar (Prioridad Media)
-Añadir tercera pestaña para subir imágenes propias.
-- Zona de drag & drop
-- Preview de imágenes subidas
-- Conexión con endpoint (mock o real)
-
-### 2. Home Hero Redesign (Prioridad Alta)
+### 1. Home Hero Redesign (Prioridad Alta)
 Según la Imagen 1 del diseño:
 - Floating 3D Cards (Nike Dunk/Jordan)
 - Search Bar Pill (rounded-full con botón interno)
 - Efectos visuales mejorados
+
+### 2. Auth Modal Glassmorphism (Prioridad Media)
+Según Imagen 0:
+- Modal con backdrop-blur
+- Diseño dark con transparencias
 
 ### 3. Undo/Redo (Prioridad Baja)
 - Implementar historial de acciones en `canvasStore`
