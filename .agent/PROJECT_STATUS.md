@@ -990,6 +990,21 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 - Los items subidos se comportan como productos en el canvas (drag & drop al stage, redimensionables).
 - UI consistente con el tema "Subir" (Icono Cloud Upload).
 
+### ✅ Design: Home Hero Redesign 3D
+
+**Fecha:** 2026-01-18 20:45
+**Rama:** `feat/home-hero-redesign` (Merged to `develop`)
+**Estado:** ✅ Completado y Verificado
+
+**Implementación:**
+- **Floating 3D Cards:** Dos tarjetas animadas (Jordan 4, Dunk Low) con rotación y levitación CSS (`animate-float`).
+- **Assets:** Imágenes generadas y alojadas localmente en `/public/images/hero/`.
+- **UI Improvements:**
+  - Badge "v2.0 Now Live" con animación ping.
+  - Títulos con gradientes mejorados.
+  - SmartSearch integrado en contenedor transformable.
+- **Verificación:** Visibilidad de assets y animaciones confirmada en navegador.
+
 ---
 
 ## Próximos pasos

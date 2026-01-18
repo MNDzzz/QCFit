@@ -40,26 +40,21 @@
 
 ## 🎯 PRÓXIMAS TAREAS (Design Alignment)
 
-### 1. Home Hero Redesign (Prioridad Alta)
-Según la Imagen 1 del diseño:
-- Floating 3D Cards (Nike Dunk/Jordan)
-- Search Bar Pill (rounded-full con botón interno)
-- Efectos visuales mejorados
-
-### 2. Auth Modal Glassmorphism (Prioridad Media)
+### 1. Auth Modal Glassmorphism (Prioridad Media)
 Según Imagen 0:
 - Modal con backdrop-blur
 - Diseño dark con transparencias
+- Tab de Login/Register estilizada
 
-### 3. Undo/Redo (Prioridad Baja)
+### 2. Undo/Redo (Prioridad Baja)
 - Implementar historial de acciones en `canvasStore`
 - Máximo 10-20 estados
 - Botones ya están en el header (solo necesitan lógica)
 
-### 4. Auth Modal Glassmorphism (Prioridad Media)
-Según Imagen 0:
-- Modal con backdrop-blur
-- Diseño dark con transparencias
+### 3. Mobile Optimization (Future)
+- Ensure all new 3D elements are responsive.
+
+
 
 ---
 
