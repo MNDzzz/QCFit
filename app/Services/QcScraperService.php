@@ -6,8 +6,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use DOMDocument;
-use DOMXPath;
+use Symfony\Component\DomCrawler\Crawler;
 
 class QcScraperService
 {
@@ -31,18 +30,17 @@ class QcScraperService
             return $existingQcs;
         }
 
-        if (!$product->source_link && !$product->original_link) {
+        if (!$product->original_link) {
             return collect([]);
         }
 
-        $targetUrl = $product->original_link ?? $product->source_link;
+        $targetUrl = $product->original_link;
 
         try {
             Log::info("QcScraper: Iniciando búsqueda para producto #{$product->id} - URL: {$targetUrl}");
 
             // 2. Componer la URL de búsqueda en qc.photos
-            // Ejemplo: https://qc.photos/qc?url=https://weidian.com/item.html?itemID=4477393523
-            $response = Http::timeout(10)
+            $response = Http::timeout(15)
                 ->withHeaders([
                     'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                     'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -58,7 +56,7 @@ class QcScraperService
 
             $html = $response->body();
 
-            // 3. Parsear el HTML para encontrar imágenes
+            // 3. Parsear el HTML para encontrar imágenes usando DomCrawler
             $imageUrls = $this->extractImagesFromHtml($html);
 
             if (empty($imageUrls)) {
@@ -78,8 +76,8 @@ class QcScraperService
                     $savedImages[] = ProductImage::create([
                         'product_id' => $product->id,
                         'url' => $url,
-                        'type' => 'qc', // Marcaremos estas como QC
-                        'source' => 'qc.photos' // Opcional, para saber el origen
+                        'type' => 'qc',
+                        'source' => 'qc.photos'
                     ]);
                 }
             }
@@ -96,8 +94,7 @@ class QcScraperService
     }
 
     /**
-     * Extrae URLs de imágenes del HTML de qc.photos.
-     * Analiza el DOM buscando patrones comunes de galerías.
+     * Extrae URLs de imágenes del HTML de qc.photos usando DomCrawler.
      *
      * @param string $html
      * @return array
@@ -105,55 +102,35 @@ class QcScraperService
     private function extractImagesFromHtml($html)
     {
         $urls = [];
+        $crawler = new Crawler($html);
 
-        // Suprimir warnings de HTML malformado
-        libxml_use_internal_errors(true);
+        // Buscar todas las imágenes
+        // Ajustamos la lógica para filtrar mejor
+        $crawler->filter('img')->each(function (Crawler $node) use (&$urls) {
+            $src = $node->attr('src');
 
-        $dom = new DOMDocument();
-        $dom->loadHTML($html);
-        $xpath = new DOMXPath($dom);
-
-        // NOTA: La estructura de qc.photos puede variar. 
-        // Generalmente muestran grid de imágenes. Buscaremos todas las img que parezcan ser de QC.
-        // Las fotos de QC suelen estar alojadas en pandabuy, cssbuy, o dominios propios de agentes.
-        // Ojo: qc.photos retorna a veces thumbnails y links a full size.
-
-        // Estrategia: Buscar todas las etiquetas <img> dentro de contenedores de resultados
-        // Ajustar el selector según lo que veamos en qc.photos real. 
-        // Por ahora, capturamos todas las imágenes que NO sean logos o iconos.
-
-        $images = $dom->getElementsByTagName('img');
-
-        foreach ($images as $img) {
-            if (!($img instanceof \DOMElement)) {
-                continue;
-            }
-            $src = $img->getAttribute('src');
-
-            // Filtros básicos para descartar basura
             if (empty($src))
-                continue;
-            if (strpos($src, 'data:image') === 0)
-                continue; // Base64 thumbs a veces no sirven
-            if (strpos($src, 'logo') !== false)
-                continue;
-            if (strpos($src, 'icon') !== false)
-                continue;
-            if (strpos($src, '.svg') !== false)
-                continue;
+                return;
 
-            // Fix rutas relativas si las hay (asumiendo base https://qc.photos)
-            if (strpos($src, 'http') === false) {
+            // Filtros básicos explicítos
+            if (str_starts_with($src, 'data:image'))
+                return;
+            if (str_contains($src, 'logo'))
+                return;
+            if (str_contains($src, 'icon'))
+                return;
+            if (str_contains($src, '.svg'))
+                return;
+
+            // Normalización de URL
+            if (!str_contains($src, 'http')) {
                 $src = 'https://qc.photos' . (str_starts_with($src, '/') ? '' : '/') . $src;
             }
 
-            // qc.photos suele mostrar imágenes de almacén con fondo verde/gris.
-            // Si pudiéramos detectar el source 'pandabuy' o similar sería ideal.
-            // Por ahora aceptamos cualquier imagen válida que parezca contenido.
             $urls[] = $src;
-        }
+        });
 
-        // Limpieza y únicos (solo tomar las primeras 10 para no saturar)
+        // Limpieza y únicos (max 10)
         return array_slice(array_unique($urls), 0, 10);
     }
 }

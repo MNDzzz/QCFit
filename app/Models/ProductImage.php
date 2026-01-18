@@ -12,6 +12,7 @@ class ProductImage extends Model
         'product_id',
         'url',
         'type',
+        'source',
         'embedding'
     ];
 

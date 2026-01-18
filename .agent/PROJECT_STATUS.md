@@ -961,12 +961,13 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 
 ### ✅ Feature: Backend QC Scraper Service
 
-**Fecha:** 2026-01-17 20:15-20:25
+**Fecha:** 2026-01-18 20:30
 **Rama:** `feat/qc-scraper-service`
-**Estado:** ✅ Implementado (Pendiente de Merge)
+**Estado:** ✅ Completado e Instalado
 
 **Funcionalidad:**
-- Servicio `QcScraperService.php` que busca imágenes en `qc.photos` dado un link de Weidian/Taobao.
+- Servicio `QcScraperService.php` implementado con `symfony/dom-crawler`.
+- Dependencias instaladas vía `composer.phar` local (`dom-crawler`, `css-selector`).
 - Integración en `ProductController@show`:
   - Si un producto NO tiene fotos QC al visitarlo, el backend las busca en tiempo real.
   - Las guarda en `product_images` con `type='qc'`.

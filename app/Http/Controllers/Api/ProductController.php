@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use App\Repositories\ProductSearchRepository;
+use App\Services\QcScraperService;
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -31,9 +35,10 @@ class ProductController extends Controller
         $results = $this->searchRepository->getLatestQCImages((int) $limit);
         return response()->json($results);
     }
-    public function show($id, \App\Services\QcScraperService $qcScraper) // Inyección de dependencias
+
+    public function show($id, QcScraperService $qcScraper)
     {
-        $product = \App\Models\Product::with(['images', 'category'])->findOrFail($id);
+        $product = Product::with(['images', 'category'])->findOrFail($id);
 
         // Lazy Loading de QCs si no existen
         // Verificamos si tiene imágenes de tipo 'qc'
@@ -47,10 +52,10 @@ class ProductController extends Controller
                 $product->load('images');
             } catch (\Exception $e) {
                 // Silencioso: si falla, simplemente mostramos lo que hay
-                \Illuminate\Support\Facades\Log::error("Error auto-fetching QCs en ProductController: " . $e->getMessage());
+                Log::error("Error auto-fetching QCs en ProductController: " . $e->getMessage());
             }
         }
 
-        return new \App\Http\Resources\ProductResource($product);
+        return new ProductResource($product);
     }
 }
