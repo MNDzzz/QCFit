@@ -30,6 +30,12 @@
 - ✅ Seeder `RealProductImporterSeeder.php` con lógica completa
 - ✅ Base de datos ahora tiene 35 productos (20 + 15 reales)
 
+### 4. 🧠 QC Auto-Scraper Service
+- ✅ Servicio `QcScraperService` implementado.
+- ✅ Auto-fetching de imágenes al visitar productos sin fotos.
+- ✅ Manejo de dependencias (dom-crawler) instalado.
+- ✅ Verificado en navegador (Lazy Loading funciona).
+
 ---
 
 ## 🎯 PRÓXIMAS TAREAS (Design Alignment)

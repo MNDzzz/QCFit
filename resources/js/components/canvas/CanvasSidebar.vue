@@ -17,6 +17,10 @@ const searchLoading = ref(false);
 const wardrobeItems = ref([]);
 const wardrobeLoading = ref(false);
 
+// Uploads
+const uploadedImages = ref([]);
+const isDraggingFile = ref(false);
+
 // Estado de drag & drop
 const draggedProduct = ref(null);
 
@@ -94,6 +98,46 @@ function addProductToCanvas(product) {
         alert('Este producto no tiene imágenes disponibles');
     }
 }
+
+// --- Logic for Uploads ---
+
+function onFileSelect(event) {
+    const files = event.target.files;
+    processFiles(files);
+}
+
+function onFileDrop(event) {
+    isDraggingFile.value = false;
+    const files = event.dataTransfer.files;
+    processFiles(files);
+}
+
+function processFiles(files) {
+    if (!files || files.length === 0) return;
+
+    Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Creamos un objeto "mock" de producto para que sea compatible con el canvasStore
+            const mockProduct = {
+                id: `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                name: file.name,
+                brand: 'Personal Upload',
+                is_upload: true,
+                images: [{
+                    url: e.target.result,
+                    type: 'uploaded'
+                }]
+            };
+            
+            // Añadir al inicio
+            uploadedImages.value.unshift(mockProduct);
+        };
+        reader.readAsDataURL(file);
+    });
+}
 </script>
 
 <template>
@@ -103,26 +147,38 @@ function addProductToCanvas(product) {
             <button
                 @click="activeTab = 'search'"
                 :class="[
-                    'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                    'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
                     activeTab === 'search' 
-                        ? 'bg-slate-900 text-white border-b-2 border-violet-600' 
-                        : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-slate-900 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
                 ]"
             >
-                <i class="pi pi-search mr-2"></i>
+                <i class="pi pi-search mr-1"></i>
                 Buscar
             </button>
             <button
                 @click="activeTab = 'wardrobe'"
                 :class="[
-                    'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                    'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
                     activeTab === 'wardrobe' 
-                        ? 'bg-slate-900 text-white border-b-2 border-violet-600' 
-                        : 'text-slate-400 hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-slate-900 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
                 ]"
             >
-                <i class="pi pi-heart mr-2"></i>
+                <i class="pi pi-heart mr-1"></i>
                 Armario
+            </button>
+            <button
+                @click="activeTab = 'uploads'"
+                :class="[
+                    'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
+                    activeTab === 'uploads' 
+                        ? 'bg-slate-900 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
+                ]"
+            >
+                <i class="pi pi-upload mr-1"></i>
+                Subir
             </button>
         </div>
 
@@ -237,11 +293,72 @@ function addProductToCanvas(product) {
             </div>
         </div>
 
+        <!-- Tab Content: Uploads -->
+        <div v-show="activeTab === 'uploads'" class="flex-1 flex flex-col overflow-hidden">
+            <!-- Dropzone -->
+            <div class="p-4 border-b border-slate-800">
+                <div 
+                    class="border-2 border-dashed border-slate-700 rounded-lg p-6 text-center transition-colors relative"
+                    :class="{'border-violet-500 bg-violet-500/10': isDraggingFile, 'hover:border-slate-500 hover:bg-slate-900': !isDraggingFile}"
+                    @dragover.prevent="isDraggingFile = true"
+                    @dragleave.prevent="isDraggingFile = false"
+                    @drop.prevent="onFileDrop"
+                >
+                    <input 
+                        type="file" 
+                        multiple 
+                        accept="image/*" 
+                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        @change="onFileSelect"
+                    >
+                    <i class="pi pi-upload text-2xl text-slate-400 mb-2"></i>
+                    <p class="text-xs text-slate-300 font-medium">Subir imágenes</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Arrastra o haz click para seleccionar</p>
+                </div>
+            </div>
+
+            <!-- Uploaded Items Grid -->
+            <div class="flex-1 overflow-y-auto p-4">
+                <div v-if="uploadedImages.length === 0" class="text-center text-slate-500 py-8">
+                    <i class="pi pi-images text-4xl mb-2 opacity-30"></i>
+                    <p class="text-sm">Tus subidas aparecerán aquí</p>
+                </div>
+
+                <div v-else class="grid grid-cols-2 gap-3">
+                    <div
+                        v-for="product in uploadedImages"
+                        :key="product.id"
+                        draggable="true"
+                        @dragstart="handleDragStart(product, $event)"
+                        @click="addProductToCanvas(product)"
+                        class="bg-slate-900 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group relative"
+                    >
+                        <!-- Imagen del producto -->
+                        <div class="aspect-square bg-slate-800 overflow-hidden">
+                            <img
+                                :src="product.images[0].url"
+                                :alt="product.name"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            >
+                        </div>
+
+                        <!-- Info del producto -->
+                        <div class="p-2">
+                            <p class="text-xs font-semibold truncate">{{ product.name }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">Uploaded</p>
+                        </div>
+                        
+                        <!-- Actions overlay (delete) could go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Ayuda de drag & drop -->
         <div class="p-3 border-t border-slate-800 bg-slate-900/50">
             <p class="text-[10px] text-slate-500 text-center">
                 <i class="pi pi-info-circle mr-1"></i>
-                Arrastra productos al canvas o haz click para añadir
+                Arrastra items al canvas o haz click para añadir
             </p>
         </div>
     </div>

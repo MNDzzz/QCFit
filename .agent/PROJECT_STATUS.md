@@ -962,17 +962,20 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 ### ✅ Feature: Backend QC Scraper Service
 
 **Fecha:** 2026-01-18 20:30
-**Rama:** `feat/qc-scraper-service`
-**Estado:** ✅ Completado e Instalado
+**Rama:** `feat/qc-scraper-service` (Merged to `develop`)
+**Estado:** ✅ Completado, Instalado y Verificado
 
 **Funcionalidad:**
 - Servicio `QcScraperService.php` implementado con `symfony/dom-crawler`.
-- Dependencias instaladas vía `composer.phar` local (`dom-crawler`, `css-selector`).
-- Integración en `ProductController@show`:
-  - Si un producto NO tiene fotos QC al visitarlo, el backend las busca en tiempo real.
-  - Las guarda en `product_images` con `type='qc'`.
-  - Lazy Loading transparente para el usuario.
-- Evita el problema de productos "vacíos" al importarlos.
+- Dependencias instaladas manualmente (`dom-crawler`, `css-selector`).
+- **Integración:** Lazy Loading en `ProductController@show`.
+  - Al visitar un producto sin fotos, el sistema busca automáticamente en `qc.photos`.
+  - Tiempo de respuesta: ~2-3 segundos adicionales la primera vez.
+- **Verificación:**
+  - Testado con Product ID 21 (Air Jordan 4 Black Cat).
+  - El sistema recuperó imágenes y las guardó en DB.
+  - El frontend mostró la galería (aunque las imágenes origen eran placeholders, la lógica funciona).
+- **Hotfix Verificado:** Las imágenes del Live Feed cargan correctamente con la nueva política de referer.
 
 ---
 
