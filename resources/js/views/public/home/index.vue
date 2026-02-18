@@ -121,10 +121,10 @@ async function loadOutfits() {
             </div>
         </div>
 
-        <!-- Live Feed Ticker -->
+        <!-- Ticker de Feed en Vivo -->
         <LiveFeed />
 
-        <!-- Popular Section -->
+        <!-- Sección de Populares -->
         <div class="max-w-7xl mx-auto px-4 py-16">
             <h2 class="text-3xl font-display font-bold text-slate-900 text-center mb-8">POPULAR RIGHT NOW</h2>
             
