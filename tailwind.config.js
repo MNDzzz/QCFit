@@ -65,6 +65,11 @@ export default {
                 'title-sm': ['20px', '26px'],
                 'title-xsm': ['18px', '24px']
             },
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                display: ['Space Grotesk', 'sans-serif'],
+                mono: ['JetBrains Mono', 'monospace'],
+            },
             spacing: {
                 4.5: '1.125rem',
                 5.5: '1.375rem',
@@ -164,6 +169,26 @@ export default {
                 default: '0px 8px 13px -3px rgba(0, 0, 0, 0.07)',
                 card: '0px 1px 3px rgba(0, 0, 0, 0.12)',
                 'card-2': '0px 1px 10px rgba(0, 0, 0, 0.08)'
+            },
+            keyframes: {
+                'fade-in-up': {
+                    '0%': {
+                        opacity: '0',
+                        transform: 'translateY(10px)'
+                    },
+                    '100%': {
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    },
+                },
+                'fade-in': {
+                    '0%': { opacity: '0' },
+                    '100%': { opacity: '1' },
+                }
+            },
+            animation: {
+                'fade-in-up': 'fade-in-up 0.5s ease-out',
+                'fade-in': 'fade-in 0.3s ease-out',
             }
         }
     }

@@ -25,10 +25,11 @@ class User extends Authenticatable implements HasMedia
 
     protected $fillable = [
         'name',
+        'alias',
         'email',
         'password',
-        'surname1',
-        'surname2'
+        'bio',
+        'avatar'
     ];
 
     /**
@@ -55,7 +56,7 @@ class User extends Authenticatable implements HasMedia
         $this->notify(new UserResetPasswordNotification($token));
     }
 
-    
+
 
 
     public function registerMediaCollections(): void
@@ -73,5 +74,33 @@ class User extends Authenticatable implements HasMedia
                 ->width(env('IMAGE_WIDTH', 300))
                 ->height(env('IMAGE_HEIGHT', 300));
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | QCFit Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function outfits()
+    {
+        return $this->hasMany(Outfit::class);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'product_user')->withTimestamps();
+    }
+
+    // Usuarios que me siguen
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'following_id', 'follower_id')->withTimestamps();
+    }
+
+    // Usuarios a los que sigo
+    public function following()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'following_id')->withTimestamps();
     }
 }

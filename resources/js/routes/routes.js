@@ -55,6 +55,21 @@ export default [
                 name: 'home',
                 component: () => import('../views/public/home/index.vue'),
             },
+            {
+                path: 'search',
+                name: 'SearchResults',
+                component: () => import('../views/public/search/Results.vue'),
+            },
+            {
+                path: 'explore',
+                name: 'ExploreOutfits',
+                component: () => import('../views/public/outfits/Index.vue'),
+            },
+            {
+                path: 'u/:id',
+                name: 'PublicProfile',
+                component: () => import('../views/public/profile/Show.vue'),
+            },
 
             {
                 path: 'login',
@@ -80,6 +95,21 @@ export default [
                 component: () => import('../views/auth/passwords/Reset.vue'),
                 beforeEnter: guest,
             },
+            {
+                path: 'product/:id',
+                name: 'ProductDetail',
+                component: () => import('../views/public/product/Show.vue'),
+            },
+            {
+                path: 'studio',
+                name: 'Studio',
+                component: () => import('../views/public/studio/Index.vue'),
+            },
+            {
+                path: 'outfit/:id',
+                name: 'OutfitDetail',
+                component: () => import('../views/public/outfits/Show.vue'),
+            },
         ]
     },
 
@@ -96,6 +126,14 @@ export default [
                 component: () => import('../views/user/profile.vue'),
                 meta: {
                     breadCrumb: 'Perfil',
+                },
+            },
+            {
+                name: 'app.canvas',
+                path: 'canvas',
+                component: () => import('../views/CanvasEditor.vue'),
+                meta: {
+                    breadCrumb: 'Editor de Outfits',
                 },
             },
 
