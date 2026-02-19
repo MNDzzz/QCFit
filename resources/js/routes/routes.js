@@ -164,6 +164,22 @@ export default [
             },
 
             {
+                name: 'products',
+                path: 'products',
+                meta: { breadCrumb: 'Productos' },
+                children: [
+                    {
+                        name: 'products.index',
+                        path: '',
+                        component: () => import('../views/admin/products/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Ver productos',
+                            hideBreadcrumb: true
+                        }
+                    },
+                ]
+            },
+            {
                 name: 'categories',
                 path: 'categories',
                 meta: { breadCrumb: 'Categorías' },

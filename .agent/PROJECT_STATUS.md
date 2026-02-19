@@ -1039,3 +1039,18 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 - Estructura relacional: **Completada**
 - CRUD de Sources/Brands: **Funcional**
 - Panel de Administración: **Actualizado con nuevas secciones**
+
+## Sesión 2026-02-19: Finalización de CRUDs Core y Estructura Relacional
+
+### Hitos Completados
+- **CRUD de Productos**: Implementado backend y frontend para la gestión de productos, incluyendo carga de imágenes y vinculación con Marcas/Marketplaces.
+- **Limpieza de API**: Rutas reorganizadas para separar zonas públicas de administración.
+- **Permisos de Producto**: Añadidos permisos product-list, product-create, etc.
+- **Estructura de BBDD**: Finalizada y normalizada al 100% según los requisitos del proyecto.
+
+### Estado Final de los Puntos Solicitados
+1. ✅ Requerimientos Funcionales (Documentados)
+2. ✅ Modelo Relacional (Normalizado con Sources y Brands)
+3. ✅ Migraciones Core (Completadas)
+4. ✅ CRUD Productos (Funcional)
+5. ✅ CRUD Sources con Relaciones (Funcional)
