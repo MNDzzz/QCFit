@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
     product: {
@@ -8,6 +9,7 @@ const props = defineProps({
     }
 });
 
+const router = useRouter();
 const isHovered = ref(false);
 
 const qcImage = computed(() => {
@@ -31,13 +33,18 @@ const price = computed(() => {
     // Mock price randomization if not present, for UI completeness
     return props.product.price || Math.floor(Math.random() * 400) + 150;
 });
+
+const goToDetail = () => {
+    router.push({ name: 'public.product.show', params: { id: props.product.id } });
+};
 </script>
 
 <template>
     <div 
-        class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 relative"
+        class="group bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 relative cursor-pointer"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false"
+        @click="goToDetail"
     >
         <!-- Image Container -->
         <div class="aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center p-4">
@@ -85,12 +92,13 @@ const price = computed(() => {
                 <h3 class="font-sans font-bold text-slate-800 text-sm truncate pr-2 flex-1 leading-tight">{{ product.name }}</h3>
             </div>
             
-            <p class="text-xs text-slate-400 mb-2">{{ product.brand || 'Unknown Brand' }}</p>
+            <p class="text-xs text-slate-400 mb-2">{{ product.brand?.name || product.brand || 'Marca desconocida' }}</p>
 
             <div class="flex justify-between items-end border-t border-slate-100 pt-2">
                 <span class="font-mono font-bold text-slate-900 text-lg">¥{{ price }}</span>
-                <i class="pi pi-shopping-bag text-slate-400" style="font-size: 0.8rem"></i> <!-- icon placeholder -->
-                 <span class="text-[10px] text-slate-400 border border-slate-200 rounded px-1">Weidian</span>
+                <i class="pi pi-shopping-bag text-slate-400" style="font-size: 0.8rem"></i>
+                 <span v-if="product.source" class="text-[10px] text-slate-400 border border-slate-200 rounded px-1 uppercase">{{ product.source.name }}</span>
+                 <span v-else-if="product.marketplace" class="text-[10px] text-slate-400 border border-slate-200 rounded px-1 uppercase">{{ product.marketplace }}</span>
             </div>
         </div>
     </div>
