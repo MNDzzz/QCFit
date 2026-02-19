@@ -69,7 +69,7 @@ class ProductController extends Controller
 
         $results = $this->searchRepository->search($query, [], (int) $limit);
 
-        return response()->json($results);
+        return ProductResource::collection($results);
     }
 
     /**
@@ -79,7 +79,7 @@ class ProductController extends Controller
     {
         $limit = $request->input('limit', 15);
         $results = $this->searchRepository->getLatestQCImages((int) $limit);
-        return response()->json($results);
+        return ProductImageResource::collection($results);
     }
 
     /**

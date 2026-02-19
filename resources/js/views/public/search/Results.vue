@@ -178,8 +178,6 @@ watch(() => route.query.q, () => {
                         :key="product.id" 
                         :product="product"
                         @add-to-studio="addToStudio"
-                         @click="$router.push({name: 'ProductDetail', params: {id: product.id}})"
-                        class="cursor-pointer"
                      />
                  </div>
                  

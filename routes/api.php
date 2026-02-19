@@ -70,8 +70,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 // Rutas Públicas
 Route::get('category-list', [CategoryController::class, 'getList']);
-Route::get('/search', [ProductController::class, 'search']);
-Route::get('/feed/live', [ProductController::class, 'liveFeed']);
+Route::get('/search', [\App\Http\Controllers\Api\SearchController::class, 'index']);
+Route::get('/feed/live', [\App\Http\Controllers\Api\SearchController::class, 'liveFeed']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::get('/outfits', [OutfitController::class, 'index']);

@@ -1054,3 +1054,16 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 3. ✅ Migraciones Core (Completadas)
 4. ✅ CRUD Productos (Funcional)
 5. ✅ CRUD Sources con Relaciones (Funcional)
+
+## Sesión 2026-02-19: Corrección de LiveFeed y Navegación de Productos
+
+### Errores Solucionados
+- **Live QC Feed**: Restaurada la visibilidad del feed en la Home. El error se debía a la falta del envoltorio 'data' en el JSON de respuesta tras la refactorización.
+- **Navegación**: Corregido el problema donde al hacer clic en un producto no ocurría nada. Se ha implementado outer.push en el componente ProductCard.
+- **Detalle de Producto**: Actualizada la vista de detalle para mostrar correctamente las marcas y marketplaces desde la nueva estructura relacional (en lugar de strings planos).
+- **Búsqueda Avanzada**: Mejorada la lógica del repositorio para permitir búsquedas por nombre de marca usando JOINS.
+
+### Estado Actual
+- Navegación pública: **Saneada**
+- Live Feed: **Operativo**
+- Integridad de datos en UI: **Corregida**
