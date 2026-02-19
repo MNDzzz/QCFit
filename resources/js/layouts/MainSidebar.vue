@@ -128,7 +128,9 @@ const menuModel = computed(() => {
         {
             label: 'Contenido',
             items: [
-                { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' }
+                { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
+                { label: 'Marketplaces', icon: 'pi pi-globe', route: '/admin/sources', permission: 'source-list' },
+                { label: 'Marcas', icon: 'pi pi-briefcase', route: '/admin/brands', permission: 'brand-list' }
             ]
         }
     ];

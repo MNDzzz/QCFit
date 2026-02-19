@@ -10,13 +10,32 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
-        'name',
         'source_id',
-        'marketplace',
-        'brand',
+        'brand_id',
+        'name',
+        'external_id',
         'original_link'
     ];
 
+    /**
+     * Relación con el marketplace de origen
+     */
+    public function source()
+    {
+        return $this->belongsTo(Source::class);
+    }
+
+    /**
+     * Relación con la marca del producto
+     */
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    /**
+     * Relación con la categoría del sistema
+     */
     public function category()
     {
         return $this->belongsTo(Category::class);
