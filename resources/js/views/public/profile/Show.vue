@@ -107,9 +107,7 @@ async function toggleFollow() {
 }
 
 const isMe = computed(() => {
-    // TODO: Comprobar con auth user real
-    // return authStore.user && authStore.user.id === user.value?.id;
-    return false; // Placeholder
+    return auth.authenticated && auth.user && auth.user.id === user.value?.id;
 });
 
 </script>
@@ -270,7 +268,7 @@ const isMe = computed(() => {
                             >
                             <!-- Overlay actions -->
                             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                                <router-link :to="{name: 'OutfitDetail', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
+                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
                                     <i class="pi pi-eye"></i>
                                 </router-link>
                             </div>

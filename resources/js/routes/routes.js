@@ -52,22 +52,22 @@ export default [
         children: [
             {
                 path: '/',
-                name: 'home',
+                name: 'public.home',
                 component: () => import('../views/public/home/index.vue'),
             },
             {
                 path: 'search',
-                name: 'SearchResults',
+                name: 'public.search',
                 component: () => import('../views/public/search/Results.vue'),
             },
             {
                 path: 'explore',
-                name: 'ExploreOutfits',
+                name: 'public.explore',
                 component: () => import('../views/public/outfits/Index.vue'),
             },
             {
                 path: 'u/:id',
-                name: 'PublicProfile',
+                name: 'public.profile',
                 component: () => import('../views/public/profile/Show.vue'),
             },
 
@@ -97,17 +97,17 @@ export default [
             },
             {
                 path: 'product/:id',
-                name: 'ProductDetail',
+                name: 'public.product.show',
                 component: () => import('../views/public/product/Show.vue'),
             },
             {
                 path: 'studio',
-                name: 'Studio',
+                name: 'public.studio',
                 component: () => import('../views/public/studio/Index.vue'),
             },
             {
                 path: 'outfit/:id',
-                name: 'OutfitDetail',
+                name: 'public.outfit.show',
                 component: () => import('../views/public/outfits/Show.vue'),
             },
         ]
@@ -131,7 +131,7 @@ export default [
             {
                 name: 'app.canvas',
                 path: 'canvas',
-                component: () => import('../views/CanvasEditor.vue'),
+                component: () => import('../views/public/studio/Index.vue'),
                 meta: {
                     breadCrumb: 'Editor de Outfits',
                 },

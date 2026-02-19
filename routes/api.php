@@ -79,3 +79,6 @@ Route::get('/outfits/{id}', [OutfitController::class, 'show']);
 
 Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
 Route::get('/public/user/{id}', [PublicProfileController::class, 'show']);
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('/user/signin', [ProfileController::class, 'user']);
+});

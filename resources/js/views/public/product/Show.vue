@@ -164,10 +164,10 @@ const agents = [
                         <i class="pi pi-angle-right mx-2 text-[10px]"></i>
                         <span class="hover:text-violet-600 cursor-pointer">{{ product.category?.name || 'Categoría' }}</span>
                         <i class="pi pi-angle-right mx-2 text-[10px]"></i>
-                        <span class="text-slate-800 truncate max-w-[150px] uppercase font-bold">{{ product.brand?.name || product.brand || 'Producto' }}</span>
+                        <span class="text-slate-800 truncate max-w-[150px] uppercase font-bold">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Producto') }}</span>
                     </nav>
 
-                    <h2 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">{{ product.brand?.name || product.brand || 'Marca desconocida' }}</h2>
+                    <h2 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Marca desconocida') }}</h2>
                     <h1 class="text-3xl lg:text-4xl font-display font-bold text-slate-900 mb-4 leading-tight">{{ product.name }}</h1>
 
                     <div class="flex items-end gap-3 mb-8 border-b border-slate-100 pb-8">
@@ -175,7 +175,7 @@ const agents = [
                         <div class="text-xs text-slate-500 mb-1.5 flex flex-col">
                              <span class="font-bold flex items-center gap-1 uppercase">
                                 <i class="pi pi-shopping-bag text-slate-400"></i> 
-                                {{ product.source?.name || product.marketplace || 'Marketplace' }}
+                                {{ product.source?.name || (typeof product.marketplace === 'string' ? product.marketplace : (product.marketplace?.name || 'Marketplace')) }}
                              </span>
                              <span>ID Externo: {{ product.external_id || product.source_id }}</span>
                         </div>

@@ -31,9 +31,10 @@ onMounted(async () => {
                 <div 
                     v-for="outfit in outfits" 
                     :key="outfit.id"
-                    class="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all"
+                    class="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-xl transition-all cursor-pointer"
+                    @click="$router.push({ name: 'public.outfit.show', params: { id: outfit.id } })"
                 >
-                    <!-- Preview (Mock because we don't have a generated thumbnail yet, using first product image) -->
+                    <!-- Preview -->
                     <div class="h-64 bg-gray-200 relative overflow-hidden">
                         <div v-if="outfit.products && outfit.products.length" class="w-full h-full flex flex-wrap">
                              <img 
@@ -51,7 +52,7 @@ onMounted(async () => {
                         <!-- Overlay -->
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button 
-                                @click="$router.push({name: 'app.canvas', query: { outfit_id: outfit.id }})"
+                                @click.stop="$router.push({name: 'app.canvas', query: { outfit_id: outfit.id }})"
                                 class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full transform scale-90 group-hover:scale-100 transition-transform flex items-center gap-2"
                             >
                                 <i class="pi pi-refresh"></i>
