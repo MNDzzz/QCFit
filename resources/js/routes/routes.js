@@ -166,14 +166,46 @@ export default [
             {
                 name: 'categories',
                 path: 'categories',
-                meta: { breadCrumb: 'Categories' },
+                meta: { breadCrumb: 'Categorías' },
                 children: [
                     {
                         name: 'categories.index',
                         path: '',
                         component: () => import('../views/admin/categories/Index.vue'),
                         meta: {
-                            breadCrumb: 'View category',
+                            breadCrumb: 'Ver categorías',
+                            hideBreadcrumb: true
+                        }
+                    },
+                ]
+            },
+            {
+                name: 'sources',
+                path: 'sources',
+                meta: { breadCrumb: 'Marketplaces' },
+                children: [
+                    {
+                        name: 'sources.index',
+                        path: '',
+                        component: () => import('../views/admin/sources/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Ver marketplaces',
+                            hideBreadcrumb: true
+                        }
+                    },
+                ]
+            },
+            {
+                name: 'brands',
+                path: 'brands',
+                meta: { breadCrumb: 'Marcas' },
+                children: [
+                    {
+                        name: 'brands.index',
+                        path: '',
+                        component: () => import('../views/admin/brands/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Ver marcas',
                             hideBreadcrumb: true
                         }
                     },

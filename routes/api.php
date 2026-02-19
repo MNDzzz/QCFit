@@ -18,9 +18,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('sources', \App\Http\Controllers\Api\SourceController::class);
+    Route::apiResource('brands', \App\Http\Controllers\Api\BrandController::class);
     Route::apiResource('roles', RoleController::class);
 
     Route::get('role-list', [RoleController::class, 'getList']);
+    Route::get('source-list', [\App\Http\Controllers\Api\SourceController::class, 'getList']);
+    Route::get('brand-list', [\App\Http\Controllers\Api\BrandController::class, 'getList']);
     Route::get('role-permissions/{id}', [PermissionController::class, 'getRolePermissions']);
     Route::put('/role-permissions', [PermissionController::class, 'updateRolePermissions']);
     Route::apiResource('permissions', PermissionController::class);

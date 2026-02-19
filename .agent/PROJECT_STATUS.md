@@ -1025,3 +1025,17 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 2. **Alternativo:** Home Hero Redesign (Floating 3D Cards)
 3. **Opcional:** Undo/Redo en Pinia store
 
+
+## Sesión 2026-02-19: Refactorización y CRUD de Sources/Brands
+
+### Cambios Realizados
+- **Refactorización del Modelo Relacional**: Creamos las tablas sources y rands para normalizar la base de datos y evitar el uso de strings planos en la tabla products.
+- **Actualización de Base de Datos**: Ejecutamos migraciones para añadir claves foráneas en products, relacionándolos con sus respectivos marketplaces y marcas.
+- **Implementación de API CRUD**: Desarrollamos controladores, recursos y requests de validación para gestionar Source y Brand.
+- **Interfaz Administrativa**: Creamos vistas en Vue 3 con PrimeVue para que el administrador pueda crear, editar y eliminar proveedores y marcas desde el panel.
+- **Gestión de Permisos**: Añadimos nuevos permisos (source-*, rand-*) y los asignamos automáticamente al rol de administrador.
+
+### Estado Actual
+- Estructura relacional: **Completada**
+- CRUD de Sources/Brands: **Funcional**
+- Panel de Administración: **Actualizado con nuevas secciones**
