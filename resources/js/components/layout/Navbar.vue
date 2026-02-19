@@ -2,9 +2,11 @@
 import { ref } from 'vue';
 import { usePreferenceStore } from '@/store/preference';
 import { authStore } from '@/store/auth';
+import useAuth from '@/composables/auth';
 
 const preferenceStore = usePreferenceStore();
-const store = authStore(); // Renamed to 'store' to match typical usage or just use authStore() shorthand
+const store = authStore();
+const { logout } = useAuth();
 const isOpen = ref(false);
 
 const agents = [
@@ -81,11 +83,45 @@ function selectAgent(agent) {
                         </router-link>
                     </template>
                     <template v-else>
-                         <router-link :to="{ name: 'public.profile', params: { id: store.user?.id || 0 } }" class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold border border-slate-700">
-                                {{ store.user?.name ? store.user.name.charAt(0) : 'U' }}
+                         <!-- Profile Dropdown -->
+                         <div class="relative group">
+                            <button class="flex items-center gap-2 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold border border-slate-700 hover:ring-2 hover:ring-violet-500 transition-all">
+                                    {{ store.user?.name ? store.user.name.charAt(0) : 'U' }}
+                                </div>
+                                <i class="pi pi-chevron-down text-[10px] text-slate-400"></i>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div class="hidden group-hover:block absolute right-0 mt-0 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-xl overflow-hidden py-1 z-50">
+                                <router-link 
+                                    :to="{ name: 'public.profile', params: { id: store.user?.id || 0 } }" 
+                                    class="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-300 hover:bg-slate-800 hover:text-white transition-colors"
+                                >
+                                    <i class="pi pi-user text-xs"></i>
+                                    Mi Perfil
+                                </router-link>
+
+                                <router-link 
+                                    v-if="store.is('admin')"
+                                    :to="{ name: 'admin.index' }" 
+                                    class="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-300 hover:bg-slate-800 hover:text-white transition-colors"
+                                >
+                                    <i class="pi pi-cog text-xs"></i>
+                                    Panel Admin
+                                </router-link>
+
+                                <div class="h-px bg-slate-800 my-1 mx-2"></div>
+
+                                <button 
+                                    @click="logout"
+                                    class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors text-left"
+                                >
+                                    <i class="pi pi-sign-out text-xs"></i>
+                                    Cerrar Sesión
+                                </button>
                             </div>
-                        </router-link>
+                        </div>
                     </template>
 
                 </div>
