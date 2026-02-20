@@ -1025,3 +1025,45 @@ C:\xampp\php\php.exe artisan migrate:fresh --seed
 2. **Alternativo:** Home Hero Redesign (Floating 3D Cards)
 3. **Opcional:** Undo/Redo en Pinia store
 
+
+## Sesión 2026-02-19: Refactorización y CRUD de Sources/Brands
+
+### Cambios Realizados
+- **Refactorización del Modelo Relacional**: Creamos las tablas sources y rands para normalizar la base de datos y evitar el uso de strings planos en la tabla products.
+- **Actualización de Base de Datos**: Ejecutamos migraciones para añadir claves foráneas en products, relacionándolos con sus respectivos marketplaces y marcas.
+- **Implementación de API CRUD**: Desarrollamos controladores, recursos y requests de validación para gestionar Source y Brand.
+- **Interfaz Administrativa**: Creamos vistas en Vue 3 con PrimeVue para que el administrador pueda crear, editar y eliminar proveedores y marcas desde el panel.
+- **Gestión de Permisos**: Añadimos nuevos permisos (source-*, rand-*) y los asignamos automáticamente al rol de administrador.
+
+### Estado Actual
+- Estructura relacional: **Completada**
+- CRUD de Sources/Brands: **Funcional**
+- Panel de Administración: **Actualizado con nuevas secciones**
+
+## Sesión 2026-02-19: Finalización de CRUDs Core y Estructura Relacional
+
+### Hitos Completados
+- **CRUD de Productos**: Implementado backend y frontend para la gestión de productos, incluyendo carga de imágenes y vinculación con Marcas/Marketplaces.
+- **Limpieza de API**: Rutas reorganizadas para separar zonas públicas de administración.
+- **Permisos de Producto**: Añadidos permisos product-list, product-create, etc.
+- **Estructura de BBDD**: Finalizada y normalizada al 100% según los requisitos del proyecto.
+
+### Estado Final de los Puntos Solicitados
+1. ✅ Requerimientos Funcionales (Documentados)
+2. ✅ Modelo Relacional (Normalizado con Sources y Brands)
+3. ✅ Migraciones Core (Completadas)
+4. ✅ CRUD Productos (Funcional)
+5. ✅ CRUD Sources con Relaciones (Funcional)
+
+## Sesión 2026-02-19: Corrección de LiveFeed y Navegación de Productos
+
+### Errores Solucionados
+- **Live QC Feed**: Restaurada la visibilidad del feed en la Home. El error se debía a la falta del envoltorio 'data' en el JSON de respuesta tras la refactorización.
+- **Navegación**: Corregido el problema donde al hacer clic en un producto no ocurría nada. Se ha implementado outer.push en el componente ProductCard.
+- **Detalle de Producto**: Actualizada la vista de detalle para mostrar correctamente las marcas y marketplaces desde la nueva estructura relacional (en lugar de strings planos).
+- **Búsqueda Avanzada**: Mejorada la lógica del repositorio para permitir búsquedas por nombre de marca usando JOINS.
+
+### Estado Actual
+- Navegación pública: **Saneada**
+- Live Feed: **Operativo**
+- Integridad de datos en UI: **Corregida**

@@ -44,18 +44,18 @@ const handleSearch = async () => {
                 });
             } else {
                 // Fallback
-                router.push({ name: 'public.search.results', query: { q: query.value } });
+                router.push({ name: 'public.search', query: { q: query.value } });
             }
 
         } catch (error) {
             console.error(error);
             // Si falla, search normal
-            router.push({ name: 'public.search.results', query: { q: query.value } });
+            router.push({ name: 'public.search', query: { q: query.value } });
         }
 
     } else {
         // CASE TEXT: Internal Search directly to results page
-        router.push({ name: 'public.search.results', query: { q: query.value } });
+        router.push({ name: 'public.search', query: { q: query.value } });
     }
 
     loading.value = false;

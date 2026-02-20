@@ -3,11 +3,13 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { authStore } from '../../../store/auth';
+import useAuth from '@/composables/auth';
 import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
 
 const route = useRoute();
 const auth = authStore();
+const { logout } = useAuth();
 const toast = useToast();
 
 const user = ref(null);
@@ -107,9 +109,7 @@ async function toggleFollow() {
 }
 
 const isMe = computed(() => {
-    // TODO: Comprobar con auth user real
-    // return authStore.user && authStore.user.id === user.value?.id;
-    return false; // Placeholder
+    return auth.authenticated && auth.user && auth.user.id === user.value?.id;
 });
 
 </script>
@@ -227,9 +227,18 @@ const isMe = computed(() => {
                             {{ user?.is_following ? 'Siguiendo' : 'Seguir' }}
                          </button>
 
-                         <button  v-else class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-700 font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
-                            Editar Perfil
-                         </button>
+                         <template v-else>
+                            <button class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-700 font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
+                                Editar Perfil
+                            </button>
+                            <button 
+                                @click="logout"
+                                class="px-6 py-2.5 rounded-full bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
+                            >
+                                <i class="pi pi-sign-out text-sm"></i>
+                                Cerrar Sesión
+                            </button>
+                         </template>
                     </div>
                 </div>
 
@@ -270,7 +279,7 @@ const isMe = computed(() => {
                             >
                             <!-- Overlay actions -->
                             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                                <router-link :to="{name: 'OutfitDetail', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
+                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
                                     <i class="pi pi-eye"></i>
                                 </router-link>
                             </div>

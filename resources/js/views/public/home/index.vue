@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import SmartSearch from '@/components/SmartSearch.vue';
 import LiveFeed from '@/components/LiveFeed.vue';
+import ProductCard from '@/components/ui/ProductCard.vue';
 import { authStore } from '@/store/auth';
 
 const useAuth = authStore();
@@ -143,42 +144,24 @@ async function loadOutfits() {
             </div>
             
             <div v-else-if="products.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Special "Studio" Card (Mocked as first item or inserted) -->
-                <div class="bg-violet-50 rounded-2xl p-4 border border-violet-100 flex flex-col items-center justify-center text-center group cursor-pointer hover:shadow-xl hover:ring-2 hover:ring-violet-500 transition-all relative overflow-hidden">
+                <!-- Special "Studio" Card -->
+                <div 
+                    @click="$router.push({ name: 'app.canvas' })"
+                    class="bg-violet-50 rounded-2xl p-4 border border-violet-100 flex flex-col items-center justify-center text-center group cursor-pointer hover:shadow-xl hover:ring-2 hover:ring-violet-500 transition-all relative overflow-hidden"
+                >
                     <div class="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent"></div>
                     <img src="/images/hero/dunk.png" class="w-24 mb-4 drop-shadow-lg group-hover:scale-110 transition-transform">
                     <button class="bg-violet-600 text-white px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 relative z-10">
                         <i class="pi pi-plus"></i> Studio
                     </button>
-                    <p class="text-xs text-violet-600 font-bold mt-3 relative z-10">Create Outfit</p>
+                    <p class="text-xs text-violet-600 font-bold mt-3 relative z-10">Crear Outfit</p>
                 </div>
 
-                <div 
+                <ProductCard 
                     v-for="product in products.slice(0, 7)" 
                     :key="product.id"
-                    class="group bg-white rounded-2xl p-3 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all border border-slate-100 relative"
-                >
-                    <!-- Image -->
-                    <div class="aspect-square bg-slate-50 rounded-xl relative overflow-hidden mb-3">
-                        <img 
-                            :src="product.images[0]?.url || '/images/placeholder.jpg'" 
-                            referrerpolicy="no-referrer"
-                            :alt="product.name"
-                            class="w-full h-full object-contain mix-blend-multiply p-4 transition-transform duration-500 group-hover:scale-105"
-                            loading="lazy"
-                        >
-                    </div>
-
-                    <!-- Info -->
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-sm truncate">{{ product.name }}</h3>
-                        <p class="text-xs text-slate-500 mb-2 truncate">Nike Dunk Low 'Grey Fog'</p>
-                        <div class="flex items-center justify-between">
-                            <span class="text-slate-900 font-extrabold text-lg">¥ {{ product.price || 180 }}</span>
-                            <img src="https://img.alicdn.com/tps/i4/TB1j5K.LXXXXXb.XVXXxGsw1VXX-112-46.png" class="h-4 opacity-50 grayscale group-hover:grayscale-0 transition-all">
-                        </div>
-                    </div>
-                </div>
+                    :product="product"
+                />
             </div>
             
             <div v-else class="text-center py-20 text-slate-400">
@@ -202,11 +185,16 @@ async function loadOutfits() {
                 <h3 class="text-center text-sm font-bold text-slate-400 tracking-widest uppercase mb-8">TRENDING OUTFITS</h3>
                 <!-- Simple 3-column grid for outfits -->
                  <div v-if="outfits.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div v-for="outfit in outfits.slice(0, 3)" :key="outfit.id" class="rounded-3xl overflow-hidden relative group aspect-square">
+                    <div 
+                        v-for="outfit in outfits.slice(0, 3)" 
+                        :key="outfit.id" 
+                        class="rounded-3xl overflow-hidden relative group aspect-square cursor-pointer"
+                        @click="$router.push({ name: 'public.outfit.show', params: { id: outfit.id } })"
+                    >
                         <img :src="outfit.thumbnail_url" referrerpolicy="no-referrer" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <button class="bg-violet-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transition-transform flex items-center gap-2">
-                                <i class="pi pi-bolt"></i> REMIX THIS FIT
+                                <i class="pi pi-bolt"></i> VER OUTFIT
                             </button>
                         </div>
                     </div>

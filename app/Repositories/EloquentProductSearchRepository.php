@@ -11,23 +11,25 @@ class EloquentProductSearchRepository implements ProductSearchRepository
     public function search(?string $query, array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
         $products = Product::query()
-            ->with(['images', 'category']) // Eager loading para optimizar
+            ->with(['images', 'category', 'brand', 'source']) // Añadido brand y source
             ->when($query, function (Builder $q) use ($query) {
                 $q->where(function ($subQ) use ($query) {
                     $subQ->where('name', 'LIKE', "%{$query}%")
-                        ->orWhere('brand', 'LIKE', "%{$query}%");
+                        ->orWhereHas('brand', function($bq) use ($query) {
+                            $bq->where('name', 'LIKE', "%{$query}%");
+                        });
                 });
             })
             ->when(isset($filters['category_id']), function (Builder $q) use ($filters) {
                 $q->where('category_id', $filters['category_id']);
             })
-            ->when(isset($filters['brand']), function (Builder $q) use ($filters) {
-                $q->where('brand', $filters['brand']);
+            ->when(isset($filters['brand_id']), function (Builder $q) use ($filters) {
+                $q->where('brand_id', $filters['brand_id']);
             })
-            ->when(isset($filters['marketplace']), function (Builder $q) use ($filters) {
-                $q->where('marketplace', $filters['marketplace']);
+            ->when(isset($filters['source_id']), function (Builder $q) use ($filters) {
+                $q->where('source_id', $filters['source_id']);
             })
-            ->orderBy('id', 'desc'); // Los más recientes primero por defecto
+            ->orderBy('id', 'desc');
 
         return $products->paginate($perPage);
     }

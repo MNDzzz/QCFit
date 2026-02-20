@@ -70,7 +70,7 @@ async function fetchOutfit() {
  */
 function handleRemix() {
     router.push({
-        name: 'Studio',
+        name: 'app.canvas',
         query: { outfit_id: outfit.value.id }
     });
 }
@@ -80,7 +80,7 @@ function handleRemix() {
  */
 function goToProduct(productId) {
     router.push({
-        name: 'ProductDetail',
+        name: 'public.product.show',
         params: { id: productId }
     });
 }

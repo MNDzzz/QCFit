@@ -5,19 +5,19 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Source;
+use App\Models\Brand;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
- * Seeder para importar productos reales desde archivo CSV.
- * Utilizado para solucionar el "Cold Start" de la base de datos
- * con productos reales de la comunidad Reps.
+ * Seeder actualizado para importar productos reales usando la nueva estructura relacional.
  */
 class RealProductImporterSeeder extends Seeder
 {
     /**
      * Ejecutar el seeder.
-     * Lee el archivo CSV y crea productos con sus imágenes.
      */
     public function run(): void
     {
@@ -47,7 +47,6 @@ class RealProductImporterSeeder extends Seeder
         // Procesar cada línea
         while (($data = fgetcsv($handle)) !== false) {
             try {
-                // Validar que tiene todas las columnas necesarias
                 if (count($data) < 5) {
                     $errors[] = "Línea con datos insuficientes: " . implode(',', $data);
                     continue;
@@ -55,7 +54,7 @@ class RealProductImporterSeeder extends Seeder
 
                 // Extraer datos del CSV
                 $name = trim($data[0]);
-                $brand = trim($data[1]);
+                $brandName = trim($data[1]);
                 $sourceLink = trim($data[2]);
                 $imageUrl = trim($data[3]);
                 $categoryName = trim($data[4]);
@@ -63,23 +62,26 @@ class RealProductImporterSeeder extends Seeder
                 // 1. Buscar o crear la categoría
                 $category = $this->findOrCreateCategory($categoryName);
 
-                // 2. Extraer el source_id del enlace original
-                $sourceId = $this->extractSourceId($sourceLink);
+                // 2. Buscar o crear la MARCA (Nueva estructura)
+                $brand = $this->findOrCreateBrand($brandName);
 
-                // 3. Determinar el marketplace
-                $marketplace = $this->detectMarketplace($sourceLink);
+                // 3. Detectar y buscar/crear el MARKETPLACE (Source) (Nueva estructura)
+                $source = $this->detectAndGetSource($sourceLink);
 
-                // 4. Crear el producto
+                // 4. Extraer el external_id (antiguo source_id)
+                $externalId = $this->extractExternalId($sourceLink);
+
+                // 5. Crear el producto usando la nueva estructura de FKs
                 $product = Product::create([
                     'name' => $name,
-                    'brand' => $brand,
-                    'source_id' => $sourceId,
-                    'marketplace' => $marketplace,
+                    'brand_id' => $brand?->id,
+                    'source_id' => $source?->id,
+                    'external_id' => $externalId,
                     'original_link' => $sourceLink,
                     'category_id' => $category?->id,
                 ]);
 
-                // 5. Crear la imagen del producto
+                // 6. Crear la imagen del producto
                 ProductImage::create([
                     'product_id' => $product->id,
                     'url' => $imageUrl,
@@ -87,7 +89,7 @@ class RealProductImporterSeeder extends Seeder
                 ]);
 
                 $importedCount++;
-                $this->command->info("✓ Importado: {$name} ({$brand})");
+                $this->command->info("✓ Importado: {$name} (Marca: {$brandName} | Source: {$source->name})");
 
             } catch (\Exception $e) {
                 $errors[] = "Error procesando producto: " . ($data[0] ?? 'desconocido') . " - " . $e->getMessage();
@@ -100,89 +102,60 @@ class RealProductImporterSeeder extends Seeder
 
         fclose($handle);
 
-        // Resumen final
         $this->command->newLine();
-        $this->command->info("=== RESUMEN DE IMPORTACIÓN ===");
+        $this->command->info("=== RESUMEN DE IMPORTACIÓN (NUEVA ESTRUCTURA) ===");
         $this->command->info("Productos importados: {$importedCount}");
 
         if (count($errors) > 0) {
             $this->command->warn("Errores encontrados: " . count($errors));
-            foreach ($errors as $error) {
-                $this->command->warn("  - {$error}");
-            }
         }
     }
 
-    /**
-     * Buscar o crear una categoría por nombre.
-     * 
-     * @param string $name Nombre de la categoría
-     * @return Category|null
-     */
     private function findOrCreateCategory(string $name): ?Category
     {
-        if (empty($name)) {
-            return null;
-        }
-
+        if (empty($name)) return null;
         return Category::firstOrCreate(
             ['name' => $name],
-            ['description' => "Categoría: {$name}"]
+            ['slug' => Str::slug($name), 'description' => "Categoría: {$name}"]
         );
     }
 
-    /**
-     * Extraer el source_id del enlace original usando regex.
-     * 
-     * - Weidian: itemID=XXXXXX
-     * - Taobao: id=XXXXXX
-     * - 1688: offer/XXXXXX.html
-     * 
-     * @param string $link Enlace completo del producto
-     * @return string ID extraído o 'unknown'
-     */
-    private function extractSourceId(string $link): string
+    private function findOrCreateBrand(string $name): ?Brand
     {
-        // Weidian: itemID=4477393523
-        if (preg_match('/itemID=(\d+)/i', $link, $matches)) {
-            return $matches[1];
-        }
-
-        // Taobao: id=6923485671
-        if (preg_match('/id=(\d+)/i', $link, $matches)) {
-            return $matches[1];
-        }
-
-        // 1688: offer/6753247890.html
-        if (preg_match('/offer\/(\d+)\.html/i', $link, $matches)) {
-            return $matches[1];
-        }
-
-        // Si no se puede extraer, generar un ID único
-        return 'unknown_' . time() . '_' . rand(1000, 9999);
+        if (empty($name)) return null;
+        return Brand::firstOrCreate(
+            ['slug' => Str::slug($name)],
+            ['name' => $name]
+        );
     }
 
-    /**
-     * Detectar el marketplace según el dominio del enlace.
-     * 
-     * @param string $link Enlace completo del producto
-     * @return string 'taobao', 'weidian' o '1688'
-     */
-    private function detectMarketplace(string $link): string
+    private function detectAndGetSource(string $link): Source
     {
+        $name = 'Taobao';
+        $slug = 'taobao';
+        $baseUrl = 'https://taobao.com';
+
         if (str_contains($link, 'weidian.com')) {
-            return 'weidian';
+            $name = 'Weidian';
+            $slug = 'weidian';
+            $baseUrl = 'https://weidian.com';
+        } elseif (str_contains($link, '1688.com')) {
+            $name = '1688';
+            $slug = '1688';
+            $baseUrl = 'https://1688.com';
         }
 
-        if (str_contains($link, 'taobao.com')) {
-            return 'taobao';
-        }
+        return Source::firstOrCreate(
+            ['slug' => $slug],
+            ['name' => $name, 'base_url' => $baseUrl]
+        );
+    }
 
-        if (str_contains($link, '1688.com')) {
-            return '1688';
-        }
-
-        // Por defecto, taobao
-        return 'taobao';
+    private function extractExternalId(string $link): string
+    {
+        if (preg_match('/itemID=(\d+)/i', $link, $matches)) return $matches[1];
+        if (preg_match('/id=(\d+)/i', $link, $matches)) return $matches[1];
+        if (preg_match('/offer\/(\d+)\.html/i', $link, $matches)) return $matches[1];
+        return 'ext_' . time() . '_' . rand(1000, 9999);
     }
 }

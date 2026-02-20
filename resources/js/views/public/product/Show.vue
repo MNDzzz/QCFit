@@ -160,21 +160,24 @@ const agents = [
                 <div class="lg:w-[40%] p-8 lg:p-12 flex flex-col bg-white">
                     <!-- Breadcrumbs -->
                     <nav class="flex items-center text-xs text-slate-400 mb-6 font-medium">
-                        <span class="hover:text-violet-600 cursor-pointer">Home</span>
+                        <span class="hover:text-violet-600 cursor-pointer" @click="$router.push('/')">Inicio</span>
                         <i class="pi pi-angle-right mx-2 text-[10px]"></i>
-                        <span class="hover:text-violet-600 cursor-pointer">{{ product.category?.name || 'Shoes' }}</span>
+                        <span class="hover:text-violet-600 cursor-pointer">{{ product.category?.name || 'Categoría' }}</span>
                         <i class="pi pi-angle-right mx-2 text-[10px]"></i>
-                        <span class="text-slate-800 truncate max-w-[150px]">{{ product.brand || 'Product' }}</span>
+                        <span class="text-slate-800 truncate max-w-[150px] uppercase font-bold">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Producto') }}</span>
                     </nav>
 
-                    <h2 class="text-sm font-bold text-slate-400 tracking-widest uppercase mb-1">{{ product.brand }}</h2>
+                    <h2 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Marca desconocida') }}</h2>
                     <h1 class="text-3xl lg:text-4xl font-display font-bold text-slate-900 mb-4 leading-tight">{{ product.name }}</h1>
 
                     <div class="flex items-end gap-3 mb-8 border-b border-slate-100 pb-8">
                         <span class="text-4xl font-mono font-bold text-slate-900">¥{{ product.price || 260 }}</span>
                         <div class="text-xs text-slate-500 mb-1.5 flex flex-col">
-                             <span class="font-bold flex items-center gap-1"><i class="pi pi-shopping-bag text-slate-400"></i> Weidian</span>
-                             <span>ID: {{ product.source_id || '107237' }}</span>
+                             <span class="font-bold flex items-center gap-1 uppercase">
+                                <i class="pi pi-shopping-bag text-slate-400"></i> 
+                                {{ product.source?.name || (typeof product.marketplace === 'string' ? product.marketplace : (product.marketplace?.name || 'Marketplace')) }}
+                             </span>
+                             <span>ID Externo: {{ product.external_id || product.source_id }}</span>
                         </div>
                     </div>
 

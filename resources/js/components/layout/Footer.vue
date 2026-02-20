@@ -15,18 +15,18 @@
                 <div>
                     <h4 class="text-white font-bold mb-4 font-display">Discover</h4>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">Trending Outfits</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">Popular Shoes</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">New Arrivals</a></li>
+                        <li><router-link :to="{ name: 'public.explore' }" class="hover:text-violet-400 transition-colors">Trending Outfits</router-link></li>
+                        <li><router-link :to="{ name: 'public.search', query: { q: 'shoes' } }" class="hover:text-violet-400 transition-colors">Popular Shoes</router-link></li>
+                        <li><router-link :to="{ name: 'public.home' }" class="hover:text-violet-400 transition-colors">New Arrivals</router-link></li>
                     </ul>
                 </div>
 
                  <div>
                     <h4 class="text-white font-bold mb-4 font-display">Studio</h4>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">Create Outfit</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">Remix Community</a></li>
-                        <li><a href="#" class="hover:text-violet-400 transition-colors">My Wardrobe</a></li>
+                        <li><router-link :to="{ name: 'app.canvas' }" class="hover:text-violet-400 transition-colors">Create Outfit</router-link></li>
+                        <li><router-link :to="{ name: 'public.explore' }" class="hover:text-violet-400 transition-colors">Remix Community</router-link></li>
+                        <li><a href="#" class="hover:text-violet-400 transition-colors">My Wardrobe (WIP)</a></li>
                     </ul>
                 </div>
 
