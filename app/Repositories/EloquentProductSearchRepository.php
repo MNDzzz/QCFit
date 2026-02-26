@@ -39,6 +39,14 @@ class EloquentProductSearchRepository implements ProductSearchRepository
         return Product::where('source_id', $sourceId)->with('images')->first();
     }
 
+    public function getLatestProducts(int $limit = 20)
+    {
+        return Product::with(['images', 'brand', 'category'])
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
     public function getLatestQCImages(int $limit = 15)
     {
         return \App\Models\ProductImage::where('type', 'qc')
