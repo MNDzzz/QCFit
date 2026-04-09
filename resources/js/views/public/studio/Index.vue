@@ -63,6 +63,16 @@ async function loadRemixOutfit(outfitId) {
     }
 }
 
+// Manejar limpiar lienzo
+function confirmClear() {
+    if (canvasStore.canvasItems.length === 0) return;
+    
+    if (confirm('¿Limpiar todo el lienzo? Esta acción no se puede deshacer.')) {
+        canvasStore.clearCanvas();
+        toast.add({ severity: 'info', summary: 'Lienzo limpio', detail: 'Se han eliminado todos los items', life: 2000 });
+    }
+}
+
 // Manejar guardar outfit
 async function handleSave() {
     // Validar que haya items en el canvas
@@ -225,16 +235,12 @@ function cancelSave() {
             <!-- Acciones Header -->
             <div class="flex items-center gap-3">
                  <button 
-                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 flex items-center justify-center transition-all"
-                    title="Undo (WIP)"
+                    @click="confirmClear"
+                    :disabled="canvasStore.canvasItems.length === 0"
+                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-red-400 hover:bg-red-900/20 border border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all"
+                    title="Limpiar Lienzo"
                 >
-                    <i class="pi pi-undo"></i>
-                 </button>
-                 <button 
-                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 flex items-center justify-center transition-all"
-                    title="Redo (WIP)"
-                >
-                    <i class="pi pi-refresh transform rotate-180"></i>
+                    <i class="pi pi-trash"></i>
                  </button>
                  
                  <div class="h-6 w-px bg-slate-800 mx-1"></div>
