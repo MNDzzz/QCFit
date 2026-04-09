@@ -25,7 +25,7 @@ class OutfitResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'thumbnail_url' => $this->thumbnail_url,
+            'thumbnail_url' => $this->thumbnail_url ?? ($this->products->first()?->images->first()?->url ?? null),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
 
@@ -49,7 +49,7 @@ class OutfitResource extends JsonResource
                             'id' => $product->id,
                             'name' => $product->name,
                             'brand' => $product->brand,
-                            'marketplace' => $product->marketplace,
+                            'source' => $product->source,
                             'source_id' => $product->source_id,
                             'original_link' => $product->original_link,
                             // Obtener imágenes con sus tipos

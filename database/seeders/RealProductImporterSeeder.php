@@ -81,11 +81,37 @@ class RealProductImporterSeeder extends Seeder
                     'category_id' => $category?->id,
                 ]);
 
-                // 6. Crear la imagen del producto
+                // 6. Crear la imagen ORIGINAL del producto (Fix para Imgur rotos)
+                $finalImageUrl = $imageUrl;
+                if (str_contains($imageUrl, 'imgur.com')) {
+                    // Generamos una imagen de Unsplash basada en el nombre para evitar links rotos de Imgur
+                    $keyword = str_replace(' ', '+', $name);
+                    $finalImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000"; // Fallback generic sneaker if keyword fails
+                    // Intentamos una búsqueda por categoría si es posible
+                    if (str_contains(strtolower($name), 'jordan') || str_contains(strtolower($name), 'nike')) {
+                        $finalImageUrl = "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=1000"; 
+                    } elseif (str_contains(strtolower($name), 'hoodie') || str_contains(strtolower($name), 'knit')) {
+                        $finalImageUrl = "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1000";
+                    }
+                }
+
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'url' => $imageUrl,
+                    'url' => $finalImageUrl,
                     'type' => 'original',
+                ]);
+
+                // 7. Crear algunas imágenes QC ficticias para el Feed (Nuevo)
+                $qcImages = [
+                    "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1560769629-975ec94e6a86?q=80&w=1000",
+                    "https://images.unsplash.com/photo-1575537302964-96cd47c06b1b?q=80&w=1000"
+                ];
+
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'url' => $qcImages[rand(0, 2)],
+                    'type' => 'qc',
                 ]);
 
                 $importedCount++;

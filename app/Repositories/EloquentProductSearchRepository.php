@@ -47,12 +47,23 @@ class EloquentProductSearchRepository implements ProductSearchRepository
             ->get();
     }
 
-    public function getLatestQCImages(int $limit = 15)
+    public function getLatestQCImages(int $limit = 20)
     {
-        return \App\Models\ProductImage::where('type', 'qc')
-            ->orderBy('id', 'desc') // Asumimos ID auto-incremental como cronológico
+        // Try getting real QC images first
+        $images = \App\Models\ProductImage::where('type', 'qc')
+            ->orderBy('id', 'desc')
             ->limit($limit)
-            ->with('product') // Eager load del producto padre
+            ->with(['product.brand', 'product.source'])
             ->get();
+
+        // Fallback: get any images if no QCs exist
+        if ($images->isEmpty()) {
+            $images = \App\Models\ProductImage::orderBy('id', 'desc')
+                ->limit($limit)
+                ->with(['product.brand', 'product.source'])
+                ->get();
+        }
+
+        return $images;
     }
 }
