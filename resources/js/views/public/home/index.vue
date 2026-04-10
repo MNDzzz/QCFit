@@ -53,52 +53,47 @@ async function loadOutfits() {
     <div class="min-h-screen bg-stone-50 flex flex-col font-sans">
         <!-- Hero Section -->
         <!-- Hero Section -->
-        <div class="relative bg-[#0B0F19] pt-40 pb-36 px-4 text-center overflow-hidden border-b border-white/5">
-            <!-- Background Gradients -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[700px] bg-violet-600/20 blur-[180px] rounded-full pointer-events-none mix-blend-screen opacity-60"></div>
+        <div class="relative bg-[#0B0F19] pt-48 pb-40 px-6 text-center overflow-hidden border-b border-white/5">
+            <!-- Background Gradients & Effects -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1600px] h-[800px] bg-violet-600/10 blur-[160px] rounded-full pointer-events-none mix-blend-screen opacity-50"></div>
+            <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 blur-[140px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none mix-blend-screen opacity-30"></div>
             
-            <div class="relative z-10 max-w-5xl mx-auto">
-                <!-- Floating Cards Animation -->
-                <div class="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0 opacity-100">
-                     <!-- Left Card: Dunk -->
-                     <div class="absolute left-[5%] lg:left-[12%] top-1/2 -translate-y-1/2 -translate-x-12 w-56 animate-float-slow transform -rotate-12">
-                         <div class="bg-[#1E293B] rounded-xl overflow-hidden shadow-2xl border border-slate-700/50 relative group">
-                             <!-- Badge -->
-                             <div class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase flex items-center gap-1 z-20 shadow-lg">
-                                 <i class="pi pi-check-circle text-[10px]"></i> QC Verified
+            <!-- Grid Pattern Overlay -->
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                 style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto">
+                <!-- Floating Elements (Visual Decoration) -->
+                <div class="hidden lg:block pointer-events-none select-none absolute inset-0 z-0">
+                     <!-- Left Floating Card -->
+                     <div class="absolute left-[2%] xl:left-[8%] top-20 animate-float-slow transform -rotate-6">
+                         <div class="bg-slate-900/40 backdrop-blur-xl rounded-2xl p-2 border border-white/10 shadow-2xl">
+                             <div class="w-48 aspect-square bg-slate-800/50 rounded-xl overflow-hidden mb-3 relative group">
+                                 <img src="/images/hero/dunk.png" alt="Nike Dunk" class="w-full h-full object-contain p-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-700">
+                                 <div class="absolute top-2 right-2 px-1.5 py-0.5 bg-emerald-500 text-[8px] font-black text-white rounded">QC</div>
                              </div>
-                             <!-- Image -->
-                             <div class="p-6 bg-gradient-to-b from-slate-700/50 to-slate-800/50">
-                                <img src="/images/hero/dunk.png" alt="Nike Dunk" class="w-full drop-shadow-xl transform group-hover:scale-110 transition-transform duration-500">
-                             </div>
-                             <!-- Footer -->
-                             <div class="bg-[#0F172A] p-3 text-left">
-                                 <div class="text-white text-xs font-bold truncate leading-tight">Nike Dunk Low 'Grey Fog'</div>
-                                 <div class="flex items-center justify-between mt-2">
-                                     <span class="text-white font-bold text-lg">¥ 180</span>
-                                     <span class="bg-orange-500/20 text-orange-500 p-1 rounded text-xs"><i class="pi pi-shopping-bag"></i></span>
+                             <div class="px-2 pb-2 text-left">
+                                 <div class="h-2 w-24 bg-white/10 rounded mb-2"></div>
+                                 <div class="flex justify-between items-center">
+                                     <div class="h-3 w-12 bg-white/20 rounded"></div>
+                                     <div class="h-4 w-4 bg-violet-500/20 rounded-full"></div>
                                  </div>
                              </div>
                          </div>
                      </div>
 
-                     <!-- Right Card: Jordan -->
-                     <div class="absolute right-[5%] lg:right-[12%] top-1/2 -translate-y-1/2 translate-x-12 w-56 animate-float-delayed transform rotate-12">
-                         <div class="bg-[#1E293B] rounded-xl overflow-hidden shadow-2xl border border-slate-700/50 relative group">
-                             <!-- Badge -->
-                             <div class="absolute top-3 left-3 bg-emerald-500 text-white text-[10px] px-2 py-0.5 rounded font-bold uppercase flex items-center gap-1 z-20 shadow-lg">
-                                 <i class="pi pi-check-circle text-[10px]"></i> QC Verified
+                     <!-- Right Floating Card -->
+                     <div class="absolute right-[2%] xl:right-[8%] bottom-0 animate-float-delayed transform rotate-6">
+                         <div class="bg-slate-900/40 backdrop-blur-xl rounded-2xl p-2 border border-white/10 shadow-2xl">
+                             <div class="w-48 aspect-square bg-slate-800/50 rounded-xl overflow-hidden mb-3 relative group">
+                                 <img src="/images/hero/jordan.png" alt="Jordan 4" class="w-full h-full object-contain p-4 drop-shadow-2xl group-hover:scale-110 transition-transform duration-700">
+                                 <div class="absolute top-2 left-2 px-1.5 py-0.5 bg-emerald-500 text-[8px] font-black text-white rounded">QC</div>
                              </div>
-                             <!-- Image -->
-                             <div class="p-6 bg-gradient-to-b from-slate-700/50 to-slate-800/50">
-                                <img src="/images/hero/jordan.png" alt="Jordan 4" class="w-full drop-shadow-xl transform group-hover:scale-110 transition-transform duration-500">
-                             </div>
-                             <!-- Footer -->
-                             <div class="bg-[#0F172A] p-3 text-left">
-                                 <div class="text-white text-xs font-bold truncate leading-tight">Cantos Exxxxs <br> Travis Scott J1...</div>
-                                 <div class="flex items-center justify-between mt-2">
-                                     <span class="text-white font-bold text-lg">¥ 180</span>
-                                     <span class="bg-red-500/20 text-red-500 p-1 rounded text-xs"><i class="pi pi-shopping-cart"></i></span>
+                             <div class="px-2 pb-2 text-left">
+                                 <div class="h-2 w-24 bg-white/10 rounded mb-2"></div>
+                                 <div class="flex justify-between items-center">
+                                     <div class="h-3 w-12 bg-white/20 rounded"></div>
+                                     <div class="h-4 w-4 bg-orange-500/20 rounded-full"></div>
                                  </div>
                              </div>
                          </div>
@@ -106,17 +101,40 @@ async function loadOutfits() {
                 </div>
 
                 <!-- Main Content -->
-                <div class="relative z-10 pt-8">
-                    <h1 class="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tight leading-none drop-shadow-2xl">
-                        The Ultimate Weidian <br/>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400">& Taobao QC Finder</span>
+                <div class="relative z-10">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-400 text-xs font-bold mb-8 animate-fade-in sm:text-sm">
+                        <span class="flex h-2 w-2 rounded-full bg-violet-500 animate-pulse"></span>
+                        Trusted by 50,000+ QC inspectors
+                    </div>
+
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-display font-black text-white mb-8 tracking-tighter leading-[0.9] drop-shadow-2xl">
+                        Design Your <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500">Perfect Outfit</span>
                     </h1>
-                    <p class="text-lg text-slate-400 mb-10 max-w-xl mx-auto font-light leading-relaxed">
-                        Search millions of real photos and build outfits.
+                    
+                    <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                        Search real QC photos from Weidian & Taobao. <br class="hidden sm:block"/>
+                        Build outfits with our interactive studio.
                     </p>
                     
-                    <div class="hover:scale-[1.01] transition-transform duration-300">
-                        <SmartSearch />
+                    <div class="max-w-3xl mx-auto relative group">
+                        <!-- Extra Search Decoration -->
+                        <div class="absolute -top-12 -left-12 w-24 h-24 bg-blue-500/10 blur-2xl rounded-full"></div>
+                        <div class="absolute -bottom-12 -right-12 w-24 h-24 bg-violet-500/10 blur-2xl rounded-full"></div>
+                        
+                        <div class="relative hover:scale-[1.02] transition-all duration-500 ease-out">
+                            <SmartSearch />
+                        </div>
+                        
+                        <!-- Search Hints -->
+                        <div class="mt-6 flex flex-wrap justify-center gap-4 text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-widest">
+                            <span>Popular:</span>
+                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Travis Scott</a>
+                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Nike SB</a>
+                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Essentials</a>
+                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Arc'teryx</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,17 +144,24 @@ async function loadOutfits() {
         <LiveFeed />
 
         <!-- Sección de Populares -->
-        <div class="max-w-7xl mx-auto px-4 py-16">
-            <h2 class="text-3xl font-display font-bold text-slate-900 text-center mb-8">POPULAR RIGHT NOW</h2>
-            
-            <!-- Category Pills -->
-            <div class="flex justify-center gap-4 mb-12">
-                <button class="px-6 py-2 rounded-full bg-slate-900 text-white font-medium text-sm shadow-lg hover:shadow-xl transition-all border border-slate-700">All</button>
-                <button class="px-6 py-2 rounded-full bg-white text-slate-600 font-medium text-sm shadow-sm border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all flex items-center gap-2"><i class="pi pi-pause rotate-90 text-xs"></i> Shoes</button>
-                <button class="px-6 py-2 rounded-full bg-white text-slate-600 font-medium text-sm shadow-sm border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all flex items-center gap-2"><i class="pi pi-user text-xs"></i> Tops</button>
-                <button class="px-6 py-2 rounded-full bg-white text-slate-600 font-medium text-sm shadow-sm border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all flex items-center gap-2"><i class="pi pi-align-justify text-xs"></i> Bottoms</button>
-                <button class="px-6 py-2 rounded-full bg-white text-slate-600 font-medium text-sm shadow-sm border border-slate-200 hover:border-slate-300 hover:text-slate-900 transition-all flex items-center gap-2"><i class="pi pi-star text-xs"></i> Accessories</button>
+        <div class="max-w-7xl mx-auto px-6 py-24">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+                <div class="flex flex-col gap-2">
+                    <h2 class="text-4xl md:text-5xl font-display font-black text-slate-900 dark:text-white tracking-tight">
+                        Trending Items
+                    </h2>
+                    <p class="text-slate-500 dark:text-slate-400">Most inspected products this week</p>
+                </div>
+                
+                <!-- Category Pills (Enhanced) -->
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-6 py-2.5 rounded-full bg-slate-950 dark:bg-white dark:text-slate-950 text-white font-bold text-xs shadow-xl transition-all">All</button>
+                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Shoes</button>
+                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Tops</button>
+                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Bottoms</button>
+                </div>
             </div>
+
 
             <!-- Products Grid (Reusing Logic but fetching Products) -->
             <div v-if="loading" class="grid grid-cols-2 md:grid-cols-4 gap-6">

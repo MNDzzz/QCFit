@@ -98,7 +98,7 @@ El proyecto implementa 3 relaciones Many-to-Many clave:
 
 ## 👥 Créditos
 Desarrollado como Proyecto Final de Desarrollo Web.
-- **Autor**: [Tu Nombre]
+- **Autores**: Álvaro Méndez y Manel Muñoz
 - **Asignatura**: Desarrollo Web Entorno Servidor / Cliente
 
 ---

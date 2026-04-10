@@ -12,7 +12,8 @@ class Outfit extends Model
         'user_id',
         'title',
         'description',
-        'thumbnail_url'
+        'thumbnail_url',
+        'is_public'
     ];
 
     public function user()

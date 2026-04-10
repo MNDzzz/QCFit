@@ -11,11 +11,21 @@ use App\Http\Resources\UserResource;
 
 class ProfileController extends Controller
 {
-    /** */
+    /**
+     * Update the authenticated user's profile.
+     */
     public function update(UpdateProfileRequest $request)
     {
         $profile = Auth::user();
         $profile->name = $request->name;
+        $profile->bio = $request->bio;
+        $profile->agent_preference = $request->agent_preference;
+
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $profile->avatar = '/storage/' . $path;
+        }
+
         $profile->save();
 
         return new UserResource($profile);

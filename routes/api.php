@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('brands', \App\Http\Controllers\Api\BrandController::class);
     
     // Gestión de Productos (Admin CRUD)
-    Route::apiResource('products', ProductController::class);
+    Route::apiResource('products', ProductController::class)->except(['index', 'show']);
 
     // Roles y Permisos
     Route::apiResource('roles', RoleController::class);
@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::get('category-list', [CategoryController::class, 'getList']);
 Route::get('/search', [\App\Http\Controllers\Api\SearchController::class, 'index']);
 Route::get('/feed/live', [\App\Http\Controllers\Api\SearchController::class, 'liveFeed']);
+Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::get('/outfits', [OutfitController::class, 'index']);

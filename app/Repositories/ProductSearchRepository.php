@@ -26,6 +26,14 @@ interface ProductSearchRepository
     public function findBySourceId(string $sourceId);
 
     /**
+     * Obtiene los últimos productos añadidos al catálogo.
+     *
+     * @param int $limit
+     * @return Collection
+     */
+    public function getLatestProducts(int $limit = 20);
+
+    /**
      * Obtiene las últimas imágenes QC subidas al sistema.
      *
      * @param int $limit
