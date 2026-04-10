@@ -8,13 +8,23 @@ const canvasStore = useCanvasStore();
 
 // Configuración del Stage (lienzo principal)
 const stageConfig = ref({
-    width: 1000,
-    height: 700,
+    width: 0,
+    height: 0,
 });
 
 // Referencias a elementos de Konva
 const transformerRef = ref(null);
 const stageRef = ref(null);
+const containerRef = ref(null);
+
+// Función para ajustar el tamaño del canvas al contenedor
+function handleResize() {
+    if (containerRef.value) {
+        const { clientWidth, clientHeight } = containerRef.value;
+        stageConfig.value.width = clientWidth;
+        stageConfig.value.height = clientHeight;
+    }
+}
 
 // Imágenes cargadas (necesario para Konva)
 const loadedImages = ref({});
@@ -74,7 +84,7 @@ function handleStageClick(e) {
     }
 
     // Click en transformer -> ignorar
-    const clickedOnTransformer = e.target.getParent().className === 'Transformer';
+    const clickedOnTransformer = e.target.getParent()?.className === 'Transformer';
     if (clickedOnTransformer) {
         return;
     }
@@ -232,6 +242,9 @@ watch(selectedItemId, () => {
 
 // Cargar imágenes existentes al montar el componente
 onMounted(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
     canvasStore.canvasItems.forEach(item => {
         loadImage(item.id, item.imageUrl);
     });
@@ -245,15 +258,14 @@ defineExpose({
 </script>
 
 <template>
-    <div class="canvas-editor-container relative w-full h-full bg-transparent">
-        <!-- Patrón de fondo tipo Checkerboard (Dark Mode Subtler) -->
-         <div class="absolute inset-0 opacity-[0.03]" 
-             style="background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%); background-size: 20px 20px; background-position: 0 0, 0 10px, 10px -10px, -10px 0px;">
+    <div ref="containerRef" class="canvas-editor-container relative w-full h-full bg-[#111111]">
+        <!-- Patrón de fondo tipo Checkerboard (Dark Studio Style) -->
+         <div class="absolute inset-0 opacity-[0.05]" 
+             style="background-image: conic-gradient(#444 0.25turn, transparent 0 0.5turn, #444 0.75turn, transparent 0); background-size: 40px 40px;">
         </div>
 
         <!-- Canvas Stage -->
-        <div class="relative flex items-center justify-center w-full h-full overflow-hidden">
-            <!-- Stage sin sombra ni fondo blanco, flotando en el espacio -->
+        <div class="relative w-full h-full overflow-hidden">
             <Stage 
                 ref="stageRef"
                 :config="stageConfig"
@@ -303,14 +315,16 @@ defineExpose({
             </div>
         </div>
 
-        <!-- Floating Toolbar Contextual (aparece sobre el item seleccionado) -->
+        <!-- Floating Toolbar Contextual -->
         <CanvasFloatingToolbar @remove-bg="handleRemoveBg" />
     </div>
 </template>
 
 <style scoped>
 .canvas-editor-container {
-    /* Asegurar que el contenedor tenga altura definida */
-    min-height: 700px;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
 }
 </style>
+
