@@ -61,11 +61,11 @@ class SearchController extends Controller
     }
 
     /**
-     * Live Feed: Latest QC photos uploaded.
+     * Live Feed: Latest images added to the system.
      */
     public function liveFeed()
     {
-        $images = $this->repository->getLatestQCImages(15);
+        $images = $this->repository->getLatestQCImages(20);
         return ProductImageResource::collection($images);
     }
 }
