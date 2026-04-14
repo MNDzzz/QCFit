@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
     // Social
     Route::post('/follow', [FollowController::class, 'toggle']);
+
+    // Admin: Moderación de Outfits
+    Route::get('/admin/outfits', [OutfitController::class, 'adminIndex']);
+    Route::delete('/admin/outfits/{id}', [OutfitController::class, 'adminDestroy']);
 });
 
 // Rutas Públicas
