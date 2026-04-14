@@ -43,7 +43,7 @@ function selectAgent(agent) {
                     <router-link :to="{ name: 'public.home' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
                         Brands
                     </router-link>
-                    <router-link :to="{ name: 'app.canvas' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
+                    <router-link :to="{ name: 'public.studio' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
                         Studio
                     </router-link>
                 </div>
@@ -139,7 +139,7 @@ function selectAgent(agent) {
         <div v-show="isOpen" class="md:hidden bg-slate-900 border-b border-slate-800">
              <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <router-link :to="{ name: 'public.explore' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Explore</router-link>
-                <router-link :to="{ name: 'app.canvas' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Studio</router-link>
+                <router-link :to="{ name: 'public.studio' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Studio</router-link>
              </div>
         </div>
     </nav>

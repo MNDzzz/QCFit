@@ -70,7 +70,7 @@ async function fetchOutfit() {
  */
 function handleRemix() {
     router.push({
-        name: 'app.canvas',
+        name: 'public.studio',
         query: { outfit_id: outfit.value.id }
     });
 }
