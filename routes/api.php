@@ -31,6 +31,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('sources', \App\Http\Controllers\Api\SourceController::class);
     Route::apiResource('brands', \App\Http\Controllers\Api\BrandController::class);
+    Route::get('brands/{brand}/products', [\App\Http\Controllers\Api\BrandController::class, 'products']);
+    Route::put('brands/{brand}/products/{product}', [\App\Http\Controllers\Api\BrandController::class, 'updateProductBrand']);
     
     // Gestión de Productos (Admin CRUD)
     Route::apiResource('products', ProductController::class)->except(['index', 'show']);

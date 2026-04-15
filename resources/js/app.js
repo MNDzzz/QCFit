@@ -49,6 +49,7 @@ import FloatLabel from 'primevue/floatlabel';
 import Password from 'primevue/password';
 
 
+import 'primeicons/primeicons.css';
 import "../css/app.css";
 
 const app = createApp(App);

@@ -82,6 +82,16 @@
                             <div class="flex gap-2">
                                 <Button
                                     v-if="can('brand-edit')"
+                                    icon="pi pi-box"
+                                    text
+                                    rounded
+                                    severity="info"
+                                    size="small"
+                                    v-tooltip.top="'Ver Productos'"
+                                    @click="openProductsDialog(slotProps.data)"
+                                />
+                                <Button
+                                    v-if="can('brand-edit')"
                                     icon="pi pi-pencil"
                                     text
                                     rounded
@@ -137,6 +147,53 @@
                 <Button v-else label="Guardar" @click="submitUpdate" :loading="isLoading" />
             </template>
         </Dialog>
+
+        <!-- Diálogo para ver productos asociados -->
+        <Dialog 
+            v-model:visible="productsDialog.open" 
+            modal 
+            :header="'Productos de ' + productsDialog.brandName" 
+            :style="{ width: '800px' }"
+        >
+            <DataTable 
+                :value="associatedProducts" 
+                size="small" 
+                :paginator="true" 
+                :rows="5"
+                striped-rows
+            >
+                <template #empty>
+                    <div class="text-center py-4 text-slate-400">Esta marca no tiene productos asociados.</div>
+                </template>
+
+                <Column field="id" header="ID" class="w-[60px]"></Column>
+                <Column header="Imagen" class="w-[80px]">
+                    <template #body="slotProps">
+                        <img v-if="slotProps.data.thumbnail" :src="slotProps.data.thumbnail" class="h-8 w-8 object-cover rounded" />
+                    </template>
+                </Column>
+                <Column field="name" header="Nombre" sortable></Column>
+                
+                <Column header="Reasignar Marca" class="w-[220px]">
+                    <template #body="slotProps">
+                        <div class="flex items-center gap-2">
+                            <Select 
+                                v-model="slotProps.data.temp_brand_id" 
+                                :options="brandList" 
+                                optionLabel="name" 
+                                optionValue="id" 
+                                placeholder="Mover a..." 
+                                class="w-full text-xs"
+                                @change="onReassignBrand(slotProps.data)"
+                            />
+                        </div>
+                    </template>
+                </Column>
+            </DataTable>
+            <template #footer>
+                <Button label="Cerrar" severity="secondary" @click="productsDialog.open = false" />
+            </template>
+        </Dialog>
     </div>
 </template>
 
@@ -146,7 +203,11 @@ import useBrands from "@/composables/brands";
 import { useAbility } from '@casl/vue';
 import { FilterMatchMode } from "@primevue/core/api";
 
-const { brands, brand, getBrands, createBrand, updateBrand, deleteBrand, resetBrand, setBrand, hasError, getError, upsertBrandRecord, isLoading } = useBrands();
+const { 
+    brands, brand, getBrands, createBrand, updateBrand, deleteBrand, 
+    resetBrand, setBrand, hasError, getError, upsertBrandRecord, 
+    isLoading, getBrandProducts, updateProductBrand, getBrandList, brandList 
+} = useBrands();
 const { can } = useAbility();
 const swal = inject('$swal');
 
@@ -158,6 +219,14 @@ const brandDialog = reactive({
     open: false,
     type: 'create'
 });
+
+const productsDialog = reactive({
+    open: false,
+    brandId: null,
+    brandName: ''
+});
+
+const associatedProducts = ref([]);
 
 const updateSlug = () => {
     if (brandDialog.type === 'create') {
@@ -182,6 +251,46 @@ const openEditDialog = (data) => {
 
 const closeDialog = () => {
     brandDialog.open = false;
+};
+
+const openProductsDialog = async (data) => {
+    productsDialog.brandId = data.id;
+    productsDialog.brandName = data.name;
+    const response = await getBrandProducts(data.id);
+    // Añadimos temp_brand_id para el select de cada fila
+    associatedProducts.value = response.map(p => ({
+        ...p,
+        temp_brand_id: data.id
+    }));
+    productsDialog.open = true;
+};
+
+const onReassignBrand = async (productData) => {
+    if (productData.temp_brand_id === productsDialog.brandId) return;
+
+    swal({
+        title: '¿Reasignar producto?',
+        text: `El producto se moverá de "${productsDialog.brandName}" a la marca seleccionada.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, mover',
+        cancelButtonText: 'Cancelar'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            const success = await updateProductBrand(
+                productsDialog.brandId, 
+                productData.id, 
+                productData.temp_brand_id
+            );
+            if (success) {
+                // Quitamos el producto de la lista actual
+                associatedProducts.value = associatedProducts.value.filter(p => p.id !== productData.id);
+            }
+        } else {
+            // Revertimos el select si cancela
+            productData.temp_brand_id = productsDialog.brandId;
+        }
+    });
 };
 
 const submitCreate = async () => {
@@ -218,5 +327,6 @@ const confirmDeleteBrand = (data) => {
 
 onMounted(() => {
     getBrands();
+    getBrandList();
 });
 </script>

@@ -157,6 +157,42 @@ export default function useBrands() {
         }
     }
 
+    /**
+     * Obtener productos asociados a una marca
+     */
+    const getBrandProducts = async (brandId) => {
+        try {
+            const response = await withLoading(() => axios.get(`/api/brands/${brandId}/products`))
+            return response.data?.data ?? []
+        } catch (error) {
+            handleRequestError(error, {
+                fallbackMessage: 'No se pudieron cargar los productos de esta marca',
+                onGenericError: (message) => toast.error('Error', message)
+            })
+            return []
+        }
+    }
+
+    /**
+     * Reasignar un producto a una marca diferente
+     */
+    const updateProductBrand = async (originBrandId, productId, targetBrandId) => {
+        try {
+            const response = await withLoading(() => 
+                axios.put(`/api/brands/${originBrandId}/products/${productId}`, {
+                    brand_id: targetBrandId
+                })
+            )
+            toast.success('Éxito', 'Producto reasignado correctamente')
+            return response.data
+        } catch (error) {
+            handleRequestError(error, {
+                fallbackMessage: 'No se pudo reasignar el producto',
+                onGenericError: (message) => toast.error('Error', message)
+            })
+        }
+    }
+
     return {
         brands,
         brand,
@@ -172,6 +208,8 @@ export default function useBrands() {
         getBrandList,
         createBrand,
         updateBrand,
-        deleteBrand
+        deleteBrand,
+        getBrandProducts,
+        updateProductBrand
     }
 }

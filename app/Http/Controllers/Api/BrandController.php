@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBrandRequest;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 /**
@@ -87,5 +89,36 @@ class BrandController extends Controller
     public function getList()
     {
         return BrandResource::collection(Brand::all());
+    }
+
+    /**
+     * Listar productos asociados a una marca específica
+     */
+    public function products(Brand $brand)
+    {
+        $this->authorize('brand-edit'); // Se requiere permiso de edición para gestionar sus productos
+        $products = $brand->products()->with(['category', 'source', 'images'])->get();
+        return ProductResource::collection($products);
+    }
+
+    /**
+     * Reasignar un producto a otra marca (Desencajar)
+     */
+    public function updateProductBrand(Request $request, Brand $brand, Product $product)
+    {
+        $this->authorize('brand-edit');
+        
+        $request->validate([
+            'brand_id' => 'required|exists:brands,id'
+        ], [
+            'brand_id.required' => 'Debes seleccionar una marca de destino.',
+            'brand_id.exists' => 'La marca seleccionada no existe.'
+        ]);
+
+        $product->update(['brand_id' => $request->brand_id]);
+
+        return response()->json([
+            'message' => 'Producto reasignado correctamente a la nueva marca.'
+        ]);
     }
 }
