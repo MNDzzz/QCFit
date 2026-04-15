@@ -59,7 +59,10 @@
 
                     <Column header="Imagen" class="w-[100px]">
                         <template #body="slotProps">
-                            <img :src="slotProps.data.thumbnail" class="h-12 w-12 object-cover rounded shadow-sm border border-gray-100" />
+                            <div class="h-12 w-12 rounded overflow-hidden shadow-sm border border-gray-100 bg-slate-50 flex items-center justify-center">
+                                <img v-if="slotProps.data.thumbnail" :src="slotProps.data.thumbnail" class="h-full w-full object-cover" />
+                                <i v-else class="pi pi-image text-slate-300"></i>
+                            </div>
                         </template>
                     </Column>
 

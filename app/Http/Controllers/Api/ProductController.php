@@ -8,6 +8,7 @@ use App\Models\ProductImage;
 use App\Repositories\ProductSearchRepository;
 use App\Services\QcScraperService;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductImageResource;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

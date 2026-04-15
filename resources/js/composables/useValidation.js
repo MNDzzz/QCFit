@@ -1,12 +1,12 @@
 import { ref } from 'vue'
 
 /**
- * Sistema de validación reutilizable basado en Yup.
+ * Sistema de validación reutilizable basado en Yup y manejador de errores de Axios.
  */
 export function useValidation() {
   const errors = ref({})
 
-  /** Valida un formulario completo de forma síncrona */
+  /** Valida un formulario completo de forma síncrona usando un esquema Yup */
   const validate = (schema, data, options = { abortEarly: false }) => {
     if (!schema) throw new Error('Se requiere un esquema de validación')
     try {
@@ -29,6 +29,36 @@ export function useValidation() {
     } catch (error) {
       setFieldError(field, error.message)
       return { isValid: false, error: error.message }
+    }
+  }
+
+  /** 
+   * Maneja errores de peticiones HTTP (Axios).
+   * Procesa errores 422 (validación de Laravel) y errores genéricos.
+   */
+  const handleRequestError = (error, options = {}) => {
+    const {
+      fallbackMessage = 'Ha ocurrido un error inesperado',
+      onValidationError = null,
+      onGenericError = null
+    } = options
+
+    // Error 422: Validación fallida en el Backend (Laravel)
+    if (error.response?.status === 422) {
+      const validationErrors = error.response.data.errors
+      errors.value = {}
+      
+      // Mapeamos los errores de Laravel al estado local
+      Object.keys(validationErrors).forEach(field => {
+        setFieldError(field, validationErrors[field][0])
+      })
+      
+      if (onValidationError) onValidationError(validationErrors)
+    } 
+    // Otros errores (500, 403, 404, etc)
+    else {
+      const message = error.response?.data?.message || fallbackMessage
+      if (onGenericError) onGenericError(message)
     }
   }
 
@@ -72,6 +102,7 @@ export function useValidation() {
     errors,
     validate,
     validateField,
+    handleRequestError,
     setFieldError,
     clearFieldError,
     clearErrors,
