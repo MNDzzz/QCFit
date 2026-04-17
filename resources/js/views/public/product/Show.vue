@@ -211,7 +211,7 @@ const agents = [
                     </button>
 
                     <button 
-                        @click="$router.push({name: 'app.canvas'})"
+                        @click="$router.push({name: 'public.studio'})"
                          class="w-full py-3 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-all flex items-center justify-center gap-2 mb-8"
                     >
                         <i class="pi pi-plus"></i> ADD TO STUDIO

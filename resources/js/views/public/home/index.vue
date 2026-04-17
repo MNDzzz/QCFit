@@ -171,7 +171,7 @@ async function loadOutfits() {
             <div v-else-if="products.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <!-- Special "Studio" Card -->
                 <div 
-                    @click="$router.push({ name: 'app.canvas' })"
+                    @click="$router.push({ name: 'public.studio' })"
                     class="bg-violet-50 rounded-2xl p-4 border border-violet-100 flex flex-col items-center justify-center text-center group cursor-pointer hover:shadow-xl hover:ring-2 hover:ring-violet-500 transition-all relative overflow-hidden"
                 >
                     <div class="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent"></div>

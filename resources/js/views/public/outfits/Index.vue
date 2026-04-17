@@ -52,7 +52,7 @@ onMounted(async () => {
                         <!-- Overlay -->
                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <button 
-                                @click.stop="$router.push({name: 'app.canvas', query: { outfit_id: outfit.id }})"
+                                @click.stop="$router.push({name: 'public.studio', query: { outfit_id: outfit.id }})"
                                 class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full transform scale-90 group-hover:scale-100 transition-transform flex items-center gap-2"
                             >
                                 <i class="pi pi-refresh"></i>
@@ -80,7 +80,7 @@ onMounted(async () => {
                 <h2 class="text-xl text-gray-400 font-semibold">No hay outfits públicos aún.</h2>
                 <p class="text-gray-400 mt-2">¡Sé el primero en crear uno!</p>
                 <button 
-                    @click="$router.push({name: 'app.canvas'})"
+                    @click="$router.push({name: 'public.studio'})"
                     class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-full font-bold"
                 >
                     Crear Outfit

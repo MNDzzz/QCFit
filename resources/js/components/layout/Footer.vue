@@ -24,7 +24,7 @@
                  <div>
                     <h4 class="text-white font-bold mb-4 font-display">Studio</h4>
                     <ul class="space-y-2 text-sm text-slate-400">
-                        <li><router-link :to="{ name: 'app.canvas' }" class="hover:text-violet-400 transition-colors">Create Outfit</router-link></li>
+                        <li><router-link :to="{ name: 'public.studio' }" class="hover:text-violet-400 transition-colors">Create Outfit</router-link></li>
                         <li><router-link :to="{ name: 'public.explore' }" class="hover:text-violet-400 transition-colors">Remix Community</router-link></li>
                         <li><a href="#" class="hover:text-violet-400 transition-colors">My Wardrobe (WIP)</a></li>
                     </ul>
