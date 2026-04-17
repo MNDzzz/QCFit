@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOutfitRequest;
 use App\Http\Resources\OutfitResource;
 use App\Http\Resources\OutfitSimpleResource;
+use App\Http\Resources\OutfitAdminResource;
 use App\Models\Outfit;
 use Illuminate\Http\Request;
 
@@ -203,6 +204,43 @@ class OutfitController extends Controller
             ->paginate(10);
 
         return OutfitSimpleResource::collection($outfits);
+    }
+
+    /**
+     * [ADMIN] Listar todos los outfits para moderación.
+     * Incluye usuario creador y conteo de productos.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function adminIndex()
+    {
+        $outfits = Outfit::with(['user'])
+            ->withCount('products')
+            ->latest()
+            ->get();
+
+        return OutfitAdminResource::collection($outfits);
+    }
+
+    /**
+     * [ADMIN] Eliminar cualquier outfit (moderación).
+     * No verifica propiedad, solo requiere autenticación y permiso outfit-delete.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function adminDestroy($id)
+    {
+        $outfit = Outfit::findOrFail($id);
+
+        // Eliminar relaciones pivote y el outfit
+        $outfit->products()->detach();
+        $outfit->delete();
+
+        return response()->json([
+            'message' => 'Outfit eliminado correctamente por moderación.',
+            'id' => $id,
+        ]);
     }
 }
 

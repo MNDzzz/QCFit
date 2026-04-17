@@ -227,6 +227,22 @@ export default [
                     },
                 ]
             },
+            {
+                name: 'outfits',
+                path: 'outfits',
+                meta: { breadCrumb: 'Outfits' },
+                children: [
+                    {
+                        name: 'outfits.index',
+                        path: '',
+                        component: () => import('../views/admin/outfits/Index.vue'),
+                        meta: {
+                            breadCrumb: 'Moderación de Outfits',
+                            hideBreadcrumb: true
+                        }
+                    },
+                ]
+            },
 
             {
                 name: 'permissions',
