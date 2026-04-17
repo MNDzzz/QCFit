@@ -2,28 +2,32 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Semilla principal de la aplicación.
+     * Organizada para garantizar el saneamiento de permisos y datos de QCFit.
      */
     public function run(): void
     {
-        // Crear usuario de prueba
-        \App\Models\User::factory()->create([
-            'name' => 'QCFit Tester',
-            'email' => 'test@qcfit.com',
-            'password' => bcrypt('password'), // Contraseña conocida
+        // 1. Roles, Permisos y Usuarios (Datos Fundacionales)
+        // Se ejecutan en orden para evitar problemas de dependencias y limpiar basura heredada.
+        $this->call([
+            RolesTableSeeder::class,
+            PermissionsTableSeeder::class,
+            RoleHasPermissionsTableSeeder::class,
+            UsersTableSeeder::class,
+            ModelHasRolesTableSeeder::class,
         ]);
 
+        // 2. Entidades de Dominio (Datos de Negocio de QCFit)
         $this->call([
-            ProductSeeder::class,
-            RealProductImporterSeeder::class, // Productos reales desde CSV
-                // OutfitSeeder depende de que existan usuarios y productos
-            OutfitSeeder::class,
+            // RealProductImporterSeeder sigue la nueva estructura relacional (FKs para Marcas y Fuentes)
+            RealProductImporterSeeder::class, 
+            // OutfitSeeder depende de que existan usuarios y productos previamente insertados
+            OutfitSeeder::class, 
         ]);
     }
 }
