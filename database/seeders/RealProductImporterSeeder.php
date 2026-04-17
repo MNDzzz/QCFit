@@ -142,7 +142,7 @@ class RealProductImporterSeeder extends Seeder
         if (empty($name)) return null;
         return Category::firstOrCreate(
             ['name' => $name],
-            ['slug' => Str::slug($name), 'description' => "Categoría: {$name}"]
+            ['description' => "Categoría: {$name}"]
         );
     }
 
