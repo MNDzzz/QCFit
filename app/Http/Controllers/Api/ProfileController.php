@@ -18,6 +18,8 @@ class ProfileController extends Controller
     {
         $profile = Auth::user();
         $profile->name = $request->name;
+        $profile->alias = $request->alias;
+        $profile->email = $request->email;
         $profile->bio = $request->bio;
         $profile->agent_preference = $request->agent_preference;
 
