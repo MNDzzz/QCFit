@@ -24,7 +24,9 @@ class UpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'             => 'required|min:5',
+            'name'             => 'required|min:3',
+            'alias'            => 'nullable|string|max:50|unique:users,alias,' . auth()->id(),
+            'email'            => 'required|email|unique:users,email,' . auth()->id(),
             'bio'              => 'nullable|string|max:500',
             'avatar'           => 'nullable|image|max:2048',
             'agent_preference' => 'nullable|string|in:cnfans,mulebuy,hoobuy',
