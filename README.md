@@ -29,19 +29,19 @@
 
 ## 🛠️ Stack Tecnológico
 
-### Backend (Laravel 10 API)
+### Backend (Laravel 12 API)
 - **Arquitectura**: Repository Pattern Service-Oriented.
 - **Base de Datos**: MySQL con relaciones N:M complejas (Pivots con atributos).
 - **Recursos**: API Resources para transformación de datos JSON.
 - **Validación**: FormRequests robustos con reglas personalizadas.
 - **Autenticación**: Laravel Sanctum (SPA Authentication).
 
-### Frontend (Vue 3 + Vite)
+### Frontend (Vue 3.5 + Vite 7)
 - **Core**: Composition API + `<script setup>`.
 - **Estado**: Pinia con persistencia (localStorage).
-- **UI Framework**: Tailwind CSS v3 + PrimeVue 4 (Aura Theme).
+- **UI Framework**: Tailwind CSS v4 + PrimeVue 4 (Aura Theme).
 - **Gráficos**: Konva.js (Canvas 2D).
-- **SEO**: `@vueuse/head` para meta tags dinámicos.
+- **SEO**: `@unhead/vue` para meta tags dinámicos.
 
 ---
 
