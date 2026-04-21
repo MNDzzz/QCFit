@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
     // Social
     Route::post('/follow', [FollowController::class, 'toggle']);
+    Route::post('/favorites/{id}', [ProductController::class, 'toggleFavorite']);
 
     // Admin: Moderación de Outfits
     Route::get('/admin/outfits', [OutfitController::class, 'adminIndex']);
@@ -84,8 +85,12 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/outfits', [OutfitController::class, 'index']);
 Route::get('/outfits/{id}', [OutfitController::class, 'show']);
 
-Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
 Route::get('/public/user/{id}', [PublicProfileController::class, 'show']);
+Route::get('/users/{id}/followers', [FollowController::class, 'followers']);
+Route::get('/users/{id}/following', [FollowController::class, 'following']);
+Route::get('/users/{id}/favorites', [PublicProfileController::class, 'favorites']);
+
+Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/signin', [ProfileController::class, 'user']);
 });

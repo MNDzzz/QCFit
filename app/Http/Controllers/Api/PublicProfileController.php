@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Resources\PublicUserResource;
 use App\Http\Resources\OutfitSimpleResource;
+use App\Http\Resources\ProductResource;
 
 class PublicProfileController extends Controller
 {
@@ -42,5 +43,15 @@ class PublicProfileController extends Controller
             'user' => new PublicUserResource($user),
             'outfits' => OutfitSimpleResource::collection($outfits)->response()->getData(true),
         ]);
+    }
+
+    public function favorites($id)
+    {
+        $user = User::findOrFail($id);
+        $favorites = $user->favorites()
+            ->with(['images', 'brand', 'category', 'source'])
+            ->paginate(12);
+
+        return ProductResource::collection($favorites);
     }
 }

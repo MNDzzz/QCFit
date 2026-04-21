@@ -165,4 +165,22 @@ class ProductController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * Alternar favorito para el usuario autenticado
+     */
+    public function toggleFavorite($id)
+    {
+        $product = Product::findOrFail($id);
+        $user = auth()->user();
+
+        $user->favorites()->toggle($product->id);
+        
+        $isFavorite = $user->favorites()->where('product_id', $product->id)->exists();
+
+        return response()->json([
+            'is_favorite' => $isFavorite,
+            'message' => $isFavorite ? 'Producto añadido a favoritos' : 'Producto eliminado de favoritos'
+        ]);
+    }
 }

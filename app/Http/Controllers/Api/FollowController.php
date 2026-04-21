@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Resources\PublicUserResource;
+
 class FollowController extends Controller
 {
     public function toggle(Request $request)
@@ -30,5 +32,19 @@ class FollowController extends Controller
             'is_following' => $isFollowing,
             'message' => $isFollowing ? 'Followed' : 'Unfollowed'
         ]);
+    }
+
+    public function followers($id)
+    {
+        $user = User::findOrFail($id);
+        $followers = $user->followers()->paginate(20);
+        return PublicUserResource::collection($followers);
+    }
+
+    public function following($id)
+    {
+        $user = User::findOrFail($id);
+        $following = $user->following()->paginate(20);
+        return PublicUserResource::collection($following);
     }
 }
