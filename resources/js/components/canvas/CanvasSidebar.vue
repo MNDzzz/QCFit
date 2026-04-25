@@ -154,7 +154,7 @@ function processFiles(files) {
                 ]"
             >
                 <i class="pi pi-search mr-1"></i>
-                Buscar
+                Search
             </button>
             <button
                 @click="activeTab = 'wardrobe'"
@@ -166,7 +166,7 @@ function processFiles(files) {
                 ]"
             >
                 <i class="pi pi-heart mr-1"></i>
-                Armario
+                Wardrobe
             </button>
             <button
                 @click="activeTab = 'uploads'"
@@ -178,7 +178,7 @@ function processFiles(files) {
                 ]"
             >
                 <i class="pi pi-upload mr-1"></i>
-                Subir
+                Upload
             </button>
         </div>
 
@@ -192,7 +192,7 @@ function processFiles(files) {
                         v-model="searchQuery"
                         @keyup.enter="searchProducts"
                         type="text"
-                        placeholder="Busca productos..."
+                        placeholder="Search products..."
                         class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600"
                     >
                 </div>
@@ -202,7 +202,7 @@ function processFiles(files) {
                     class="w-full mt-2 px-4 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-slate-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
                 >
                     <i v-if="searchLoading" class="pi pi-spin pi-spinner mr-2"></i>
-                    {{ searchLoading ? 'Buscando...' : 'Buscar' }}
+                    {{ searchLoading ? 'Searching...' : 'Search' }}
                 </button>
             </div>
 
@@ -210,7 +210,7 @@ function processFiles(files) {
             <div class="flex-1 overflow-y-auto p-4">
                 <div v-if="searchResults.length === 0 && !searchLoading" class="text-center text-slate-500 py-8">
                     <i class="pi pi-inbox text-4xl mb-2 opacity-30"></i>
-                    <p class="text-sm">Busca productos para añadir a tu outfit</p>
+                    <p class="text-sm">Search products to add to your outfit</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -251,13 +251,13 @@ function processFiles(files) {
             <div class="flex-1 overflow-y-auto p-4">
                 <div v-if="wardrobeLoading" class="text-center text-slate-500 py-8">
                     <i class="pi pi-spin pi-spinner text-3xl mb-2"></i>
-                    <p class="text-sm">Cargando armario...</p>
+                    <p class="text-sm">Loading wardrobe...</p>
                 </div>
 
                 <div v-else-if="wardrobeItems.length === 0" class="text-center text-slate-500 py-8">
                     <i class="pi pi-heart text-4xl mb-2 opacity-30"></i>
-                    <p class="text-sm">No tienes productos guardados</p>
-                    <p class="text-xs mt-2">Guarda productos desde la búsqueda</p>
+                    <p class="text-sm">No saved products</p>
+                    <p class="text-xs mt-2">Save products from search</p>
                 </div>
 
                 <div v-else class="grid grid-cols-2 gap-3">
@@ -312,8 +312,8 @@ function processFiles(files) {
                         @change="onFileSelect"
                     >
                     <i class="pi pi-upload text-2xl text-slate-400 mb-2"></i>
-                    <p class="text-xs text-slate-300 font-medium">Subir imágenes</p>
-                    <p class="text-[10px] text-slate-500 mt-1">Arrastra o haz click para seleccionar</p>
+                    <p class="text-xs text-slate-300 font-medium">Upload images</p>
+                    <p class="text-[10px] text-slate-500 mt-1">Drag or click to select</p>
                 </div>
             </div>
 
@@ -321,7 +321,7 @@ function processFiles(files) {
             <div class="flex-1 overflow-y-auto p-4">
                 <div v-if="uploadedImages.length === 0" class="text-center text-slate-500 py-8">
                     <i class="pi pi-images text-4xl mb-2 opacity-30"></i>
-                    <p class="text-sm">Tus subidas aparecerán aquí</p>
+                    <p class="text-sm">Your uploads will appear here</p>
                 </div>
 
                 <div v-else class="grid grid-cols-2 gap-3">
@@ -358,7 +358,7 @@ function processFiles(files) {
         <div class="p-3 border-t border-slate-800 bg-slate-900/50">
             <p class="text-[10px] text-slate-500 text-center">
                 <i class="pi pi-info-circle mr-1"></i>
-                Arrastra items al canvas o haz click para añadir
+                Drag items to the canvas or click to add
             </p>
         </div>
     </div>

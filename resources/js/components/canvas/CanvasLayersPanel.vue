@@ -121,8 +121,8 @@ function truncateName(name, maxLength = 18) {
             <!-- Estado vacío -->
             <div v-if="canvasStore.canvasItems.length === 0" class="empty-state px-4 py-8 text-center">
                 <i class="pi pi-inbox text-3xl text-slate-700 mb-3 block"></i>
-                <p class="text-xs text-slate-600">No hay capas</p>
-                <p class="text-[10px] text-slate-700 mt-1">Arrastra productos al canvas</p>
+                <p class="text-xs text-slate-600">No layers</p>
+                <p class="text-[10px] text-slate-700 mt-1">Add products to canvas</p>
             </div>
 
             <!-- Items como capas -->
@@ -182,21 +182,21 @@ function truncateName(name, maxLength = 18) {
                     <button 
                         @click.stop="moveLayerUp(item.id)"
                         class="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                        title="Subir capa"
+                        title="Move up"
                     >
                         <i class="pi pi-chevron-up text-[10px]"></i>
                     </button>
                     <button 
                         @click.stop="moveLayerDown(item.id)"
                         class="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors"
-                        title="Bajar capa"
+                        title="Move down"
                     >
                         <i class="pi pi-chevron-down text-[10px]"></i>
                     </button>
                     <button 
                         @click.stop="deleteLayer(item.id, item.productName)"
                         class="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-red-400 hover:bg-red-900/30 transition-colors"
-                        title="Eliminar"
+                        title="Delete"
                     >
                         <i class="pi pi-trash text-[10px]"></i>
                     </button>
@@ -206,7 +206,7 @@ function truncateName(name, maxLength = 18) {
 
         <!-- Footer con info adicional -->
         <div class="panel-footer px-4 py-3 border-t border-slate-900/50 text-[10px] text-slate-600">
-            <p><i class="pi pi-info-circle mr-1"></i> Arrastra para reordenar</p>
+            <p><i class="pi pi-info-circle mr-1"></i> Drag to reorder</p>
         </div>
     </div>
 </template>

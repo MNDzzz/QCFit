@@ -26,7 +26,31 @@
             
                 <!-- ===== Main Content Start ===== -->
                 <main>
-                    <div class="main-content-wrapper">
+                    <div class="main-content-wrapper p-4 md:p-6 2xl:p-10">
+                        <!-- Breadcrumbs UI -->
+                        <div v-if="breadcrumbs.length > 0" class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <h2 class="text-2xl font-semibold text-slate-800 dark:text-white">
+                                {{ pageTitle }}
+                            </h2>
+                            <nav>
+                                <ol class="flex items-center gap-2">
+                                    <li v-for="(item, index) in breadcrumbs" :key="index" class="flex items-center gap-2">
+                                        <router-link 
+                                            v-if="index !== breadcrumbs.length - 1" 
+                                            :to="item.route" 
+                                            class="font-medium text-slate-500 hover:text-violet-600 dark:text-slate-400 dark:hover:text-violet-400 transition-colors"
+                                        >
+                                            {{ item.label }}
+                                        </router-link>
+                                        <span v-else class="font-medium text-violet-600 dark:text-violet-400">
+                                            {{ item.label }}
+                                        </span>
+                                        <span v-if="index !== breadcrumbs.length - 1" class="text-slate-400">/</span>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                        
                         <!-- Router View -->
                         <div class="router-view-container">
                             <Suspense>

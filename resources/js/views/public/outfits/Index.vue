@@ -20,8 +20,8 @@ onMounted(async () => {
 <template>
     <div class="min-h-screen bg-gray-50 py-8 px-4">
         <div class="max-w-7xl mx-auto">
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Explorar Outfits</h1>
-            <p class="text-gray-500 mb-8">Inspírate con las creaciones de la comunidad y remízclas.</p>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Explore Outfits</h1>
+            <p class="text-gray-500 mb-8">Get inspired by community creations and remix them.</p>
 
             <div v-if="loading" class="flex justify-center py-20">
                 <i class="pi pi-spin pi-spinner text-4xl text-indigo-600"></i>
@@ -46,7 +46,7 @@ onMounted(async () => {
                             >
                         </div>
                         <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
-                            Sin vista previa
+                            No preview available
                         </div>
                         
                         <!-- Overlay -->
@@ -56,14 +56,14 @@ onMounted(async () => {
                                 class="bg-white text-indigo-600 font-bold py-2 px-6 rounded-full transform scale-90 group-hover:scale-100 transition-transform flex items-center gap-2"
                             >
                                 <i class="pi pi-refresh"></i>
-                                REMIX ESTE OUTFIT
+                                REMIX THIS OUTFIT
                             </button>
                         </div>
                     </div>
 
                     <div class="p-4">
                         <div class="flex items-center justify-between mb-2">
-                            <h3 class="font-bold text-lg truncate">{{ outfit.name || 'Outfit sin nombre' }}</h3>
+                            <h3 class="font-bold text-lg truncate">{{ outfit.name || 'Untitled Outfit' }}</h3>
                             <button class="text-gray-400 hover:text-red-500"><i class="pi pi-heart"></i></button>
                         </div>
                         <div class="flex items-center gap-2">
@@ -77,13 +77,13 @@ onMounted(async () => {
             </div>
             
             <div v-else class="text-center py-20 bg-white rounded-xl shadow-inner">
-                <h2 class="text-xl text-gray-400 font-semibold">No hay outfits públicos aún.</h2>
-                <p class="text-gray-400 mt-2">¡Sé el primero en crear uno!</p>
+                <h2 class="text-xl text-gray-400 font-semibold">No public outfits yet.</h2>
+                <p class="text-gray-400 mt-2">Be the first to create one!</p>
                 <button 
                     @click="$router.push({name: 'public.studio'})"
                     class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-full font-bold"
                 >
-                    Crear Outfit
+                    Create Outfit
                 </button>
             </div>
         </div>
