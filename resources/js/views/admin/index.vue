@@ -37,11 +37,25 @@
                 <template #content>
                     <div class="stat-card-content">
                         <div class="stat-card-icon stat-icon-success">
-                            <i class="pi pi-file"></i>
+                            <i class="pi pi-images"></i>
                         </div>
                         <div class="stat-card-info">
-                            <p class="stat-card-label">Posts</p>
-                            <p class="stat-card-value">{{ stats.posts || 0 }}</p>
+                            <p class="stat-card-label">Outfits</p>
+                            <p class="stat-card-value">{{ stats.outfits || 0 }}</p>
+                        </div>
+                    </div>
+                </template>
+            </Card>
+
+            <Card class="dashboard-stat-card">
+                <template #content>
+                    <div class="stat-card-content">
+                        <div class="stat-card-icon stat-icon-info">
+                            <i class="pi pi-shopping-bag"></i>
+                        </div>
+                        <div class="stat-card-info">
+                            <p class="stat-card-label">Productos</p>
+                            <p class="stat-card-value">{{ stats.products || 0 }}</p>
                         </div>
                     </div>
                 </template>
@@ -100,15 +114,29 @@
                         </router-link>
 
                         <router-link
-                            to="/admin/posts"
+                            to="/admin/outfits"
                             class="dashboard-action-item"
                         >
                             <div class="dashboard-action-icon stat-icon-success">
-                                <i class="pi pi-file"></i>
+                                <i class="pi pi-images"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Posts</p>
-                                <p class="dashboard-action-description">Ver y editar posts</p>
+                                <p class="dashboard-action-title">Gestionar Outfits</p>
+                                <p class="dashboard-action-description">Moderar y ver outfits</p>
+                            </div>
+                            <i class="pi pi-chevron-right dashboard-action-arrow"></i>
+                        </router-link>
+
+                        <router-link
+                            to="/admin/products"
+                            class="dashboard-action-item"
+                        >
+                            <div class="dashboard-action-icon stat-icon-info">
+                                <i class="pi pi-shopping-bag"></i>
+                            </div>
+                            <div class="dashboard-action-info">
+                                <p class="dashboard-action-title">Gestionar Productos</p>
+                                <p class="dashboard-action-description">Ver y editar productos</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -164,19 +192,22 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import useUsers from "../../composables/users";
-import usePosts from "../../composables/posts";
+import useOutfits from "../../composables/outfits";
+import useProducts from "../../composables/products";
 import useCategories from "../../composables/categories";
 import useRoles from "../../composables/roles";
 
 const stats = ref({
     users: 0,
-    posts: 0,
+    outfits: 0,
+    products: 0,
     categories: 0,
     roles: 0
 });
 
 const { users, getUsers } = useUsers();
-const { posts, getPosts } = usePosts();
+const { outfits, getOutfits } = useOutfits();
+const { products, getProducts } = useProducts();
 const { categories, getCategories } = useCategories();
 const { roles, getRoles } = useRoles();
 
@@ -184,16 +215,18 @@ const loadStats = async () => {
     try {
         await Promise.all([
             getUsers(),
-            getPosts(),
+            getOutfits(),
+            getProducts(),
             getCategories(),
             getRoles()
         ]);
         
         stats.value = {
             users: users.value?.total || users.value?.data?.length || 0,
-            posts: posts.value?.total || posts.value?.data?.length || 0,
-            categories: categories.value?.total || categories.value?.data?.length || 0,
-            roles: roles.value?.total || roles.value?.data?.length || 0
+            outfits: outfits.value?.total || outfits.value?.data?.length || outfits.value?.length || 0,
+            products: products.value?.total || products.value?.data?.length || products.value?.length || 0,
+            categories: categories.value?.total || categories.value?.data?.length || categories.value?.length || 0,
+            roles: roles.value?.total || roles.value?.data?.length || roles.value?.length || 0
         };
     } catch (error) {
         console.error('Error loading stats:', error);
