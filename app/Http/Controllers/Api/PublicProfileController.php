@@ -41,7 +41,7 @@ class PublicProfileController extends Controller
 
         // Cargar productos favoritos (wishlist)
         $favorites = $user->favorites()
-            ->with(['brand', 'images', 'source', 'marketplace'])
+            ->with(['brand', 'images', 'source', 'category'])
             ->latest()
             ->get();
 
