@@ -86,6 +86,8 @@ Route::get('/outfits/{id}', [OutfitController::class, 'show']);
 
 Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
 Route::get('/public/user/{id}', [PublicProfileController::class, 'show']);
+Route::get('/public/user/{id}/followers', [PublicProfileController::class, 'followers']);
+Route::get('/public/user/{id}/following', [PublicProfileController::class, 'following']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/signin', [ProfileController::class, 'user']);
 });

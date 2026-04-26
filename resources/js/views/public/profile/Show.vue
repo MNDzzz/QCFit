@@ -6,6 +6,7 @@ import { authStore } from '../../../store/auth';
 import useAuth from '@/composables/auth';
 import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
+import FollowersModal from '@/components/ui/FollowersModal.vue';
 
 const route = useRoute();
 const auth = authStore();
@@ -17,6 +18,15 @@ const outfits = ref([]);
 const loading = ref(true);
 const followLoading = ref(false);
 const error = ref(null);
+
+// Modal state
+const showFollowersModal = ref(false);
+const modalType = ref('followers');
+
+function openFollowModal(type) {
+    modalType.value = type;
+    showFollowersModal.value = true;
+}
 
 // Pagination
 const currentPage = ref(1);
@@ -209,13 +219,19 @@ const isMe = computed(() => {
                                 </span>
                                 <span class="text-slate-500 dark:text-slate-400">Outfits</span>
                             </div>
-                            <div class="text-center md:text-left cursor-pointer hover:opacity-80 transition-opacity">
+                            <div 
+                                class="text-center md:text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                @click="openFollowModal('followers')"
+                            >
                                 <span class="block font-bold text-lg text-slate-900 dark:text-white">
                                     {{ user?.stats?.followers_count || 0 }}
                                 </span>
                                 <span class="text-slate-500 dark:text-slate-400">Seguidores</span>
                             </div>
-                            <div class="text-center md:text-left cursor-pointer hover:opacity-80 transition-opacity">
+                            <div 
+                                class="text-center md:text-left cursor-pointer hover:opacity-80 transition-opacity"
+                                @click="openFollowModal('following')"
+                            >
                                 <span class="block font-bold text-lg text-slate-900 dark:text-white">
                                     {{ user?.stats?.following_count || 0 }}
                                 </span>
@@ -322,6 +338,14 @@ const isMe = computed(() => {
                 </div>
             </div>
         </div>
+
+        <!-- Followers/Following Modal -->
+        <FollowersModal 
+            v-if="user"
+            v-model:visible="showFollowersModal" 
+            :type="modalType" 
+            :userId="user.id" 
+        />
     </div>
 </template>
 

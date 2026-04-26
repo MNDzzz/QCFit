@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { usePreferenceStore } from '@/store/preference';
 import { useHead } from '@vueuse/head';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -13,6 +14,15 @@ const preferenceStore = usePreferenceStore();
 const outfit = ref(null);
 const loading = ref(true);
 const error = ref(null);
+
+const breadcrumbItems = computed(() => {
+    if (!outfit.value) return [];
+    return [
+        { label: 'Home', to: { name: 'public.home' } },
+        { label: 'Explore', to: { name: 'public.search', query: { type: 'outfits' } } },
+        { label: outfit.value.title }
+    ];
+});
 
 // Cargar outfit al montar el componente
 onMounted(async () => {
@@ -144,18 +154,17 @@ const formattedDate = computed(() => {
         </div>
 
         <!-- Outfit Detail -->
-        <div v-else-if="outfit" class="max-w-6xl mx-auto px-4 py-8">
-            <!-- Header -->
-            <div class="mb-8">
-                <nav class="flex items-center text-sm text-slate-400 mb-4">
-                    <router-link to="/" class="hover:text-violet-600">Inicio</router-link>
-                    <i class="pi pi-chevron-right mx-2 text-xs"></i>
-                    <span class="text-slate-700">Outfit</span>
-                </nav>
+        <div v-else-if="outfit">
+            <!-- Header Strip -->
+            <div class="bg-white border-b border-slate-200 py-4 px-4 sticky top-16 z-30 shadow-sm">
+                <div class="max-w-[1600px] mx-auto">
+                    <Breadcrumbs :items="breadcrumbItems" />
+                </div>
             </div>
 
             <!-- Main Content -->
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div class="max-w-6xl mx-auto px-4 py-8">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
                 <div class="grid lg:grid-cols-2 gap-0">
                     
                     <!-- Left: Outfit Preview (Collage o Thumbnail) -->
@@ -201,7 +210,11 @@ const formattedDate = computed(() => {
                     <!-- Right: Outfit Info -->
                     <div class="p-8 lg:p-12 flex flex-col">
                         <!-- User Info -->
-                        <div v-if="outfit.user" class="flex items-center gap-3 mb-6">
+                        <router-link 
+                            v-if="outfit.user" 
+                            :to="{ name: 'public.profile', params: { id: outfit.user.id } }"
+                            class="flex items-center gap-3 mb-6 cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-xl transition-colors group"
+                        >
                             <img 
                                 :src="outfit.user.avatar || '/images/default-avatar.png'" 
                                 referrerpolicy="no-referrer"
@@ -209,10 +222,10 @@ const formattedDate = computed(() => {
                                 :alt="outfit.user.name"
                             />
                             <div>
-                                <h4 class="font-bold text-slate-800">{{ outfit.user.alias || outfit.user.name }}</h4>
+                                <h4 class="font-bold text-slate-800 group-hover:text-violet-600 transition-colors">{{ outfit.user.alias || outfit.user.name }}</h4>
                                 <p class="text-sm text-slate-500">{{ formattedDate }}</p>
                             </div>
-                        </div>
+                        </router-link>
 
                         <!-- Title & Description -->
                         <h1 class="text-3xl lg:text-4xl font-black text-slate-900 mb-4">
@@ -318,8 +331,10 @@ const formattedDate = computed(() => {
                             </p>
                         </div>
                     </div>
+                    </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>
