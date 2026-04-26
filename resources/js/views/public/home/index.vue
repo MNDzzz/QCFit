@@ -1,8 +1,7 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import axios from 'axios';
 import SmartSearch from '@/components/SmartSearch.vue';
-import LiveFeed from '@/components/LiveFeed.vue';
 import ProductCard from '@/components/ui/ProductCard.vue';
 import { authStore } from '@/store/auth';
 
@@ -11,10 +10,42 @@ const activeTab = ref('trending');
 const outfits = ref([]);
 const products = ref([]);
 const loading = ref(false);
+const tickerItems = ref([]);
+
+// Categorías para el filtro
+const categories = [
+    { label: 'All', value: 'all', icon: '✦' },
+    { label: 'Shoes', value: 'Shoes', icon: '👟' },
+    { label: 'Tops', value: 'Tops', icon: '👕' },
+    { label: 'Bottoms', value: 'Bottoms', icon: '👖' },
+    { label: 'Accessories', value: 'Accessories', icon: '🎒' },
+];
+const activeCategory = ref('all');
+
+// Marcas para la sección Browse by Brand
+const brandList = [
+    { name: 'KENZO', display: 'KENZO' },
+    { name: 'NIKE', display: 'NIKE' },
+    { name: 'ADIDAS', display: 'adidas' },
+    { name: 'BALENCIAGA', display: 'BB' },
+    { name: "ARC'TERYX", display: "ARC'TERYX" },
+    { name: 'CARHARTT', display: 'CARHARTT' },
+    { name: 'STUSSY', display: 'STÜSSY' },
+];
+
+// Productos filtrados por categoría seleccionada
+const filteredProducts = computed(() => {
+    if (activeCategory.value === 'all') return products.value;
+    return products.value.filter(p => {
+        const catName = p.category?.name || '';
+        return catName.toLowerCase() === activeCategory.value.toLowerCase();
+    });
+});
 
 onMounted(() => {
     loadOutfits();
     loadProducts();
+    loadTicker();
 });
 
 async function loadProducts() {
@@ -26,6 +57,16 @@ async function loadProducts() {
     }
 }
 
+async function loadTicker() {
+    try {
+        const response = await axios.get('/api/feed/live');
+        tickerItems.value = response.data.data || [];
+    } catch (e) {
+        // Fallback: usar productos como ticker
+        tickerItems.value = products.value.slice(0, 8);
+    }
+}
+
 watch(activeTab, () => {
     loadOutfits();
 });
@@ -34,10 +75,10 @@ async function loadOutfits() {
     loading.value = true;
     outfits.value = [];
     try {
-        const url = activeTab.value === 'following' 
+        const url = activeTab.value === 'following'
             ? '/api/feed/following'
             : '/api/outfits';
-            
+
         const response = await axios.get(url);
         // Manejar estructura de respuesta de Resource (obj.data)
         outfits.value = response.data.data;
@@ -51,15 +92,14 @@ async function loadOutfits() {
 
 <template>
     <div class="min-h-screen bg-stone-50 flex flex-col font-sans">
-        <!-- Hero Section -->
-        <!-- Hero Section -->
+        <!-- ===== HERO SECTION (SIN TOCAR) ===== -->
         <div class="relative bg-[#0B0F19] pt-48 pb-40 px-6 text-center overflow-hidden border-b border-white/5">
             <!-- Background Gradients & Effects -->
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1600px] h-[800px] bg-violet-600/10 blur-[160px] rounded-full pointer-events-none mix-blend-screen opacity-50"></div>
             <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 blur-[140px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none mix-blend-screen opacity-30"></div>
-            
+
             <!-- Grid Pattern Overlay -->
-            <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
+            <div class="absolute inset-0 opacity-[0.03] pointer-events-none"
                  style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 40px 40px;"></div>
 
             <div class="relative z-10 max-w-7xl mx-auto">
@@ -112,21 +152,21 @@ async function loadOutfits() {
                         Design Your <br/>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-500">Perfect Outfit</span>
                     </h1>
-                    
+
                     <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
                         Search real QC photos from Weidian & Taobao. <br class="hidden sm:block"/>
                         Build outfits with our interactive studio.
                     </p>
-                    
+
                     <div class="max-w-3xl mx-auto relative group">
                         <!-- Extra Search Decoration -->
                         <div class="absolute -top-12 -left-12 w-24 h-24 bg-blue-500/10 blur-2xl rounded-full"></div>
                         <div class="absolute -bottom-12 -right-12 w-24 h-24 bg-violet-500/10 blur-2xl rounded-full"></div>
-                        
+
                         <div class="relative hover:scale-[1.02] transition-all duration-500 ease-out">
                             <SmartSearch />
                         </div>
-                        
+
                         <!-- Search Hints -->
                         <div class="mt-6 flex flex-wrap justify-center gap-4 text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-widest">
                             <span>Popular:</span>
@@ -139,126 +179,244 @@ async function loadOutfits() {
                 </div>
             </div>
         </div>
+        <!-- ===== FIN HERO ===== -->
 
-        <!-- Ticker de Feed en Vivo -->
-        <LiveFeed />
-
-        <!-- Sección de Populares -->
-        <div class="max-w-7xl mx-auto px-6 py-24">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-                <div class="flex flex-col gap-2">
-                    <h2 class="text-4xl md:text-5xl font-display font-black text-slate-900 dark:text-white tracking-tight">
-                        Trending Items
-                    </h2>
-                    <p class="text-slate-500 dark:text-slate-400">Most inspected products this week</p>
-                </div>
-                
-                <!-- Category Pills & More Button -->
-                <div class="flex flex-col md:items-end gap-4">
-                    <router-link :to="{ name: 'public.search', query: { type: 'products' } }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1 w-fit">
-                        MORE ITEMS <i class="pi pi-arrow-right text-[10px]"></i>
-                    </router-link>
-                    <div class="flex flex-wrap gap-2">
-                        <button @click="$router.push({ name: 'public.search' })" class="px-6 py-2.5 rounded-full bg-slate-950 dark:bg-white dark:text-slate-950 text-white font-bold text-xs shadow-xl transition-all">All</button>
-                        <button @click="$router.push({ name: 'public.search', query: { category: 'Shoes' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Shoes</button>
-                        <button @click="$router.push({ name: 'public.search', query: { category: 'Tops' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Tops</button>
-                        <button @click="$router.push({ name: 'public.search', query: { category: 'Bottoms' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Bottoms</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Products Grid (Reusing Logic but fetching Products) -->
-            <div v-if="loading" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                 <div v-for="i in 4" :key="i" class="aspect-[4/5] bg-slate-100 rounded-2xl animate-pulse"></div>
-            </div>
-            
-            <div v-else-if="products.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- Special "Studio" Card -->
-                <div 
-                    @click="$router.push({ name: 'public.studio' })"
-                    class="bg-violet-50 rounded-2xl p-4 border border-violet-100 flex flex-col items-center justify-center text-center group cursor-pointer hover:shadow-xl hover:ring-2 hover:ring-violet-500 transition-all relative overflow-hidden"
-                >
-                    <div class="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent"></div>
-                    <img src="/images/hero/dunk.png" class="w-24 mb-4 drop-shadow-lg group-hover:scale-110 transition-transform">
-                    <button class="bg-violet-600 text-white px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 relative z-10">
-                        <i class="pi pi-plus"></i> Studio
-                    </button>
-                    <p class="text-xs text-violet-600 font-bold mt-3 relative z-10">Crear Outfit</p>
-                </div>
-
-                <ProductCard 
-                    v-for="product in products.slice(0, 7)" 
-                    :key="product.id"
-                    :product="product"
-                />
-            </div>
-            
-            <div v-else class="text-center py-20 text-slate-400">
-                 <p>No products found.</p>
-            </div>
-        </div>
-
-        <!-- Brands Grid -->
-        <div class="max-w-7xl mx-auto px-4 py-12 mb-12">
-            <div class="flex items-center justify-between mb-8">
-                <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">BROWSE BY BRAND</h3>
-                <router-link :to="{ name: 'public.brands' }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1">
-                    MORE BRANDS <i class="pi pi-arrow-right text-[10px]"></i>
-                </router-link>
-            </div>
-             <div class="flex justify-center flex-wrap gap-4">
-                 <div 
-                    v-for="brand in ['NIKE', 'STUSSY', 'BALENCIAGA', 'ARC\'TERYX', 'CARHARTT', 'YEEZY']" 
-                    :key="brand" 
-                    class="w-32 h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group"
-                    @click="$router.push({ name: 'public.search', query: { brand: brand } })"
-                >
-                     <span class="font-black font-display text-slate-800 text-xl group-hover:scale-110 transition-transform">{{ brand }}</span>
-                 </div>
-             </div>
-        </div>
-        
-        <!-- Trending Outfits (Moved down) -->
-        <div class="bg-slate-50 py-16 border-t border-slate-200">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">TRENDING OUTFITS</h3>
-                    <router-link :to="{ name: 'public.search', query: { type: 'outfits' } }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1">
-                        MORE OUTFITS <i class="pi pi-arrow-right text-[10px]"></i>
-                    </router-link>
-                </div>
-                <!-- Simple 3-column grid for outfits -->
-                 <div v-if="outfits.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div 
-                        v-for="outfit in outfits.slice(0, 3)" 
-                        :key="outfit.id" 
-                        class="rounded-3xl overflow-hidden relative group aspect-square cursor-pointer"
-                        @click="$router.push({ name: 'public.outfit.show', params: { id: outfit.id } })"
+        <!-- ===== TICKER MARQUEE (JUST CHECKED) ===== -->
+        <div class="w-full bg-[#0B0F19] border-y border-white/5 py-4 overflow-hidden relative">
+            <div class="flex animate-ticker-scroll gap-8 whitespace-nowrap" v-if="tickerItems.length > 0">
+                <template v-for="(img, idx) in tickerItems" :key="'t1-' + idx">
+                    <div
+                        class="inline-flex items-center gap-3 bg-slate-900/60 border border-white/5 rounded-xl px-4 py-2.5 min-w-[260px] cursor-pointer hover:border-violet-500/30 transition-colors"
+                        @click="$router.push({ name: 'public.product.show', params: { id: img.product_id || img.id } })"
                     >
-                        <img :src="outfit.thumbnail_url" referrerpolicy="no-referrer" class="w-full h-full object-cover">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="bg-violet-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:scale-105 transition-transform flex items-center gap-2">
-                                <i class="pi pi-bolt"></i> VER OUTFIT
-                            </button>
+                        <div class="w-12 h-12 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0">
+                            <img :src="img.url || img.images?.[0]?.url" referrerpolicy="no-referrer" class="w-full h-full object-cover" v-if="img.url || img.images?.[0]?.url">
+                            <div v-else class="w-full h-full flex items-center justify-center"><i class="pi pi-image text-slate-600"></i></div>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <span class="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1">
+                                <i class="pi pi-check-circle text-[8px]"></i> JUST CHECKED
+                            </span>
+                            <span class="text-white text-xs font-medium truncate max-w-[160px]">{{ img.title || img.name || 'Product' }}</span>
+                            <span class="text-slate-500 text-[10px]">{{ img.date_human || 'recently' }}</span>
                         </div>
                     </div>
-                 </div>
-                 
-                 <div v-else class="text-center py-20 text-slate-400">
-                    <i class="pi pi-compass text-4xl mb-4 opacity-50"></i>
+                </template>
+                <!-- Duplicado para scroll infinito -->
+                <template v-for="(img, idx) in tickerItems" :key="'t2-' + idx">
+                    <div
+                        class="inline-flex items-center gap-3 bg-slate-900/60 border border-white/5 rounded-xl px-4 py-2.5 min-w-[260px] cursor-pointer hover:border-violet-500/30 transition-colors"
+                        @click="$router.push({ name: 'public.product.show', params: { id: img.product_id || img.id } })"
+                    >
+                        <div class="w-12 h-12 rounded-lg bg-slate-800 overflow-hidden flex-shrink-0">
+                            <img :src="img.url || img.images?.[0]?.url" referrerpolicy="no-referrer" class="w-full h-full object-cover" v-if="img.url || img.images?.[0]?.url">
+                            <div v-else class="w-full h-full flex items-center justify-center"><i class="pi pi-image text-slate-600"></i></div>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <span class="text-[10px] font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1">
+                                <i class="pi pi-check-circle text-[8px]"></i> JUST CHECKED
+                            </span>
+                            <span class="text-white text-xs font-medium truncate max-w-[160px]">{{ img.title || img.name || 'Product' }}</span>
+                            <span class="text-slate-500 text-[10px]">{{ img.date_human || 'recently' }}</span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- ===== POPULAR RIGHT NOW ===== -->
+        <div class="bg-white py-20">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-center text-2xl md:text-3xl font-display font-black text-slate-900 tracking-tight mb-8 uppercase">
+                    Popular Right Now
+                </h2>
+
+                <!-- Categorías centradas -->
+                <div class="flex justify-center flex-wrap gap-2 mb-12">
+                    <button
+                        v-for="cat in categories"
+                        :key="cat.value"
+                        @click="activeCategory = cat.value"
+                        class="px-5 py-2 rounded-full text-xs font-bold border transition-all"
+                        :class="activeCategory === cat.value
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-lg'
+                            : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'"
+                    >
+                        <span v-if="cat.icon" class="mr-1">{{ cat.icon }}</span>
+                        {{ cat.label }}
+                    </button>
+                </div>
+
+                <!-- Products Grid 4 columnas -->
+                <div v-if="loading" class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                     <div v-for="i in 8" :key="i" class="aspect-square bg-slate-100 rounded-xl animate-pulse"></div>
+                </div>
+
+                <div v-else-if="filteredProducts.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                    <ProductCard
+                        v-for="product in filteredProducts.slice(0, 8)"
+                        :key="product.id"
+                        :product="product"
+                    />
+                </div>
+
+                <div v-else class="text-center py-16 text-slate-400">
+                    <i class="pi pi-search text-3xl mb-3 opacity-40 block"></i>
+                    <p>No products found.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== BROWSE BY BRAND ===== -->
+        <div class="bg-white border-t border-slate-100 py-16">
+            <div class="max-w-6xl mx-auto px-6">
+                <h3 class="text-center text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-10">BROWSE BY BRAND</h3>
+
+                <div class="flex justify-center flex-wrap gap-4">
+                    <div
+                        v-for="brand in brandList"
+                        :key="brand.name"
+                        class="w-28 h-16 md:w-32 md:h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group"
+                        @click="$router.push({ name: 'public.search', query: { brand: brand.name } })"
+                    >
+                        <span class="font-black font-display text-slate-800 text-sm md:text-base group-hover:scale-110 transition-transform tracking-tight">{{ brand.display }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TRENDING OUTFITS ===== -->
+        <div class="bg-slate-50 border-t border-slate-200 py-20">
+            <div class="max-w-6xl mx-auto px-6">
+                <h3 class="text-center text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-12">TRENDING OUTFITS</h3>
+
+                <div v-if="outfits.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div
+                        v-for="outfit in outfits.slice(0, 3)"
+                        :key="outfit.id"
+                        class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all group border border-slate-100"
+                    >
+                        <!-- User Info Header -->
+                        <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-50">
+                            <router-link
+                                :to="{ name: 'public.profile', params: { id: outfit.user?.id || 0 } }"
+                                class="flex items-center gap-2 min-w-0"
+                            >
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0 ring-2 ring-violet-200">
+                                    {{ outfit.user?.name?.charAt(0) || 'U' }}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="text-xs font-bold text-slate-900 truncate">{{ outfit.user?.alias || outfit.user?.name || 'User' }}</p>
+                                    <p class="text-[10px] text-slate-400">{{ outfit.items_count || 0 }} items</p>
+                                </div>
+                            </router-link>
+                            <span class="ml-auto bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-full">● Live</span>
+                        </div>
+
+                        <!-- Outfit Image -->
+                        <div
+                            class="aspect-[4/5] bg-slate-100 relative overflow-hidden cursor-pointer"
+                            @click="$router.push({ name: 'public.outfit.show', params: { id: outfit.id } })"
+                        >
+                            <img
+                                :src="outfit.thumbnail_url"
+                                referrerpolicy="no-referrer"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            >
+                            <!-- Botón REMIX THIS FIT -->
+                            <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="bg-violet-600 hover:bg-violet-500 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-xl flex items-center gap-2 transform hover:scale-105 transition-all">
+                                    <i class="pi pi-bolt"></i> REMIX THIS FIT
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Stats Footer -->
+                        <div class="flex items-center justify-between px-4 py-3">
+                            <div class="flex items-center gap-4 text-slate-400">
+                                <span class="flex items-center gap-1 text-xs">
+                                    <i class="pi pi-heart text-[11px]"></i> {{ Math.floor(Math.random() * 50) + 5 }}
+                                </span>
+                                <span class="flex items-center gap-1 text-xs">
+                                    <i class="pi pi-comment text-[11px]"></i> {{ Math.floor(Math.random() * 15) }}
+                                </span>
+                            </div>
+                            <span class="text-[10px] text-slate-400">{{ outfit.title || 'Untitled' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else class="text-center py-16 text-slate-400">
+                    <i class="pi pi-compass text-3xl mb-3 opacity-40 block"></i>
                     <p>No trending outfits found.</p>
                 </div>
             </div>
         </div>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="bg-[#0B0F19] text-white pt-20 pb-10">
+            <div class="max-w-6xl mx-auto px-6">
+                <!-- Info Columns -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+                    <div>
+                        <h4 class="text-sm font-bold text-white mb-4 tracking-wider">What is QCFit?</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            QCFit is a platform that lets you search for real QC (Quality Control) photos from Weidian, Taobao and 1688 sellers. Compare products before buying and make smarter purchase decisions.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white mb-4 tracking-wider">How to find QC?</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            Simply paste a Weidian or Taobao link in the search bar, or type the product name. We'll show you real inspection photos from our global community of QC inspectors.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-white mb-4 tracking-wider">Outfit Builder</h4>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            Use our interactive Studio to drag and drop products onto a canvas and create your dream outfit. Share it with the community, remix other people's looks, and get inspired.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Logo & Links -->
+                <div class="border-t border-slate-800 pt-10 flex flex-col items-center gap-6">
+                    <img src="/images/qcfit.svg" alt="QCFit" class="h-10 w-auto opacity-80">
+
+                    <div class="flex items-center gap-6 text-sm text-slate-400">
+                        <a href="#" class="hover:text-white transition-colors">Terms</a>
+                        <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                        <a href="#" class="hover:text-white transition-colors">Contact us</a>
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+                            <i class="pi pi-discord text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+                            <i class="pi pi-instagram text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+                            <i class="pi pi-youtube text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all">
+                            <i class="pi pi-twitter text-sm"></i>
+                        </a>
+                    </div>
+
+                    <p class="text-xs text-slate-600 mt-4">&copy; {{ new Date().getFullYear() }} QCFit | Your style, your rules.</p>
+                </div>
+            </div>
+        </footer>
     </div>
 </template>
 
 <style scoped>
-.animate-marquee {
-    animation: marquee 20s linear infinite;
+/* Animación del ticker marquee */
+.animate-ticker-scroll {
+    animation: ticker-scroll 40s linear infinite;
 }
-@keyframes marquee {
+@keyframes ticker-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
