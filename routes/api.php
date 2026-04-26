@@ -86,8 +86,8 @@ Route::get('/outfits', [OutfitController::class, 'index']);
 Route::get('/outfits/{id}', [OutfitController::class, 'show']);
 
 Route::get('/public/user/{id}', [PublicProfileController::class, 'show']);
-Route::get('/users/{id}/followers', [FollowController::class, 'followers']);
-Route::get('/users/{id}/following', [FollowController::class, 'following']);
+Route::get('/public/user/{id}/followers', [PublicProfileController::class, 'followers']);
+Route::get('/public/user/{id}/following', [PublicProfileController::class, 'following']);
 Route::get('/users/{id}/favorites', [PublicProfileController::class, 'favorites']);
 
 Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);

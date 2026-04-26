@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import axios from 'axios';
 import { usePreferenceStore } from '@/store/preference';
 import { useHead } from '@vueuse/head';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.vue';
 
 const route = useRoute();
 const preferenceStore = usePreferenceStore();
@@ -12,6 +13,16 @@ const product = ref(null);
 const loading = ref(true);
 const activeImage = ref('');
 const isQcMode = ref(true); // Toggle logic
+
+const breadcrumbItems = computed(() => {
+    if (!product.value) return [];
+    return [
+        { label: 'Home', to: { name: 'public.home' } },
+        { label: 'Explore', to: { name: 'public.search' } },
+        { label: product.value.category?.name || 'Categoría', to: product.value.category ? { name: 'public.search', query: { category: product.value.category.name } } : null },
+        { label: product.value.brand?.name || (typeof product.value.brand === 'string' ? product.value.brand : 'Producto') }
+    ];
+});
 
 onMounted(async () => {
     fetchProduct();
@@ -105,8 +116,16 @@ const agents = [
             <i class="pi pi-spin pi-spinner text-4xl text-violet-600"></i>
         </div>
 
-        <div v-else-if="product" class="max-w-7xl mx-auto px-4 py-8">
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
+        <div v-else-if="product">
+            <!-- Header Strip -->
+            <div class="bg-white border-b border-slate-200 py-4 px-4 sticky top-16 z-30 shadow-sm">
+                <div class="max-w-[1600px] mx-auto">
+                    <Breadcrumbs :items="breadcrumbItems" />
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
                 
                 <!-- Left: Gallery Section -->
                 <div class="lg:w-[60%] bg-slate-100 relative p-8 flex flex-col items-center justify-center">
@@ -158,14 +177,6 @@ const agents = [
 
                 <!-- Right: Product Info -->
                 <div class="lg:w-[40%] p-8 lg:p-12 flex flex-col bg-white">
-                    <!-- Breadcrumbs -->
-                    <nav class="flex items-center text-xs text-slate-400 mb-6 font-medium">
-                        <span class="hover:text-violet-600 cursor-pointer" @click="$router.push('/')">Inicio</span>
-                        <i class="pi pi-angle-right mx-2 text-[10px]"></i>
-                        <span class="hover:text-violet-600 cursor-pointer">{{ product.category?.name || 'Categoría' }}</span>
-                        <i class="pi pi-angle-right mx-2 text-[10px]"></i>
-                        <span class="text-slate-800 truncate max-w-[150px] uppercase font-bold">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Producto') }}</span>
-                    </nav>
 
                     <h2 class="text-xs font-bold text-slate-400 tracking-widest uppercase mb-1">{{ product.brand?.name || (typeof product.brand === 'string' ? product.brand : 'Marca desconocida') }}</h2>
                     <h1 class="text-3xl lg:text-4xl font-display font-bold text-slate-900 mb-4 leading-tight">{{ product.name }}</h1>
@@ -252,6 +263,7 @@ const agents = [
                       <div class="aspect-[3/4] bg-slate-200 rounded-lg"></div>
                  </div>
             </div>
+        </div>
         </div>
     </div>
 </template>

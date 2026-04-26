@@ -130,10 +130,10 @@ async function loadOutfits() {
                         <!-- Search Hints -->
                         <div class="mt-6 flex flex-wrap justify-center gap-4 text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-widest">
                             <span>Popular:</span>
-                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Travis Scott</a>
-                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Nike SB</a>
-                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Essentials</a>
-                            <a href="#" class="text-slate-400 hover:text-white transition-colors">Arc'teryx</a>
+                            <router-link :to="{ name: 'public.search', query: { q: 'Travis Scott' } }" class="text-slate-400 hover:text-white transition-colors">Travis Scott</router-link>
+                            <router-link :to="{ name: 'public.search', query: { q: 'Nike SB' } }" class="text-slate-400 hover:text-white transition-colors">Nike SB</router-link>
+                            <router-link :to="{ name: 'public.search', query: { brand: 'Essentials' } }" class="text-slate-400 hover:text-white transition-colors">Essentials</router-link>
+                            <router-link :to="{ name: 'public.search', query: { brand: 'Arc\'teryx' } }" class="text-slate-400 hover:text-white transition-colors">Arc'teryx</router-link>
                         </div>
                     </div>
                 </div>
@@ -153,12 +153,17 @@ async function loadOutfits() {
                     <p class="text-slate-500 dark:text-slate-400">Most inspected products this week</p>
                 </div>
                 
-                <!-- Category Pills (Enhanced) -->
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-6 py-2.5 rounded-full bg-slate-950 dark:bg-white dark:text-slate-950 text-white font-bold text-xs shadow-xl transition-all">All</button>
-                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Shoes</button>
-                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Tops</button>
-                    <button class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Bottoms</button>
+                <!-- Category Pills & More Button -->
+                <div class="flex flex-col md:items-end gap-4">
+                    <router-link :to="{ name: 'public.search', query: { type: 'products' } }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1 w-fit">
+                        MORE ITEMS <i class="pi pi-arrow-right text-[10px]"></i>
+                    </router-link>
+                    <div class="flex flex-wrap gap-2">
+                        <button @click="$router.push({ name: 'public.search' })" class="px-6 py-2.5 rounded-full bg-slate-950 dark:bg-white dark:text-slate-950 text-white font-bold text-xs shadow-xl transition-all">All</button>
+                        <button @click="$router.push({ name: 'public.search', query: { category: 'Shoes' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Shoes</button>
+                        <button @click="$router.push({ name: 'public.search', query: { category: 'Tops' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Tops</button>
+                        <button @click="$router.push({ name: 'public.search', query: { category: 'Bottoms' } })" class="px-6 py-2.5 rounded-full bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold text-xs border border-slate-200 dark:border-white/10 hover:border-slate-900 transition-all">Bottoms</button>
+                    </div>
                 </div>
             </div>
 
@@ -196,9 +201,19 @@ async function loadOutfits() {
 
         <!-- Brands Grid -->
         <div class="max-w-7xl mx-auto px-4 py-12 mb-12">
-            <h3 class="text-center text-sm font-bold text-slate-400 tracking-widest uppercase mb-8">BROWSE BY BRAND</h3>
+            <div class="flex items-center justify-between mb-8">
+                <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">BROWSE BY BRAND</h3>
+                <router-link :to="{ name: 'public.brands' }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1">
+                    MORE BRANDS <i class="pi pi-arrow-right text-[10px]"></i>
+                </router-link>
+            </div>
              <div class="flex justify-center flex-wrap gap-4">
-                 <div v-for="brand in ['NIKE', 'STUSSY', 'BALENCIAGA', 'ARC\'TERYX', 'CARHARTT', 'YEEZY']" :key="brand" class="w-32 h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group">
+                 <div 
+                    v-for="brand in ['NIKE', 'STUSSY', 'BALENCIAGA', 'ARC\'TERYX', 'CARHARTT', 'YEEZY']" 
+                    :key="brand" 
+                    class="w-32 h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group"
+                    @click="$router.push({ name: 'public.search', query: { brand: brand } })"
+                >
                      <span class="font-black font-display text-slate-800 text-xl group-hover:scale-110 transition-transform">{{ brand }}</span>
                  </div>
              </div>
@@ -207,7 +222,12 @@ async function loadOutfits() {
         <!-- Trending Outfits (Moved down) -->
         <div class="bg-slate-50 py-16 border-t border-slate-200">
             <div class="max-w-7xl mx-auto px-4">
-                <h3 class="text-center text-sm font-bold text-slate-400 tracking-widest uppercase mb-8">TRENDING OUTFITS</h3>
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-sm font-bold text-slate-400 tracking-widest uppercase">TRENDING OUTFITS</h3>
+                    <router-link :to="{ name: 'public.search', query: { type: 'outfits' } }" class="text-xs font-bold text-violet-600 hover:text-violet-700 hover:underline flex items-center gap-1">
+                        MORE OUTFITS <i class="pi pi-arrow-right text-[10px]"></i>
+                    </router-link>
+                </div>
                 <!-- Simple 3-column grid for outfits -->
                  <div v-if="outfits.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div 

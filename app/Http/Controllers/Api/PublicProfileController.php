@@ -45,6 +45,53 @@ class PublicProfileController extends Controller
         ]);
     }
 
+    public function followers($id)
+    {
+        $user = User::findOrFail($id);
+        
+        $followers = $user->followers()
+            ->select('users.id', 'users.name', 'users.alias', 'users.avatar')
+            ->paginate(15);
+            
+        // Si hay usuario autenticado, verificamos si sigue a estos followers
+        if (Auth::guard('sanctum')->check()) {
+            $authUser = Auth::guard('sanctum')->user();
+            $followingIds = $authUser->following()->pluck('users.id')->toArray();
+            
+            $followers->getCollection()->transform(function ($follower) use ($followingIds, $authUser) {
+                // Prevenir mostrar "Siguiendo" a uno mismo
+                $follower->is_following = in_array($follower->id, $followingIds);
+                $follower->is_me = $follower->id === $authUser->id;
+                return $follower;
+            });
+        }
+
+        return response()->json($followers);
+    }
+
+    public function following($id)
+    {
+        $user = User::findOrFail($id);
+        
+        $following = $user->following()
+            ->select('users.id', 'users.name', 'users.alias', 'users.avatar')
+            ->paginate(15);
+
+        // Si hay usuario autenticado, verificamos a cuáles de estos usuarios también sigue
+        if (Auth::guard('sanctum')->check()) {
+            $authUser = Auth::guard('sanctum')->user();
+            $myFollowingIds = $authUser->following()->pluck('users.id')->toArray();
+            
+            $following->getCollection()->transform(function ($followed) use ($myFollowingIds, $authUser) {
+                $followed->is_following = in_array($followed->id, $myFollowingIds);
+                $followed->is_me = $followed->id === $authUser->id;
+                return $followed;
+            });
+        }
+
+        return response()->json($following);
+    }
+
     public function favorites($id)
     {
         $user = User::findOrFail($id);
