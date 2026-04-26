@@ -38,7 +38,7 @@ const searchByBrand = (brandName) => {
                  <div>
                     <Breadcrumbs :items="breadcrumbItems" />
                     <h1 class="text-2xl font-display font-bold text-slate-900 mt-1">
-                        Todas las Marcas
+                        All Brands
                     </h1>
                  </div>
             </div>
@@ -46,7 +46,7 @@ const searchByBrand = (brandName) => {
 
         <div class="max-w-7xl mx-auto px-6 pt-12">
             <p class="text-center text-slate-500 mb-12">
-                Explora productos y outfits agrupados por tus marcas favoritas.
+                Explore products and outfits grouped by your favorite brands.
             </p>
 
             <div v-if="loading" class="flex justify-center py-20">

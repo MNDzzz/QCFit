@@ -6,7 +6,7 @@
             <div class="text-center mb-4">
                 <img src="/images/qcfit.svg" alt="QCFit Logo" class="mb-3" style="height: 48px; width: auto;">
                 <h2 class="fw-bold mb-1">{{ $t('register') }}</h2>
-                <p class="text-muted">Regístrate para comenzar</p>
+                <p class="text-muted">Sign up to get started</p>
             </div>
 
             <!-- Formulario con Card de Bootstrap -->
@@ -21,7 +21,7 @@
                                 type="text"
                                 class="form-control form-control-lg rounded-3"
                                 v-model="registerForm.name"
-                                placeholder="Nombre completo"
+                                placeholder="Full name"
                                 :class="{ 'is-invalid': validationErrors?.name }"
                             />
                             <div v-if="validationErrors?.name" class="invalid-feedback" style="display:block;">
@@ -38,7 +38,7 @@
                                     type="text"
                                     class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.surname1"
-                                    placeholder="Primer apellido"
+                                    placeholder="First surname"
                                     :class="{ 'is-invalid': validationErrors?.surname1 }"
                                 />
                                 <div v-if="validationErrors?.surname1" class="invalid-feedback" style="display:block;">
@@ -53,7 +53,7 @@
                                     type="text"
                                     class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.surname2"
-                                    placeholder="Segundo apellido"
+                                    placeholder="Second surname"
                                     :class="{ 'is-invalid': validationErrors?.surname2 }"
                                 />
                                 <div v-if="validationErrors?.surname2" class="invalid-feedback" style="display:block;">
@@ -124,12 +124,12 @@
                         <!-- Login link -->
                         <div class="text-center mt-4">
                             <p class="text-muted mb-0">
-                                ¿Ya tienes una cuenta?
+                                Already have an account?
                                 <router-link
                                     :to="{ name: 'auth.login' }"
                                     class="text-primary text-decoration-none fw-semibold"
                                 >
-                                    Inicia sesión aquí
+                                    Log in here
                                 </router-link>
                             </p>
                         </div>

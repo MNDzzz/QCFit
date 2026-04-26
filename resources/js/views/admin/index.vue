@@ -10,7 +10,7 @@
                             Dashboard
                         </h1>
                         <p class="page-description">
-                            Bienvenido al panel de administración. Desde aquí puedes gestionar usuarios, posts, categorías y más.
+                            Welcome to the admin panel. From here you can manage users, posts, categories and more.
                         </p>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                             <i class="pi pi-users"></i>
                         </div>
                         <div class="stat-card-info">
-                            <p class="stat-card-label">Usuarios</p>
+                            <p class="stat-card-label">Users</p>
                             <p class="stat-card-value">{{ stats.users || 0 }}</p>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                             <i class="pi pi-shopping-bag"></i>
                         </div>
                         <div class="stat-card-info">
-                            <p class="stat-card-label">Productos</p>
+                            <p class="stat-card-label">Products</p>
                             <p class="stat-card-value">{{ stats.products || 0 }}</p>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                             <i class="pi pi-tags"></i>
                         </div>
                         <div class="stat-card-info">
-                            <p class="stat-card-label">Categorías</p>
+                            <p class="stat-card-label">Categories</p>
                             <p class="stat-card-value">{{ stats.categories || 0 }}</p>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                 <div class="dashboard-actions-content">
                     <h2 class="dashboard-actions-title">
                         <i class="pi pi-bolt"></i>
-                        Acciones Rápidas
+                        Quick Actions
                     </h2>
                     <div class="dashboard-actions-grid">
                         <router-link
@@ -107,8 +107,8 @@
                                 <i class="pi pi-users"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Usuarios</p>
-                                <p class="dashboard-action-description">Ver y editar usuarios</p>
+                                <p class="dashboard-action-title">Manage Users</p>
+                                <p class="dashboard-action-description">View and edit users</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -121,8 +121,8 @@
                                 <i class="pi pi-images"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Outfits</p>
-                                <p class="dashboard-action-description">Moderar y ver outfits</p>
+                                <p class="dashboard-action-title">Manage Outfits</p>
+                                <p class="dashboard-action-description">Moderate and view outfits</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -135,8 +135,8 @@
                                 <i class="pi pi-shopping-bag"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Productos</p>
-                                <p class="dashboard-action-description">Ver y editar productos</p>
+                                <p class="dashboard-action-title">Manage Products</p>
+                                <p class="dashboard-action-description">View and edit products</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -149,8 +149,8 @@
                                 <i class="pi pi-tags"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Categorías</p>
-                                <p class="dashboard-action-description">Ver y editar categorías</p>
+                                <p class="dashboard-action-title">Manage Categories</p>
+                                <p class="dashboard-action-description">View and edit categories</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -163,8 +163,8 @@
                                 <i class="pi pi-globe"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Marketplaces</p>
-                                <p class="dashboard-action-description">Ver y editar marketplaces</p>
+                                <p class="dashboard-action-title">Manage Marketplaces</p>
+                                <p class="dashboard-action-description">View and edit marketplaces</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -177,8 +177,8 @@
                                 <i class="pi pi-briefcase"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Marcas</p>
-                                <p class="dashboard-action-description">Ver y editar marcas</p>
+                                <p class="dashboard-action-title">Manage Brands</p>
+                                <p class="dashboard-action-description">View and edit brands</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -191,8 +191,8 @@
                                 <i class="pi pi-shield"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Roles</p>
-                                <p class="dashboard-action-description">Ver y editar roles</p>
+                                <p class="dashboard-action-title">Manage Roles</p>
+                                <p class="dashboard-action-description">View and edit roles</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>
@@ -205,8 +205,8 @@
                                 <i class="pi pi-key"></i>
                             </div>
                             <div class="dashboard-action-info">
-                                <p class="dashboard-action-title">Gestionar Permisos</p>
-                                <p class="dashboard-action-description">Ver y editar permisos</p>
+                                <p class="dashboard-action-title">Manage Permissions</p>
+                                <p class="dashboard-action-description">View and edit permissions</p>
                             </div>
                             <i class="pi pi-chevron-right dashboard-action-arrow"></i>
                         </router-link>

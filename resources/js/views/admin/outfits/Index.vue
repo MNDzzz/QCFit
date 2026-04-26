@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Moderación de Outfits</span>
+                    <span>Outfit Moderation</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -57,8 +57,8 @@
                     <template #empty>
                         <div class="table-empty-state">
                             <i class="pi pi-inbox empty-state-icon"></i>
-                            <p class="empty-state-text">No se encontraron outfits</p>
-                            <p class="empty-state-subtext">No hay outfits creados en el sistema</p>
+                            <p class="empty-state-text">No outfits found</p>
+                            <p class="empty-state-subtext">No outfits have been created in the system</p>
                         </div>
                     </template>
 
@@ -83,12 +83,12 @@
                         </template>
                     </Column>
 
-                    <Column field="title" header="Título" sortable filter class="min-w-[200px]">
+                    <Column field="title" header="Title" sortable filter class="min-w-[200px]">
                         <template #body="slotProps">
-                            <span class="table-cell-name font-medium">{{ slotProps.data.title || 'Sin título' }}</span>
+                            <span class="table-cell-name font-medium">{{ slotProps.data.title || 'Untitled' }}</span>
                         </template>
                         <template #filter="{ filterModel }">
-                            <InputText v-model="filterModel.value" type="text" placeholder="Buscar por título" />
+                            <InputText v-model="filterModel.value" type="text" placeholder="Search by title" />
                         </template>
                     </Column>
 

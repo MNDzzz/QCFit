@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Gestión de Marcas</span>
+                    <span>Brand Management</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -47,7 +47,7 @@
                     <template #empty>
                         <div class="table-empty-state text-center py-5">
                             <i class="pi pi-inbox text-4xl opacity-20 mb-3 block"></i>
-                            <p>No se encontraron marcas</p>
+                            <p>No brands found</p>
                         </div>
                     </template>
 
@@ -137,7 +137,7 @@
                     <InputText v-model="brand.logo_url" id="logo_url" />
                 </div>
                 <div class="flex flex-col gap-1">
-                    <label for="description" class="font-semibold text-sm">Descripción</label>
+                    <label for="description" class="font-semibold text-sm">Description</label>
                     <Textarea v-model="brand.description" id="description" rows="3" class="w-full" />
                 </div>
             </div>

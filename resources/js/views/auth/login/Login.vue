@@ -83,12 +83,12 @@
                         <!-- Register link -->
                         <div class="text-center mt-4">
                             <p class="text-muted mb-0">
-                                ¿No tienes una cuenta?
+                                Don't have an account?
                                 <router-link
                                     :to="{ name: 'auth.register' }"
                                     class="text-primary text-decoration-none fw-semibold"
                                 >
-                                    Regístrate aquí
+                                    Sign up here
                                 </router-link>
                             </p>
                         </div>

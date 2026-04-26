@@ -119,7 +119,7 @@ async function fetchProfile(userId) {
         }
     } catch (e) {
         console.error('Error fetching profile:', e);
-        error.value = 'Usuario no encontrado o error de conexión.';
+        error.value = 'User not found or connection error.';
     } finally {
         loading.value = false;
     }
@@ -146,7 +146,7 @@ async function toggleFollow() {
         user.value.stats.followers_count = previousCount;
         
         if (e.response && e.response.status === 401) {
-             toast.add({ severity: 'info', summary: 'Acceso Restringido', detail: 'Debes iniciar sesión para seguir a usuarios.', life: 3000 });
+             toast.add({ severity: 'info', summary: 'Restricted Access', detail: 'You must log in to follow users.', life: 3000 });
              // O redirigir a login
         } else {
              console.error('Error following user:', e);
@@ -410,7 +410,7 @@ async function saveProfile() {
                                 : 'bg-black dark:bg-white text-white dark:text-black hover:bg-zinc-800 hover:dark:bg-slate-200'"
                          >
                             <i class="pi" :class="followLoading ? 'pi-spin pi-spinner' : (user?.is_following ? 'pi-check' : 'pi-user-plus')"></i>
-                            {{ user?.is_following ? 'Siguiendo' : 'Seguir' }}
+                            {{ user?.is_following ? 'Following' : 'Follow' }}
                          </button>
 
                          <template v-else>
@@ -453,7 +453,7 @@ async function saveProfile() {
                         <input
                             v-model="outfitSearchQuery"
                             type="text"
-                            placeholder="Filtrar outfits..."
+                            placeholder="Filter outfits..."
                             class="w-full pl-9 pr-4 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
                         />
                     </div>
@@ -463,15 +463,15 @@ async function saveProfile() {
                         v-model="outfitSortBy"
                         class="px-3 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-700 dark:text-white focus:outline-none focus:border-violet-500 cursor-pointer"
                     >
-                        <option value="newest">Más recientes</option>
-                        <option value="oldest">Más antiguos</option>
-                        <option value="most_items">Más prendas</option>
-                        <option value="alpha">Alfabético (A-Z)</option>
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="most_items">Most items</option>
+                        <option value="alpha">Alphabetical (A-Z)</option>
                     </select>
 
                     <!-- Contador de resultados filtrados -->
                     <span class="text-xs text-slate-400 ml-auto">
-                        {{ filteredOutfits.length }} de {{ outfits.length }} outfits
+                        {{ filteredOutfits.length }} of {{ outfits.length }} outfits
                     </span>
                 </div>
 
@@ -493,16 +493,16 @@ async function saveProfile() {
                             >
                             <!-- Overlay actions -->
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="px-5 py-2 w-32 bg-white/90 hover:bg-white text-zinc-900 rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Ver Detalle">
+                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="px-5 py-2 w-32 bg-white/90 hover:bg-white text-zinc-900 rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="View Detail">
                                     <i class="pi pi-eye"></i> See
                                 </router-link>
                                 
                                 <template v-if="isMe">
-                                    <router-link :to="{name: 'public.studio', query: {outfit_id: outfit.id}}" class="px-5 py-2 w-32 bg-violet-600/90 hover:bg-violet-600 border border-violet-500/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Editar Outfit">
+                                    <router-link :to="{name: 'public.studio', query: {outfit_id: outfit.id}}" class="px-5 py-2 w-32 bg-violet-600/90 hover:bg-violet-600 border border-violet-500/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Edit Outfit">
                                         <i class="pi pi-pencil"></i> Edit
                                     </router-link>
                                     
-                                    <button @click.prevent="confirmDelete(outfit.id)" class="px-5 py-2 w-32 bg-red-500/90 hover:bg-red-500 border border-red-400/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Eliminar Outfit">
+                                    <button @click.prevent="confirmDelete(outfit.id)" class="px-5 py-2 w-32 bg-red-500/90 hover:bg-red-500 border border-red-400/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Delete Outfit">
                                         <i class="pi pi-trash"></i> Delete
                                     </button>
                                 </template>
@@ -526,9 +526,9 @@ async function saveProfile() {
                 <!-- Estado vacío por filtro local -->
                 <div v-else-if="outfits.length > 0 && filteredOutfits.length === 0" class="text-center py-16 bg-white dark:bg-zinc-800/50 rounded-2xl border border-slate-200 dark:border-zinc-700">
                     <i class="pi pi-filter-slash text-4xl text-slate-300 mb-3"></i>
-                    <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-1">Sin coincidencias</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-sm">No hay outfits que coincidan con "{{ outfitSearchQuery }}"</p>
-                    <button @click="outfitSearchQuery = ''" class="mt-4 text-violet-600 font-semibold text-sm hover:underline">Limpiar filtro</button>
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-1">No matches</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">No outfits matching "{{ outfitSearchQuery }}"</p>
+                    <button @click="outfitSearchQuery = ''" class="mt-4 text-violet-600 font-semibold text-sm hover:underline">Clear filter</button>
                 </div>
 
                 <!-- Estado vacío general -->
@@ -536,9 +536,9 @@ async function saveProfile() {
                     <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="pi pi-image text-slate-400 text-2xl"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">Sin outfits aún</h3>
+                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">No outfits yet</h3>
                     <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                        Este usuario aún no ha publicado ningún outfit.
+                        This user hasn't published any outfits yet.
                     </p>
                 </div>
             </div>

@@ -66,9 +66,9 @@ async function fetchOutfit() {
         console.error('Error cargando outfit:', err);
         
         if (err.response?.status === 404) {
-            error.value = 'Este outfit no existe o ha sido eliminado.';
+            error.value = 'This outfit does not exist or has been deleted.';
         } else {
-            error.value = 'Error al cargar el outfit. Intenta nuevamente.';
+            error.value = 'Error loading the outfit. Please try again.';
         }
     } finally {
         loading.value = false;
@@ -139,17 +139,17 @@ const formattedDate = computed(() => {
         <div v-if="loading" class="flex justify-center items-center h-screen">
             <div class="text-center">
                 <i class="pi pi-spin pi-spinner text-4xl text-violet-600 mb-4"></i>
-                <p class="text-slate-600">Cargando outfit...</p>
+                <p class="text-slate-600">Loading outfit...</p>
             </div>
         </div>
 
         <!-- Error State -->
         <div v-else-if="error" class="flex flex-col justify-center items-center h-screen text-center px-4">
             <i class="pi pi-exclamation-circle text-6xl text-red-400 mb-4"></i>
-            <h2 class="text-2xl font-bold text-slate-800 mb-2">¡Oops!</h2>
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Oops!</h2>
             <p class="text-slate-600 mb-6">{{ error }}</p>
             <router-link to="/" class="px-6 py-3 bg-violet-600 text-white rounded-full font-bold hover:bg-violet-500 transition-colors">
-                Volver al inicio
+                Go back home
             </router-link>
         </div>
 
@@ -242,7 +242,7 @@ const formattedDate = computed(() => {
                                 <span class="block text-2xl font-bold text-violet-600">
                                     {{ outfit.items_count || outfit.items?.length || 0 }}
                                 </span>
-                                <span class="text-xs text-slate-500 uppercase tracking-wide">Productos</span>
+                                <span class="text-xs text-slate-500 uppercase tracking-wide">Products</span>
                             </div>
                         </div>
 
@@ -256,7 +256,7 @@ const formattedDate = computed(() => {
                         </button>
 
                         <p class="text-center text-sm text-slate-500 mb-8">
-                            Abre este outfit en el Studio y personalízalo a tu gusto
+                            Open this outfit in the Studio and customize it to your liking
                         </p>
 
                         <!-- Divider -->
@@ -264,7 +264,7 @@ const formattedDate = computed(() => {
 
                         <!-- Share -->
                         <div class="flex items-center justify-center gap-4">
-                            <span class="text-sm text-slate-500">Compartir:</span>
+                            <span class="text-sm text-slate-500">Share:</span>
                             <button class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
                                 <i class="pi pi-link"></i>
                             </button>
@@ -305,12 +305,12 @@ const formattedDate = computed(() => {
                             
                             <!-- Hover Overlay -->
                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4 justify-between gap-2">
-                                <span class="text-white text-sm font-medium">Ver detalles</span>
+                                <span class="text-white text-sm font-medium">View details</span>
                                 
                                 <button 
                                     @click="buyProduct(item.product, $event)"
                                     class="bg-violet-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-violet-700 hover:scale-105 transition-all shadow-lg flex items-center gap-1"
-                                    title="Comprar ahora"
+                                    title="Buy now"
                                 >
                                     <i class="pi pi-shopping-cart"></i>
                                     {{ preferenceStore.preferredAgent }}
@@ -324,7 +324,7 @@ const formattedDate = computed(() => {
                                 {{ item.product?.brand?.name || item.product?.brand || 'N/A' }}
                             </p>
                             <h3 class="font-bold text-slate-800 text-sm line-clamp-2">
-                                {{ item.product?.name || 'Producto' }}
+                                {{ item.product?.name || 'Product' }}
                             </h3>
                             <p class="text-slate-500 text-xs mt-1 capitalize">
                                 {{ item.product?.marketplace || 'weidian' }}
