@@ -19,6 +19,43 @@ const loading = ref(true);
 const followLoading = ref(false);
 const error = ref(null);
 
+// --- Filtrado y ordenación local (íntegramente en Vue, sin petición al servidor) ---
+const outfitSearchQuery = ref('');
+const outfitSortBy = ref('newest'); // 'newest', 'oldest', 'most_items', 'alpha'
+
+// Computed que filtra y ordena el array local de outfits sin tocar la API
+const filteredOutfits = computed(() => {
+    let filtered = [...outfits.value];
+
+    // 1. Filtrar por texto de búsqueda sobre el array local
+    if (outfitSearchQuery.value.trim()) {
+        const query = outfitSearchQuery.value.toLowerCase().trim();
+        filtered = filtered.filter(outfit =>
+            outfit.title?.toLowerCase().includes(query) ||
+            outfit.description?.toLowerCase().includes(query)
+        );
+    }
+
+    // 2. Ordenar el array resultante
+    switch (outfitSortBy.value) {
+        case 'oldest':
+            filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            break;
+        case 'most_items':
+            filtered.sort((a, b) => (b.items_count || 0) - (a.items_count || 0));
+            break;
+        case 'alpha':
+            filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            break;
+        case 'newest':
+        default:
+            filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            break;
+    }
+
+    return filtered;
+});
+
 // Modal state
 const showFollowersModal = ref(false);
 const modalType = ref('followers');
@@ -280,18 +317,43 @@ const isMe = computed(() => {
                         <button class="pb-4 px-2 border-b-2 border-violet-600 text-violet-600 font-semibold transition-colors">
                             Outfits
                         </button>
-                        <!-- Future tabs: Saved, Liked -->
-                        <!-- <button class="pb-4 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium transition-colors">
-                            Guardados
-                        </button> -->
                     </nav>
                 </div>
 
-                <!-- Outfits Grid -->
-                <!-- Defensive check added -->
-                <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
+                <!-- Barra de filtrado y ordenación local (sobre el array ya cargado) -->
+                <div v-if="outfits && outfits.length > 0" class="flex flex-col sm:flex-row items-center gap-3 mb-6">
+                    <!-- Buscador local sobre el array -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input
+                            v-model="outfitSearchQuery"
+                            type="text"
+                            placeholder="Filtrar outfits..."
+                            class="w-full pl-9 pr-4 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
+                        />
+                    </div>
+
+                    <!-- Selector de ordenación local -->
+                    <select
+                        v-model="outfitSortBy"
+                        class="px-3 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-700 dark:text-white focus:outline-none focus:border-violet-500 cursor-pointer"
+                    >
+                        <option value="newest">Más recientes</option>
+                        <option value="oldest">Más antiguos</option>
+                        <option value="most_items">Más prendas</option>
+                        <option value="alpha">Alfabético (A-Z)</option>
+                    </select>
+
+                    <!-- Contador de resultados filtrados -->
+                    <span class="text-xs text-slate-400 ml-auto">
+                        {{ filteredOutfits.length }} de {{ outfits.length }} outfits
+                    </span>
+                </div>
+
+                <!-- Outfits Grid (usa el computed filteredOutfits en vez del array crudo) -->
+                <div v-if="filteredOutfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
                     <div 
-                        v-for="outfit in outfits" 
+                        v-for="outfit in filteredOutfits" 
                         :key="outfit.id"
                         class="bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group border border-slate-100 dark:border-zinc-700/50"
                     >
@@ -326,7 +388,15 @@ const isMe = computed(() => {
                     </div>
                 </div>
 
-                <!-- Empty State -->
+                <!-- Estado vacío por filtro local -->
+                <div v-else-if="outfits.length > 0 && filteredOutfits.length === 0" class="text-center py-16 bg-white dark:bg-zinc-800/50 rounded-2xl border border-slate-200 dark:border-zinc-700">
+                    <i class="pi pi-filter-slash text-4xl text-slate-300 mb-3"></i>
+                    <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-1">Sin coincidencias</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">No hay outfits que coincidan con "{{ outfitSearchQuery }}"</p>
+                    <button @click="outfitSearchQuery = ''" class="mt-4 text-violet-600 font-semibold text-sm hover:underline">Limpiar filtro</button>
+                </div>
+
+                <!-- Estado vacío general -->
                 <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
                     <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="pi pi-image text-slate-400 text-2xl"></i>

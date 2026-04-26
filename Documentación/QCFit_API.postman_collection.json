@@ -1,0 +1,465 @@
+{
+	"info": {
+		"_postman_id": "qcfit-api-collection-2026",
+		"name": "QCFit API - Colección de Pruebas",
+		"description": "Colección completa de pruebas para la API REST de QCFit.\nIncluye todos los endpoints públicos y protegidos organizados por módulo.\n\nConfiguración:\n- Variable {{base_url}}: http://127.0.0.1:8000\n- Variable {{token}}: Se obtiene automáticamente tras el Login.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "base_url", "value": "http://127.0.0.1:8000" },
+		{ "key": "token", "value": "" }
+	],
+	"item": [
+		{
+			"name": "01 - Autenticación",
+			"item": [
+				{
+					"name": "Login",
+					"event": [{ "listen": "test", "script": { "exec": ["var jsonData = pm.response.json();", "if (jsonData.token) { pm.collectionVariables.set('token', jsonData.token); }", "pm.test('Login exitoso (200)', function () { pm.response.to.have.status(200); });", "pm.test('Devuelve token y usuario', function () { pm.expect(jsonData).to.have.property('token'); pm.expect(jsonData).to.have.property('user'); });"] } }],
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"password\"\n}" },
+						"url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+					}
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}" },
+						"url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] }
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+					}
+				},
+				{
+					"name": "Get User (Auth)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/user", "host": ["{{base_url}}"], "path": ["api","user"] }
+					}
+				},
+				{
+					"name": "Get User SignIn",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/user/signin", "host": ["{{base_url}}"], "path": ["api","user","signin"] }
+					}
+				},
+				{
+					"name": "Get Abilities",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/abilities", "host": ["{{base_url}}"], "path": ["api","abilities"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "02 - Productos (Público)",
+			"item": [
+				{
+					"name": "Listar Productos",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "pm.test('Devuelve array de datos', function () { var json = pm.response.json(); pm.expect(json.data).to.be.an('array'); });"] } }],
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/products", "host": ["{{base_url}}"], "path": ["api","products"] }
+					}
+				},
+				{
+					"name": "Ver Producto (ID=1)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "pm.test('Tiene nombre e imágenes', function () { var json = pm.response.json(); pm.expect(json.data).to.have.property('name'); });"] } }],
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/products/1", "host": ["{{base_url}}"], "path": ["api","products","1"] }
+					}
+				},
+				{
+					"name": "Smart Search (keyword)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });"] } }],
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/search?q=nike&type=products", "host": ["{{base_url}}"], "path": ["api","search"], "query": [{"key":"q","value":"nike"},{"key":"type","value":"products"}] }
+					}
+				},
+				{
+					"name": "Smart Search (outfits)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/search?q=&type=outfits", "host": ["{{base_url}}"], "path": ["api","search"], "query": [{"key":"q","value":""},{"key":"type","value":"outfits"}] }
+					}
+				},
+				{
+					"name": "Live Feed",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/feed/live", "host": ["{{base_url}}"], "path": ["api","feed","live"] }
+					}
+				},
+				{
+					"name": "Category List",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/category-list", "host": ["{{base_url}}"], "path": ["api","category-list"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "03 - Productos (Admin CRUD)",
+			"item": [
+				{
+					"name": "Crear Producto",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201 Created', function () { pm.response.to.have.status(201); });"] } }],
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Product Postman\",\n  \"external_id\": \"99999\",\n  \"original_link\": \"https://weidian.com/item.html?itemID=99999\",\n  \"category_id\": 1,\n  \"brand_id\": 1,\n  \"source_id\": 1\n}" },
+						"url": { "raw": "{{base_url}}/api/products", "host": ["{{base_url}}"], "path": ["api","products"] }
+					}
+				},
+				{
+					"name": "Actualizar Producto (ID=1)",
+					"request": {
+						"method": "PUT",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Producto Actualizado\",\n  \"external_id\": \"99999\",\n  \"original_link\": \"https://weidian.com/item.html?itemID=99999\"\n}" },
+						"url": { "raw": "{{base_url}}/api/products/1", "host": ["{{base_url}}"], "path": ["api","products","1"] }
+					}
+				},
+				{
+					"name": "Eliminar Producto (ID=99)",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/products/99", "host": ["{{base_url}}"], "path": ["api","products","99"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "04 - Outfits",
+			"item": [
+				{
+					"name": "Listar Outfits (Público)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });"] } }],
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/outfits", "host": ["{{base_url}}"], "path": ["api","outfits"] }
+					}
+				},
+				{
+					"name": "Ver Outfit (ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/outfits/1", "host": ["{{base_url}}"], "path": ["api","outfits","1"] }
+					}
+				},
+				{
+					"name": "Crear Outfit",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 201', function () { pm.response.to.have.status(201); });", "pm.test('Devuelve outfit con items', function () { var json = pm.response.json(); pm.expect(json.data || json).to.have.property('title'); });"] } }],
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"title\": \"Test Outfit Postman\",\n  \"description\": \"Outfit creado desde Postman\",\n  \"is_public\": true,\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"pos_x\": 100,\n      \"pos_y\": 200,\n      \"rotation\": 0,\n      \"scale_x\": 1,\n      \"scale_y\": 1,\n      \"z_index\": 0,\n      \"is_flipped\": false\n    }\n  ]\n}" },
+						"url": { "raw": "{{base_url}}/api/outfits", "host": ["{{base_url}}"], "path": ["api","outfits"] }
+					}
+				},
+				{
+					"name": "Actualizar Outfit (ID=1)",
+					"request": {
+						"method": "PUT",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"title\": \"Outfit Actualizado\",\n  \"description\": \"Descripción modificada\",\n  \"is_public\": true,\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"pos_x\": 150,\n      \"pos_y\": 250,\n      \"rotation\": 15,\n      \"scale_x\": 1.2,\n      \"scale_y\": 1.2,\n      \"z_index\": 1,\n      \"is_flipped\": false\n    }\n  ]\n}" },
+						"url": { "raw": "{{base_url}}/api/outfits/1", "host": ["{{base_url}}"], "path": ["api","outfits","1"] }
+					}
+				},
+				{
+					"name": "Eliminar Outfit (ID=99)",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/outfits/99", "host": ["{{base_url}}"], "path": ["api","outfits","99"] }
+					}
+				},
+				{
+					"name": "Mis Outfits",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/my-outfits", "host": ["{{base_url}}"], "path": ["api","my-outfits"] }
+					}
+				},
+				{
+					"name": "Feed Following",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/feed/following", "host": ["{{base_url}}"], "path": ["api","feed","following"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "05 - Social (Follow / Favorites)",
+			"item": [
+				{
+					"name": "Toggle Follow",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "pm.test('Devuelve estado de follow', function () { var json = pm.response.json(); pm.expect(json).to.have.property('status'); });"] } }],
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"user_id\": 2\n}" },
+						"url": { "raw": "{{base_url}}/api/follow", "host": ["{{base_url}}"], "path": ["api","follow"] }
+					}
+				},
+				{
+					"name": "Toggle Favorite (Product ID=1)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });"] } }],
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/favorites/1", "host": ["{{base_url}}"], "path": ["api","favorites","1"] }
+					}
+				},
+				{
+					"name": "Perfil Público (ID=1)",
+					"event": [{ "listen": "test", "script": { "exec": ["pm.test('Status 200', function () { pm.response.to.have.status(200); });", "pm.test('Tiene user y outfits', function () { var json = pm.response.json(); pm.expect(json).to.have.property('user'); pm.expect(json).to.have.property('outfits'); });"] } }],
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/public/user/1", "host": ["{{base_url}}"], "path": ["api","public","user","1"] }
+					}
+				},
+				{
+					"name": "Followers (User ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/public/user/1/followers", "host": ["{{base_url}}"], "path": ["api","public","user","1","followers"] }
+					}
+				},
+				{
+					"name": "Following (User ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/public/user/1/following", "host": ["{{base_url}}"], "path": ["api","public","user","1","following"] }
+					}
+				},
+				{
+					"name": "Favorites (User ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/users/1/favorites", "host": ["{{base_url}}"], "path": ["api","users","1","favorites"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "06 - Admin (Usuarios, Roles, Permisos)",
+			"item": [
+				{
+					"name": "Listar Usuarios",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/users", "host": ["{{base_url}}"], "path": ["api","users"] }
+					}
+				},
+				{
+					"name": "Crear Usuario",
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Nuevo Usuario\",\n  \"email\": \"nuevo@test.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}" },
+						"url": { "raw": "{{base_url}}/api/users", "host": ["{{base_url}}"], "path": ["api","users"] }
+					}
+				},
+				{
+					"name": "Ver Usuario (ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/users/1", "host": ["{{base_url}}"], "path": ["api","users","1"] }
+					}
+				},
+				{
+					"name": "Actualizar Usuario (ID=2)",
+					"request": {
+						"method": "PUT",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Usuario Modificado\",\n  \"email\": \"modificado@test.com\"\n}" },
+						"url": { "raw": "{{base_url}}/api/users/2", "host": ["{{base_url}}"], "path": ["api","users","2"] }
+					}
+				},
+				{
+					"name": "Eliminar Usuario (ID=99)",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/users/99", "host": ["{{base_url}}"], "path": ["api","users","99"] }
+					}
+				},
+				{
+					"name": "Listar Roles",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api","roles"] }
+					}
+				},
+				{
+					"name": "Role List (Select)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/role-list", "host": ["{{base_url}}"], "path": ["api","role-list"] }
+					}
+				},
+				{
+					"name": "Listar Permisos",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/permissions", "host": ["{{base_url}}"], "path": ["api","permissions"] }
+					}
+				},
+				{
+					"name": "Role Permissions (ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/role-permissions/1", "host": ["{{base_url}}"], "path": ["api","role-permissions","1"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "07 - Admin (Marcas, Categorías, Fuentes)",
+			"item": [
+				{
+					"name": "Listar Marcas",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/brands", "host": ["{{base_url}}"], "path": ["api","brands"] }
+					}
+				},
+				{
+					"name": "Brand List (Select)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/brand-list", "host": ["{{base_url}}"], "path": ["api","brand-list"] }
+					}
+				},
+				{
+					"name": "Productos de Marca (ID=1)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/brands/1/products", "host": ["{{base_url}}"], "path": ["api","brands","1","products"] }
+					}
+				},
+				{
+					"name": "Listar Fuentes (Sources)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/sources", "host": ["{{base_url}}"], "path": ["api","sources"] }
+					}
+				},
+				{
+					"name": "Source List (Select)",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/source-list", "host": ["{{base_url}}"], "path": ["api","source-list"] }
+					}
+				},
+				{
+					"name": "Listar Categorías",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/categories", "host": ["{{base_url}}"], "path": ["api","categories"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "08 - Admin (Outfits Moderación)",
+			"item": [
+				{
+					"name": "Admin - Listar Outfits",
+					"request": {
+						"method": "GET",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/admin/outfits", "host": ["{{base_url}}"], "path": ["api","admin","outfits"] }
+					}
+				},
+				{
+					"name": "Admin - Eliminar Outfit (ID=99)",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"url": { "raw": "{{base_url}}/api/admin/outfits/99", "host": ["{{base_url}}"], "path": ["api","admin","outfits","99"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "09 - Perfil y Multimedia",
+			"item": [
+				{
+					"name": "Actualizar Perfil",
+					"request": {
+						"method": "PUT",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "raw", "raw": "{\n  \"name\": \"Álvaro Méndez\",\n  \"alias\": \"mndzzz\",\n  \"bio\": \"QCFit developer\"\n}" },
+						"url": { "raw": "{{base_url}}/api/user", "host": ["{{base_url}}"], "path": ["api","user"] }
+					}
+				},
+				{
+					"name": "Subir Imagen de Usuario",
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "formdata", "formdata": [{"key":"image","type":"file","src":""}] },
+						"url": { "raw": "{{base_url}}/api/users/updateimg", "host": ["{{base_url}}"], "path": ["api","users","updateimg"] }
+					}
+				},
+				{
+					"name": "AI - Remove Background",
+					"request": {
+						"method": "POST",
+						"header": [{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Accept","value":"application/json"}],
+						"body": { "mode": "formdata", "formdata": [{"key":"image_url","value":"https://example.com/image.jpg","type":"text"}] },
+						"url": { "raw": "{{base_url}}/api/ai/remove-bg", "host": ["{{base_url}}"], "path": ["api","ai","remove-bg"] }
+					}
+				}
+			]
+		}
+	]
+}

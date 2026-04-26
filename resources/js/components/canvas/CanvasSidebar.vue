@@ -1,19 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useCanvasStore } from '@/store/canvas';
-import axios from 'axios';
+import useProducts from '@/composables/products';
 
 const canvasStore = useCanvasStore();
+
+// Reutilizamos el composable de productos (mismo que usa el Panel Admin)
+const { products: searchResults, isLoading: searchLoading, searchProducts: composableSearch, getProducts } = useProducts();
+
+// Instancia separada para el wardrobe (evita colisiones de estado con la búsqueda)
+const wardrobeProducts = useProducts();
 
 // Tabs
 const activeTab = ref('search');
 
 // Búsqueda
 const searchQuery = ref('');
-const searchResults = ref([]);
-const searchLoading = ref(false);
 
-// Wardrobe (productos favoritos)
+// Wardrobe (productos favoritos / recientes)
 const wardrobeItems = ref([]);
 const wardrobeLoading = ref(false);
 
@@ -29,44 +33,23 @@ onMounted(() => {
     loadWardrobe();
 });
 
-// Buscar productos
+// Buscar productos (reutiliza el composable en vez de axios directo)
 async function searchProducts() {
     if (!searchQuery.value.trim()) {
         searchResults.value = [];
         return;
     }
 
-    searchLoading.value = true;
-    
-    try {
-        const response = await axios.get('/api/search', {
-            params: { 
-                q: searchQuery.value,
-                limit: 12 
-            }
-        });
-
-        searchResults.value = response.data.data || response.data || [];
-    } catch (error) {
-        console.error('Error buscando productos:', error);
-        searchResults.value = [];
-    } finally {
-        searchLoading.value = false;
-    }
+    await composableSearch(searchQuery.value, { limit: 12 });
 }
 
-// Cargar productos del wardrobe (favoritos)
+// Cargar productos del wardrobe usando el composable
 async function loadWardrobe() {
     wardrobeLoading.value = true;
     
     try {
-        // TODO: Implementar endpoint de favoritos del usuario
-        // Por ahora, cargar productos recientes
-        const response = await axios.get('/api/products', {
-            params: { limit: 12 }
-        });
-
-        wardrobeItems.value = response.data.data || response.data || [];
+        await wardrobeProducts.getProducts({ limit: 12 });
+        wardrobeItems.value = wardrobeProducts.products.value || [];
     } catch (error) {
         console.error('Error cargando wardrobe:', error);
         wardrobeItems.value = [];

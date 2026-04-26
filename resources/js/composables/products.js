@@ -121,6 +121,36 @@ export default function useProducts() {
         }
     }
 
+    /**
+     * Búsqueda pública de productos a través de la API /api/search.
+     * Reutilizable tanto en el Panel Admin como en el Web Client (CanvasSidebar).
+     * @param {string} query - Término de búsqueda
+     * @param {Object} extraParams - Parámetros adicionales (limit, etc.)
+     * @returns {Array} - Array de productos encontrados
+     */
+    const searchProducts = async (query, extraParams = {}) => {
+        if (!query || !query.trim()) {
+            products.value = []
+            return []
+        }
+
+        isLoading.value = true
+        try {
+            const response = await axios.get('/api/search', {
+                params: { q: query, ...extraParams }
+            })
+            const data = response.data?.data || response.data || []
+            products.value = data
+            return data
+        } catch (error) {
+            console.error('Error en búsqueda de productos:', error)
+            products.value = []
+            return []
+        } finally {
+            isLoading.value = false
+        }
+    }
+
     return {
         products,
         product,
@@ -131,6 +161,7 @@ export default function useProducts() {
         resetProduct,
         setProduct,
         getProducts,
+        searchProducts,
         createProduct,
         updateProduct,
         deleteProduct
