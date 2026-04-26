@@ -1,0 +1,123 @@
+/* ============================================
+   Bootstrap 5 - Overrides para Modo Oscuro
+   Aplica estilos oscuros cuando la clase .dark
+   está presente en <html> (sistema de QCFit)
+   ============================================ */
+
+/* === Cards === */
+.dark .card {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .card-body {
+    color: #e2e8f0 !important;
+}
+
+/* === Formularios === */
+.dark .form-control {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .form-control:focus {
+    background-color: #0f172a !important;
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25) !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .form-control::placeholder {
+    color: #64748b !important;
+}
+
+.dark .form-label {
+    color: #cbd5e1 !important;
+}
+
+/* === Botones === */
+.dark .btn-primary {
+    background-color: #7c3aed !important;
+    border-color: #7c3aed !important;
+}
+
+.dark .btn-primary:hover {
+    background-color: #6d28d9 !important;
+    border-color: #6d28d9 !important;
+}
+
+.dark .btn-outline-secondary {
+    color: #94a3b8 !important;
+    border-color: #475569 !important;
+}
+
+.dark .btn-outline-secondary:hover {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+
+/* === Textos === */
+.dark .text-muted {
+    color: #94a3b8 !important;
+}
+
+.dark .text-danger {
+    color: #f87171 !important;
+}
+
+.dark .text-body-secondary {
+    color: #94a3b8 !important;
+}
+
+/* === Links === */
+.dark a.text-primary {
+    color: #a78bfa !important;
+}
+
+.dark a.text-primary:hover {
+    color: #c4b5fd !important;
+}
+
+/* === Backgrounds === */
+.dark .bg-body-tertiary {
+    background-color: #1e293b !important;
+}
+
+/* === Page Backgrounds (Auth pages) === */
+.dark .bs-auth-page {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* === Headings en dark mode === */
+.dark .bs-auth-page h2,
+.dark .bs-auth-page h1 {
+    color: #f1f5f9 !important;
+}
+
+/* === Estilo del checkbox === */
+.dark .form-check-input {
+    background-color: #0f172a !important;
+    border-color: #475569 !important;
+}
+
+.dark .form-check-input:checked {
+    background-color: #7c3aed !important;
+    border-color: #7c3aed !important;
+}
+
+.dark .form-check-label {
+    color: #cbd5e1 !important;
+}
+
+/* === 404 Page === */
+.dark .bs-error-page {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+.dark .bs-error-page h1 {
+    color: #f1f5f9 !important;
+}

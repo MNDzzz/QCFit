@@ -1,9 +1,16 @@
 /* ============================================
+   Bootstrap 5 - Para secciones de Auth y Errores
+   ============================================ */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* ============================================
    Tailwind CSS v4 - Importación principal
+   (Se carga después para que tenga prioridad)
    ============================================ */
 @import "tailwindcss";
 @import 'sweetalert2/dist/sweetalert2.min.css';
 @import "./flags.css";
+@import "./bootstrap-dark.css";
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ============================================

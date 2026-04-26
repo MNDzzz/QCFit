@@ -4,8 +4,10 @@ import { useRouter } from 'vue-router';
 import { usePreferenceStore } from '@/store/preference';
 import { authStore } from '@/store/auth';
 import useAuth from '@/composables/auth';
+import { useLayout } from '@/composables/layout';
 
 const router = useRouter();
+const { toggleDarkMode, isDarkTheme } = useLayout();
 const navSearchQuery = ref('');
 const isNavSearchActive = ref(false);
 const navSearchInput = ref(null);
@@ -95,6 +97,14 @@ function selectAgent(agent) {
                         </div>
                     </div>
 
+                    <!-- Dark Mode Toggle -->
+                    <button 
+                        @click="toggleDarkMode" 
+                        class="text-stone-300 hover:text-white transition-colors focus:outline-none w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-800"
+                        :title="isDarkTheme ? 'Light Mode' : 'Dark Mode'"
+                    >
+                        <i class="pi" :class="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+                    </button>
 
                     <!-- Auth -->
                     <template v-if="!store.authenticated">
