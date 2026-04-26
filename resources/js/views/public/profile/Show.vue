@@ -112,6 +112,85 @@ const isMe = computed(() => {
     return auth.authenticated && auth.user && auth.user.id === user.value?.id;
 });
 
+// Edit Profile Logic
+const showEditModal = ref(false);
+const saveLoading = ref(false);
+const editForm = ref({
+    name: '',
+    bio: '',
+    agent_preference: null
+});
+const avatarFile = ref(null);
+const avatarPreview = ref(null);
+
+const agentOptions = ref([
+    { name: 'CNFans', value: 'cnfans' },
+    { name: 'Mulebuy', value: 'mulebuy' },
+    { name: 'Hoobuy', value: 'hoobuy' },
+]);
+
+function openEditModal() {
+    editForm.value = {
+        name: user.value?.name || '',
+        bio: user.value?.bio || '',
+        agent_preference: user.value?.agent_preference || null
+    };
+    avatarFile.value = null;
+    avatarPreview.value = null;
+    showEditModal.value = true;
+}
+
+function onAvatarSelected(event) {
+    const file = event.target.files[0];
+    if (file) {
+        avatarFile.value = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            avatarPreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+async function saveProfile() {
+    saveLoading.value = true;
+    try {
+        const formData = new FormData();
+        formData.append('_method', 'PUT'); // Truco de Laravel para enviar archivos por PUT
+        
+        // El backend requiere name y email, aunque no queramos editar email
+        formData.append('name', editForm.value.name);
+        formData.append('email', auth.user.email); // Requerido por UpdateProfileRequest
+        
+        if (editForm.value.bio) formData.append('bio', editForm.value.bio);
+        if (editForm.value.agent_preference) formData.append('agent_preference', editForm.value.agent_preference);
+        if (avatarFile.value) formData.append('avatar', avatarFile.value);
+
+        const response = await axios.post('/api/user', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        
+        // Actualizar también el usuario autenticado en la store para el Navbar
+        if (auth.user && response.data?.data) {
+            auth.user.name = response.data.data.name;
+        } else if (auth.user && response.data) {
+            auth.user.name = response.data.name;
+        }
+        
+        toast.add({ severity: 'success', summary: 'Profile Updated', detail: 'Your data has been successfully saved.', life: 3000 });
+        showEditModal.value = false;
+        
+        // Recargar perfil para asegurar que todos los datos (incluyendo alias, stats, etc) estén sincronizados
+        fetchProfile(user.value.id);
+    } catch (e) {
+        console.error(e);
+        const errorMessage = e.response?.data?.message || 'Could not update profile. Check your data.';
+        toast.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 5000 });
+    } finally {
+        saveLoading.value = false;
+    }
+}
+
 </script>
 
 <template>
@@ -202,13 +281,13 @@ const isMe = computed(() => {
                                 <span class="block font-bold text-lg text-slate-900 dark:text-white">
                                     {{ user?.stats?.followers_count || 0 }}
                                 </span>
-                                <span class="text-slate-500 dark:text-slate-400">Seguidores</span>
+                                <span class="text-slate-500 dark:text-slate-400">Followers</span>
                             </div>
                             <div class="text-center md:text-left cursor-pointer hover:opacity-80 transition-opacity">
                                 <span class="block font-bold text-lg text-slate-900 dark:text-white">
                                     {{ user?.stats?.following_count || 0 }}
                                 </span>
-                                <span class="text-slate-500 dark:text-slate-400">Siguiendo</span>
+                                <span class="text-slate-500 dark:text-slate-400">Following</span>
                             </div>
                         </div>
                     </div>
@@ -228,15 +307,18 @@ const isMe = computed(() => {
                          </button>
 
                          <template v-else>
-                            <button class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-700 font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
-                                Editar Perfil
+                            <button 
+                                @click="openEditModal"
+                                class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-600 font-medium hover:bg-slate-100 dark:hover:bg-zinc-700 hover:border-slate-400 hover:shadow-md active:scale-95 transition-all cursor-pointer"
+                            >
+                                Edit Profile
                             </button>
                             <button 
                                 @click="logout"
-                                class="px-6 py-2.5 rounded-full bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
+                                class="px-6 py-2.5 rounded-full bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2 cursor-pointer active:scale-95"
                             >
                                 <i class="pi pi-sign-out text-sm"></i>
-                                Cerrar Sesión
+                                Log Out
                             </button>
                          </template>
                     </div>
@@ -311,6 +393,70 @@ const isMe = computed(() => {
                 </div>
             </div>
         </div>
+
+        <!-- Edit Profile Modal -->
+        <Dialog v-model:visible="showEditModal" modal header="Edit Profile" :style="{ width: '90vw', maxWidth: '500px' }" :draggable="false" class="p-fluid">
+            <div class="flex flex-col gap-6 pt-2">
+                
+                <!-- Avatar Upload -->
+                <div class="flex flex-col items-center gap-4 mb-2">
+                    <div class="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-200 dark:border-zinc-700">
+                        <img :src="avatarPreview || user?.avatar || '/images/placeholder-user.jpg'" alt="Avatar" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <div>
+                        <label 
+                            for="avatar-upload" 
+                            class="px-4 py-2 border border-slate-300 dark:border-zinc-600 rounded-full text-sm font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors cursor-pointer text-slate-700 dark:text-slate-300"
+                        >
+                            Change Photo
+                        </label>
+                        <input 
+                            id="avatar-upload" 
+                            type="file" 
+                            accept="image/*" 
+                            class="hidden" 
+                            @change="onAvatarSelected" 
+                        />
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="flex flex-col gap-2">
+                    <label for="name" class="font-bold text-slate-700 dark:text-slate-300">Name</label>
+                    <InputText id="name" v-model="editForm.name" placeholder="Your name" />
+                </div>
+
+                <!-- Bio -->
+                <div class="flex flex-col gap-2">
+                    <label for="bio" class="font-bold text-slate-700 dark:text-slate-300">Bio</label>
+                    <Textarea id="bio" v-model="editForm.bio" rows="4" placeholder="Tell us a little about yourself..." />
+                </div>
+
+                <!-- Agent Preference -->
+                <div class="flex flex-col gap-2">
+                    <label for="agent" class="font-bold text-slate-700 dark:text-slate-300">Preferred Agent</label>
+                    <Select 
+                        id="agent" 
+                        v-model="editForm.agent_preference" 
+                        :options="agentOptions" 
+                        optionLabel="name" 
+                        optionValue="value" 
+                        placeholder="Select your favorite shopping agent" 
+                        showClear
+                        class="w-full"
+                    />
+                </div>
+
+            </div>
+            
+            <template #footer>
+                <div class="flex justify-end gap-3 mt-6">
+                    <Button label="Cancel" icon="pi pi-times" @click="showEditModal = false" class="p-button-text p-button-secondary" />
+                    <Button label="Save Changes" icon="pi pi-check" @click="saveProfile" :loading="saveLoading" autofocus class="rounded-full" />
+                </div>
+            </template>
+        </Dialog>
     </div>
 </template>
 
