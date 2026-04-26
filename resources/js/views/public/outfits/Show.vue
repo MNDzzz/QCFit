@@ -201,7 +201,11 @@ const formattedDate = computed(() => {
                     <!-- Right: Outfit Info -->
                     <div class="p-8 lg:p-12 flex flex-col">
                         <!-- User Info -->
-                        <div v-if="outfit.user" class="flex items-center gap-3 mb-6">
+                        <router-link 
+                            v-if="outfit.user" 
+                            :to="{ name: 'public.profile', params: { id: outfit.user.id } }"
+                            class="flex items-center gap-3 mb-6 cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-xl transition-colors group"
+                        >
                             <img 
                                 :src="outfit.user.avatar || '/images/default-avatar.png'" 
                                 referrerpolicy="no-referrer"
@@ -209,10 +213,10 @@ const formattedDate = computed(() => {
                                 :alt="outfit.user.name"
                             />
                             <div>
-                                <h4 class="font-bold text-slate-800">{{ outfit.user.alias || outfit.user.name }}</h4>
+                                <h4 class="font-bold text-slate-800 group-hover:text-violet-600 transition-colors">{{ outfit.user.alias || outfit.user.name }}</h4>
                                 <p class="text-sm text-slate-500">{{ formattedDate }}</p>
                             </div>
-                        </div>
+                        </router-link>
 
                         <!-- Title & Description -->
                         <h1 class="text-3xl lg:text-4xl font-black text-slate-900 mb-4">
