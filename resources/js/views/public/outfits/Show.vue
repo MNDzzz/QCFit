@@ -331,7 +331,6 @@ const formattedDate = computed(() => {
                             </p>
                         </div>
                     </div>
-                    </div>
                 </div>
             </div>
         </div>
