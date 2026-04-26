@@ -19,7 +19,7 @@ onMounted(async () => {
 
 <template>
     <div class="min-h-screen bg-gray-50 py-8 px-4">
-        <div class="max-w-7xl mx-auto">
+        <div class="max-w-6xl mx-auto">
             <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Explore Outfits</h1>
             <p class="text-gray-500 mb-8">Get inspired by community creations and remix them.</p>
 

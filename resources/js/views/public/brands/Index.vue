@@ -34,7 +34,7 @@ const searchByBrand = (brandName) => {
     <div class="min-h-screen bg-stone-50 pb-20 font-sans">
         <!-- Header Strip -->
         <div class="bg-white border-b border-slate-200 py-4 px-4 sticky top-16 z-30 shadow-sm">
-            <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
                  <div>
                     <Breadcrumbs :items="breadcrumbItems" />
                     <h1 class="text-2xl font-display font-bold text-slate-900 mt-1">
@@ -44,7 +44,7 @@ const searchByBrand = (brandName) => {
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 pt-12">
+        <div class="max-w-6xl mx-auto px-6 pt-12">
             <p class="text-center text-slate-500 mb-12">
                 Explore products and outfits grouped by your favorite brands.
             </p>
