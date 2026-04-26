@@ -1,8 +1,28 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { usePreferenceStore } from '@/store/preference';
 import { authStore } from '@/store/auth';
 import useAuth from '@/composables/auth';
+
+const router = useRouter();
+const navSearchQuery = ref('');
+const isNavSearchActive = ref(false);
+const navSearchInput = ref(null);
+
+const toggleNavSearch = () => {
+    isNavSearchActive.value = !isNavSearchActive.value;
+    if (isNavSearchActive.value) {
+        setTimeout(() => navSearchInput.value?.focus(), 100);
+    }
+};
+
+const submitNavSearch = () => {
+    if (!navSearchQuery.value.trim()) return;
+    router.push({ name: 'public.search', query: { q: navSearchQuery.value.trim() } });
+    navSearchQuery.value = '';
+    isNavSearchActive.value = false;
+};
 
 const preferenceStore = usePreferenceStore();
 const store = authStore();
@@ -36,11 +56,11 @@ function selectAgent(agent) {
                 </div>
 
                 <!-- Desktop Nav -->
-                <div class="hidden md:flex items-center space-x-8">
+                <div class="hidden md:flex items-center space-x-8" v-if="!isNavSearchActive">
                     <router-link :to="{ name: 'public.explore' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
                         Explore
                     </router-link>
-                    <router-link :to="{ name: 'public.home' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
+                    <router-link :to="{ name: 'public.brands' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
                         Brands
                     </router-link>
                     <router-link :to="{ name: 'public.studio' }" class="text-stone-300 hover:text-white font-sans text-sm font-medium transition-colors">
@@ -49,7 +69,12 @@ function selectAgent(agent) {
                 </div>
 
                 <!-- Right Side Actions -->
-                <div class="hidden md:flex items-center gap-4">
+                <div class="hidden md:flex items-center gap-4" v-if="!isNavSearchActive">
+                    <!-- Search Icon Button -->
+                    <button @click="toggleNavSearch" class="text-stone-300 hover:text-white transition-colors focus:outline-none">
+                        <i class="pi pi-search text-lg"></i>
+                    </button>
+
                     <!-- Agent Selector -->
                     <div class="relative group">
                         <button class="flex items-center gap-2 text-stone-300 hover:text-white text-sm font-medium bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700 transition-colors">
@@ -126,8 +151,28 @@ function selectAgent(agent) {
 
                 </div>
 
+                <!-- Expanded Search Bar (Visible when isNavSearchActive is true) -->
+                <div v-if="isNavSearchActive" class="flex-1 flex items-center px-4 md:px-8 ml-4">
+                     <form @submit.prevent="submitNavSearch" class="relative w-full flex items-center">
+                         <i class="pi pi-search absolute left-4 text-slate-400 text-lg"></i>
+                         <input 
+                             v-model="navSearchQuery"
+                             type="text" 
+                             ref="navSearchInput"
+                             placeholder="Search products, brands, links..." 
+                             class="w-full bg-slate-800/50 text-white text-base font-medium border border-slate-700 rounded-full pl-12 pr-12 py-2.5 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all placeholder-slate-500"
+                         >
+                         <button type="button" @click="toggleNavSearch" class="absolute right-4 text-slate-400 hover:text-white transition-colors focus:outline-none">
+                             <i class="pi pi-times text-lg"></i>
+                         </button>
+                     </form>
+                </div>
+
                 <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
+                <div class="md:hidden flex items-center gap-4" v-if="!isNavSearchActive">
+                    <button @click="toggleNavSearch" class="text-stone-300 hover:text-white transition-colors focus:outline-none">
+                        <i class="pi pi-search text-xl"></i>
+                    </button>
                     <button @click="isOpen = !isOpen" class="text-stone-300 hover:text-white">
                         <i class="pi pi-bars text-xl"></i>
                     </button>
@@ -139,6 +184,7 @@ function selectAgent(agent) {
         <div v-show="isOpen" class="md:hidden bg-slate-900 border-b border-slate-800">
              <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <router-link :to="{ name: 'public.explore' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Explore</router-link>
+                <router-link :to="{ name: 'public.brands' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Brands</router-link>
                 <router-link :to="{ name: 'public.studio' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Studio</router-link>
              </div>
         </div>

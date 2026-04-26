@@ -61,9 +61,14 @@ export default [
                 component: () => import('../views/public/search/Results.vue'),
             },
             {
+                path: 'brands',
+                name: 'public.brands',
+                component: () => import('../views/public/brands/Index.vue'),
+            },
+            {
                 path: 'explore',
                 name: 'public.explore',
-                component: () => import('../views/public/outfits/Index.vue'),
+                component: () => import('../views/public/search/Results.vue'),
             },
             {
                 path: 'u/:id',

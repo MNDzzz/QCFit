@@ -11,7 +11,7 @@ class EloquentProductSearchRepository implements ProductSearchRepository
     public function search(?string $query, array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
         $products = Product::query()
-            ->with(['images', 'category', 'brand', 'source']) // Añadido brand y source
+            ->with(['images', 'category', 'brand', 'source'])
             ->when($query, function (Builder $q) use ($query) {
                 $q->where(function ($subQ) use ($query) {
                     $subQ->where('name', 'LIKE', "%{$query}%")
@@ -25,6 +25,11 @@ class EloquentProductSearchRepository implements ProductSearchRepository
             })
             ->when(isset($filters['brand_id']), function (Builder $q) use ($filters) {
                 $q->where('brand_id', $filters['brand_id']);
+            })
+            ->when(isset($filters['brand_name']), function (Builder $q) use ($filters) {
+                $q->whereHas('brand', function($bq) use ($filters) {
+                    $bq->where('name', 'LIKE', "%{$filters['brand_name']}%");
+                });
             })
             ->when(isset($filters['source_id']), function (Builder $q) use ($filters) {
                 $q->where('source_id', $filters['source_id']);
