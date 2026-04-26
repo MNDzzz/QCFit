@@ -185,9 +185,17 @@ function cancelSave() {
 </script>
 
 <template>
-    <div class="studio-view flex flex-col h-screen bg-slate-950 text-white overflow-hidden">
+    <div class="studio-view flex flex-col h-screen bg-[#0B0F19] text-white overflow-hidden relative">
+        <!-- Background Gradients & Effects from Home -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1600px] h-[800px] bg-violet-600/10 blur-[160px] rounded-full pointer-events-none mix-blend-screen opacity-50 z-0"></div>
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 blur-[140px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none mix-blend-screen opacity-30 z-0"></div>
+        
+        <!-- Grid Pattern Overlay -->
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none z-0" 
+             style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 40px 40px;"></div>
+
         <!-- Loading Overlay para Remix -->
-        <div v-if="loadingRemix" class="fixed inset-0 bg-slate-950/90 flex items-center justify-center z-50 backdrop-blur-sm">
+        <div v-if="loadingRemix" class="fixed inset-0 bg-[#0B0F19]/90 flex items-center justify-center z-50 backdrop-blur-sm">
             <div class="text-center">
                 <i class="pi pi-spin pi-spinner text-5xl text-violet-600 mb-6"></i>
                 <p class="text-slate-300 font-display text-lg tracking-wide">Loading outfit for remix...</p>
@@ -195,11 +203,11 @@ function cancelSave() {
         </div>
 
         <!-- Header del Studio (Dark & Premium) -->
-        <div class="studio-header flex items-center justify-between px-6 py-4 bg-slate-950 border-b border-slate-900/50">
+        <div class="studio-header relative z-10 flex items-center justify-between px-6 py-4 bg-[#0B0F19]/80 backdrop-blur-md border-b border-white/5">
             <!-- Logo y navegación -->
             <div class="flex items-center gap-6">
                 <router-link to="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity group">
-                    <div class="w-8 h-8 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center group-hover:border-violet-600/50 transition-colors">
+                    <div class="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:border-violet-500/50 transition-colors">
                         <i class="pi pi-arrow-left text-slate-400 group-hover:text-white text-xs"></i>
                     </div>
                 </router-link>
@@ -223,7 +231,7 @@ function cancelSave() {
 
             <!-- Stats Centrales (Opcional) -->
             <div class="hidden md:flex items-center gap-6 text-sm">
-                 <div class="flex items-center gap-2 text-slate-400 bg-slate-900/50 px-3 py-1.5 rounded-full border border-slate-800/50">
+                 <div class="flex items-center gap-2 text-slate-400 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
                     <i class="pi pi-layers text-xs"></i>
                     <span class="font-mono text-xs">{{ canvasStore.canvasItems.length }} layers</span>
                 </div>
@@ -238,7 +246,7 @@ function cancelSave() {
                  <button 
                     @click="confirmClear"
                     :disabled="canvasStore.canvasItems.length === 0"
-                    class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-red-400 hover:bg-red-900/20 border border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all"
+                    class="w-10 h-10 rounded-full bg-white/5 text-slate-400 hover:text-red-400 hover:bg-red-500/20 border border-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all"
                     title="Clear Canvas"
                 >
                     <i class="pi pi-trash"></i>
@@ -260,12 +268,12 @@ function cancelSave() {
         <CanvasToolbar @save="handleSave" @export="handleExport" />
 
         <!-- Área principal: Sidebar + Canvas + Layers Panel -->
-        <div class="flex-1 flex overflow-hidden">
+        <div class="flex-1 flex overflow-hidden relative z-10">
             <!-- Sidebar Izquierda (Assets) -->
             <CanvasSidebar />
 
             <!-- Canvas Editor (Centro) -->
-            <div class="flex-1 overflow-hidden relative bg-[#0f1014]"> <!-- Background muy oscuro -->
+            <div class="flex-1 overflow-hidden relative bg-transparent"> <!-- Transparent to show body background -->
                 <CanvasEditor ref="canvasEditorRef" />
             </div>
 
@@ -281,10 +289,10 @@ function cancelSave() {
             :style="{ width: '450px' }"
             :draggable="false"
             :pt="{
-                root: { class: 'bg-slate-900 border border-slate-800 text-white' },
-                header: { class: 'bg-slate-900 text-white border-b border-slate-800' },
-                content: { class: 'bg-slate-900 text-white' },
-                footer: { class: 'bg-slate-900 border-t border-slate-800' },
+                root: { class: 'bg-[#0B0F19] border border-white/10 text-white shadow-2xl backdrop-blur-xl' },
+                header: { class: 'bg-transparent text-white border-b border-white/10' },
+                content: { class: 'bg-transparent text-white' },
+                footer: { class: 'bg-transparent border-t border-white/10' },
                 closeButton: { class: 'text-slate-400 hover:text-white focus:ring-0' }
             }"
         >
@@ -297,7 +305,7 @@ function cancelSave() {
                     v-model="outfitTitle"
                     type="text"
                     placeholder="Ej: Summer Street Style 2024"
-                    class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600 placeholder-slate-600 transition-all"
+                    class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 placeholder-slate-500 transition-all"
                     @keyup.enter="confirmSave"
                     autofocus
                 >
@@ -310,14 +318,14 @@ function cancelSave() {
                 <div class="flex justify-end gap-3 pt-2">
                     <button
                         @click="cancelSave"
-                        class="px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                        class="px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         @click="confirmSave"
                         :disabled="saving || !outfitTitle.trim()"
-                        class="px-6 py-2 text-sm bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-violet-900/20"
+                        class="px-6 py-2 text-sm bg-violet-600 hover:bg-violet-500 disabled:bg-white/10 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-violet-500/20"
                     >
                         <i v-if="saving" class="pi pi-spin pi-spinner"></i>
                         <span v-else>Save & Publish</span>

@@ -106,9 +106,9 @@ function truncateName(name, maxLength = 18) {
 </script>
 
 <template>
-    <div class="canvas-layers-panel w-60 bg-slate-950 border-l border-slate-900/50 flex flex-col h-full">
+    <div class="canvas-layers-panel w-60 bg-[#0B0F19]/80 backdrop-blur-md text-white border-l border-white/5 flex flex-col h-full relative z-10">
         <!-- Cabecera del Panel -->
-        <div class="panel-header px-4 py-3 border-b border-slate-900/50 flex items-center justify-between">
+        <div class="panel-header px-4 py-3 border-b border-white/5 flex items-center justify-between">
             <h3 class="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <i class="pi pi-layers text-violet-500"></i>
                 Layers
@@ -139,8 +139,8 @@ function truncateName(name, maxLength = 18) {
                 class="layer-item group flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-all duration-150"
                 :class="{
                     'bg-violet-600/20 border-l-2 border-violet-500': canvasStore.selectedId === item.id,
-                    'hover:bg-slate-900/50 border-l-2 border-transparent': canvasStore.selectedId !== item.id,
-                    'bg-slate-800/50 border-dashed border-violet-400': dragOverItemId === item.id && draggedItemId !== item.id,
+                    'hover:bg-white/5 border-l-2 border-transparent': canvasStore.selectedId !== item.id,
+                    'bg-white/5 border-dashed border-violet-400': dragOverItemId === item.id && draggedItemId !== item.id,
                     'opacity-50': draggedItemId === item.id
                 }"
             >
@@ -150,7 +150,7 @@ function truncateName(name, maxLength = 18) {
                 </div>
 
                 <!-- Thumbnail del item -->
-                <div class="layer-thumbnail w-10 h-10 rounded-lg bg-slate-800 border border-slate-700 overflow-hidden flex-shrink-0">
+                <div class="layer-thumbnail w-10 h-10 rounded-lg bg-black/40 border border-white/10 overflow-hidden flex-shrink-0">
                     <img 
                         v-if="item.imageUrl" 
                         :src="item.imageUrl" 
@@ -205,7 +205,7 @@ function truncateName(name, maxLength = 18) {
         </div>
 
         <!-- Footer con info adicional -->
-        <div class="panel-footer px-4 py-3 border-t border-slate-900/50 text-[10px] text-slate-600">
+        <div class="panel-footer px-4 py-3 border-t border-white/5 text-[10px] text-slate-600">
             <p><i class="pi pi-info-circle mr-1"></i> Drag to reorder</p>
         </div>
     </div>
