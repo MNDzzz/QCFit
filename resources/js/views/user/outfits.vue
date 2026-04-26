@@ -23,7 +23,7 @@ async function fetchOutfits() {
         outfits.value = response.data.data || response.data;
     } catch (e) {
         console.error('Error fetching outfits:', e);
-        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar tus outfits.', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Could not load your outfits.', life: 3000 });
     } finally {
         loading.value = false;
     }
@@ -31,14 +31,14 @@ async function fetchOutfits() {
 
 function confirmDelete(outfitId) {
     swal({
-        title: '¿Estás seguro?',
-        text: "Esta acción eliminará permanentemente tu outfit.",
+        title: 'Are you sure?',
+        text: "This action will permanently delete your outfit.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel'
     }).then((result) => {
         if (result.isConfirmed) {
             deleteOutfit(outfitId);
@@ -53,15 +53,15 @@ async function deleteOutfit(id) {
         outfits.value = outfits.value.filter(o => o.id !== id);
         
         swal(
-            '¡Eliminado!',
-            'Tu outfit ha sido eliminado correctamente.',
+            'Deleted!',
+            'Your outfit has been deleted successfully.',
             'success'
         );
     } catch (e) {
         console.error('Error deleting outfit:', e);
         swal(
             'Error',
-            'Hubo un problema al eliminar el outfit.',
+            'There was a problem deleting the outfit.',
             'error'
         );
     }
@@ -72,12 +72,12 @@ async function deleteOutfit(id) {
     <div class="p-6">
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-2xl font-bold text-slate-800 dark:text-white">Mis Outfits</h1>
-                <p class="text-slate-500 dark:text-slate-400">Gestiona y edita tus creaciones</p>
+                <h1 class="text-2xl font-bold text-slate-800 dark:text-white">My Outfits</h1>
+                <p class="text-slate-500 dark:text-slate-400">Manage and edit your creations</p>
             </div>
             <router-link :to="{ name: 'public.studio' }" class="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-lg shadow transition-colors flex items-center gap-2">
                 <i class="pi pi-plus"></i>
-                Crear Nuevo Outfit
+                Create New Outfit
             </router-link>
         </div>
 
@@ -95,10 +95,10 @@ async function deleteOutfit(id) {
             <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="pi pi-image text-slate-400 text-2xl"></i>
             </div>
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">Aún no tienes outfits</h3>
-            <p class="text-slate-500 dark:text-slate-400 mb-6">Crea tu primer outfit en el Studio usando los productos que más te gusten.</p>
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-2">No outfits yet</h3>
+            <p class="text-slate-500 dark:text-slate-400 mb-6">Create your first outfit in the Studio using your favorite products.</p>
             <router-link :to="{ name: 'public.studio' }" class="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-medium hover:opacity-90 transition-opacity">
-                Ir al Studio
+                Go to Studio
             </router-link>
         </div>
 
@@ -123,19 +123,19 @@ async function deleteOutfit(id) {
                             :to="{name: 'public.outfit.show', params: {id: outfit.id}}" 
                             class="px-5 py-2 w-32 bg-white/10 hover:bg-white/20 border border-white/30 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-medium backdrop-blur-md"
                         >
-                            <i class="pi pi-eye"></i> Ver
+                            <i class="pi pi-eye"></i> View
                         </router-link>
                         <router-link 
                             :to="{name: 'public.studio', query: {outfit_id: outfit.id}}" 
                             class="px-5 py-2 w-32 bg-white/10 hover:bg-white/20 border border-white/30 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-medium backdrop-blur-md"
                         >
-                            <i class="pi pi-pencil"></i> Editar
+                            <i class="pi pi-pencil"></i> Edit
                         </router-link>
                         <button 
                             @click="confirmDelete(outfit.id)"
                             class="px-5 py-2 w-32 bg-red-500/80 hover:bg-red-500 text-white border border-red-400/50 rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-medium backdrop-blur-md"
                         >
-                            <i class="pi pi-trash"></i> Eliminar
+                            <i class="pi pi-trash"></i> Delete
                         </button>
                     </div>
                 </div>

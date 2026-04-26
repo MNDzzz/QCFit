@@ -258,7 +258,7 @@ async function removeBackground() {
     } catch (e) {
         console.error(e);
         processingAi.value = false;
-        alert("Error al quitar fondo");
+        alert("Error removing background");
     }
 }
 
@@ -274,10 +274,10 @@ function deleteSelectedItem() {
     <div class="flex h-screen bg-gray-100 p-4 gap-4">
         <!-- Sidebar de Productos -->
         <div class="w-1/4 bg-white rounded-xl shadow-lg p-4 overflow-y-auto flex flex-col">
-            <h2 class="text-xl font-bold mb-4 text-gray-800">Mi Armario</h2>
+            <h2 class="text-xl font-bold mb-4 text-gray-800">My Wardrobe</h2>
             
             <div v-if="availableProducts.length === 0" class="text-gray-400 text-center py-4">
-                No hay productos. Busca en Home para añadir.
+                No products available. Search on Home to add some.
             </div>
 
             <div class="grid grid-cols-2 gap-2">
@@ -296,7 +296,7 @@ function deleteSelectedItem() {
                             referrerpolicy="no-referrer"
                             class="w-full h-full object-cover pointer-events-none"
                         >
-                        <div v-else class="flex items-center justify-center h-full text-xs text-gray-400">Sin foto</div>
+                        <div v-else class="flex items-center justify-center h-full text-xs text-gray-400">No photo</div>
                     </div>
                     <p class="text-xs font-semibold text-center truncate">{{ prod.name }}</p>
                     <p class="text-[10px] text-center text-gray-500">{{ prod.brand }}</p>
@@ -311,7 +311,7 @@ function deleteSelectedItem() {
             @dragover="onDragOver"
         >
             <div class="absolute top-2 left-2 z-10 text-xs text-gray-400 bg-white/80 p-1 rounded">
-                Arrastra prendas aquí. Haz click para transformar.
+                Drag items here. Click to transform.
             </div>
 
             <!-- Toolbar Contextual -->
@@ -361,17 +361,17 @@ function deleteSelectedItem() {
         <Dialog 
             v-model:visible="showImageSelect" 
             modal 
-            header="Elige la variante" 
+            header="Choose a variant" 
             :style="{ width: '50vw' }"
             :draggable="false"
         >
             <div v-if="selectedProduct">
-                <p class="mb-4 text-gray-600">Selecciona la imagen para: <span class="font-bold">{{ selectedProduct.name }}</span></p>
+                <p class="mb-4 text-gray-600">Select image for: <span class="font-bold">{{ selectedProduct.name }}</span></p>
                 
                 <div class="mb-6">
-                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">QCs (Control de Calidad)</h3>
+                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">QCs (Quality Control)</h3>
                     <div class="flex gap-2 overflow-x-auto pb-2">
-                        <div v-if="productImages.qc.length === 0" class="text-sm text-gray-400 italic">No hay QCs disponibles</div>
+                        <div v-if="productImages.qc.length === 0" class="text-sm text-gray-400 italic">No QCs available</div>
                         <img 
                             v-for="img in productImages.qc" 
                             :key="img.id"
@@ -384,9 +384,9 @@ function deleteSelectedItem() {
                 </div>
 
                 <div>
-                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">Oficial / Marketing</h3>
+                    <h3 class="text-sm font-bold uppercase text-gray-400 mb-2">Official / Marketing</h3>
                     <div class="flex gap-2 overflow-x-auto pb-2">
-                        <div v-if="productImages.original.length === 0" class="text-sm text-gray-400 italic">No hay fotos oficiales</div>
+                        <div v-if="productImages.original.length === 0" class="text-sm text-gray-400 italic">No official photos</div>
                         <img 
                             v-for="img in productImages.original" 
                             :key="img.id"

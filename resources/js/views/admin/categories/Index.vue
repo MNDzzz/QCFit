@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Gestión de Categorías</span>
+                    <span>Category Management</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -64,8 +64,8 @@
                     <template #empty>
                         <div class="table-empty-state">
                             <i class="pi pi-inbox empty-state-icon"></i>
-                            <p class="empty-state-text">No se encontraron categorías</p>
-                            <p class="empty-state-subtext">Intenta ajustar los filtros de búsqueda</p>
+                            <p class="empty-state-text">No categories found</p>
+                            <p class="empty-state-subtext">Try adjusting your search filters</p>
                         </div>
                     </template>
 
@@ -139,7 +139,7 @@
         >
             <div class="flex flex-col gap-4">
                 <div>
-                    <label for="category-name" class="dialog-label">Nombre de la categoría</label>
+                    <label for="category-name" class="dialog-label">Category name</label>
                     <InputText
                         v-model="category.name"
                         id="category-name"

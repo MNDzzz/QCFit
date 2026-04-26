@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Gestión de Roles</span>
+                    <span>Role Management</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -48,8 +48,8 @@
                     <template #empty>
                         <div class="table-empty-state">
                             <i class="pi pi-inbox empty-state-icon"></i>
-                            <p class="empty-state-text">No se encontraron roles</p>
-                            <p class="empty-state-subtext">Intenta ajustar los filtros de búsqueda</p>
+                            <p class="empty-state-text">No roles found</p>
+                            <p class="empty-state-subtext">Try adjusting your search filters</p>
                         </div>
                     </template>
 

@@ -1,102 +1,100 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md w-full">
+    <!-- Página de Login - Maquetada con Bootstrap 5 (scoped) -->
+    <div class="bs-scope bs-auth-page min-vh-100 d-flex align-items-center justify-content-center py-5 px-3">
+        <div style="max-width: 440px; width: 100%;">
             <!-- Logo y título -->
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold">
-                    Bienvenido a SQL Check!
-                </h2>
-                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    Inicia sesión para continuar
-                </p>
+            <div class="text-center mb-4">
+                <img src="/images/qcfit.svg" alt="QCFit Logo" class="mb-3" style="height: 48px; width: auto;">
+                <h2 class="fw-bold mb-1">Welcome back</h2>
+                <p class="text-muted">{{ $t('login') }} to continue</p>
             </div>
 
-            <!-- Formulario -->
-            <Card>
-                <template #content>
-                    <form @submit.prevent="submitLogin" class="space-y-6">
+            <!-- Formulario con Card de Bootstrap -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form @submit.prevent="submitLogin">
                         <!-- Email -->
-                        <div class="flex flex-col gap-2">
-                            <label for="email" class="font-medium">{{ $t('email') }}</label>
-                            <InputText
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">{{ $t('email') }}</label>
+                            <input
                                 id="email"
                                 type="email"
+                                class="form-control form-control-lg rounded-3"
                                 v-model="loginForm.email"
-                                placeholder="tu@email.com"
-                                :class="{ 'p-invalid': validationErrors?.email }"
+                                placeholder="your@email.com"
+                                :class="{ 'is-invalid': validationErrors?.email }"
                             />
-                            <small v-if="validationErrors?.email" class="text-red-500">
+                            <div v-if="validationErrors?.email" class="invalid-feedback" style="display:block;">
                                 <div v-for="message in validationErrors.email" :key="message">
                                     {{ message }}
                                 </div>
-                            </small>
+                            </div>
                         </div>
 
                         <!-- Password -->
-                        <div class="flex flex-col gap-2">
-                            <label for="password" class="font-medium">{{ $t('password') }}</label>
-                            <Password
+                        <div class="mb-3">
+                            <label for="password" class="form-label fw-semibold">{{ $t('password') }}</label>
+                            <input
                                 id="password"
+                                type="password"
+                                class="form-control form-control-lg rounded-3"
                                 v-model="loginForm.password"
                                 placeholder="••••••••"
-                                :toggleMask="true"
-                                :feedback="false"
-                                inputClass="w-full"
-                                :class="{ 'p-invalid': validationErrors?.password }"
-                                fluid
+                                :class="{ 'is-invalid': validationErrors?.password }"
                             />
-                            <small v-if="validationErrors?.password" class="text-red-500">
+                            <div v-if="validationErrors?.password" class="invalid-feedback" style="display:block;">
                                 <div v-for="message in validationErrors.password" :key="message">
                                     {{ message }}
                                 </div>
-                            </small>
+                            </div>
                         </div>
 
                         <!-- Remember me y Forgot password -->
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <Checkbox
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
                                     v-model="loginForm.remember"
-                                    inputId="remember"
-                                    binary
+                                    id="remember"
                                 />
-                                <label for="remember" class="text-sm cursor-pointer">
+                                <label class="form-check-label" for="remember">
                                     {{ $t('remember_me') }}
                                 </label>
                             </div>
                             <router-link
                                 :to="{ name: 'auth.forgot-password' }"
-                                class="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                                class="text-primary text-decoration-none fw-medium small"
                             >
                                 {{ $t('forgot_password') }}
                             </router-link>
                         </div>
 
                         <!-- Submit Button -->
-                        <Button
+                        <button
                             type="submit"
-                            :label="$t('login')"
-                            :loading="processing"
+                            class="btn btn-primary btn-lg w-100 rounded-3 fw-bold"
                             :disabled="processing"
-                            class="w-full"
-                            size="large"
-                        />
+                        >
+                            <span v-if="processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            {{ $t('login') }}
+                        </button>
 
                         <!-- Register link -->
-                        <div class="text-center">
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                ¿No tienes una cuenta?
+                        <div class="text-center mt-4">
+                            <p class="text-muted mb-0">
+                                Don't have an account?
                                 <router-link
                                     :to="{ name: 'auth.register' }"
-                                    class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                                    class="text-primary text-decoration-none fw-semibold"
                                 >
-                                    Regístrate aquí
+                                    Sign up here
                                 </router-link>
                             </p>
                         </div>
                     </form>
-                </template>
-            </Card>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -106,35 +104,3 @@ import useAuth from '@/composables/auth';
 
 const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 </script>
-
-<style scoped>
-/* Asegurar que PrimeIcons se muestren correctamente */
-:deep(.pi) {
-    font-family: 'primeicons' !important;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-    display: inline-block;
-}
-
-/* Estilos para InputText de PrimeVue */
-:deep(.p-inputtext) {
-    width: 100%;
-}
-
-/* Estilos para Password de PrimeVue */
-:deep(.p-password) {
-    width: 100%;
-}
-
-:deep(.p-password-input) {
-    width: 100%;
-}
-
-/* Estilos para Button de PrimeVue */
-:deep(.p-button) {
-    width: 100%;
-}
-</style>

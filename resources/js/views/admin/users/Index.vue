@@ -2,10 +2,10 @@
     <Card>
         <template #title>
             <div class="flex items-center justify-between w-full">
-                <span>Gestión de Usuarios</span>
+                <span>User Management</span>
                 <div class="flex items-center gap-2">
                     <Button 
-                        label="Actualizar" 
+                        label="Refresh" 
                         icon="pi pi-refresh" 
                         size="small" 
                         outlined 
@@ -25,7 +25,7 @@
             </div>
         </template>
 
-        <template #subtitle>Administra y gestiona los usuarios del sistema. Crea, edita y elimina usuarios según tus permisos.</template>
+        <template #subtitle>Manage and administer system users. Create, edit and delete users based on your permissions.</template>
 
         <template #content>
             <DataTable
@@ -103,7 +103,7 @@
                         </div>
                     </template>
                     <template #filter="{ filterModel }">
-                        <InputText v-model="filterModel.value" placeholder="Buscar por nombre de rol" class="w-full" />
+                        <InputText v-model="filterModel.value" placeholder="Search by role name" class="w-full" />
                     </template>
                 </Column>
 

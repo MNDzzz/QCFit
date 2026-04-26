@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Gestión de Productos</span>
+                    <span>Product Management</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -47,7 +47,7 @@
                     <template #empty>
                         <div class="text-center py-5">
                             <i class="pi pi-inbox text-4xl opacity-20 mb-3 block"></i>
-                            <p>No se encontraron productos</p>
+                            <p>No products found</p>
                         </div>
                     </template>
 
@@ -146,7 +146,7 @@
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Categoría</label>
+                    <label class="font-semibold text-sm">Category</label>
                     <Select
                         v-model="product.category_id"
                         :options="categoryList"

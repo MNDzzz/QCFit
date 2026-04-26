@@ -3,13 +3,13 @@
         <Card class="w-full max-w-3xl">
             
             <template #title>
-                <h2 class="text-xl font-semibold">Configuración del Perfil</h2>
+                <h2 class="text-xl font-semibold">Profile Settings</h2>
             </template>
 
             <template #content>
                 <form @submit.prevent="submitForm" class="flex flex-col gap-6">
 
-                    <h3 class="text-base font-medium text-surface-700 mb-2">Información personal</h3>
+                    <h3 class="text-base font-medium text-surface-700 mb-2">Personal Information</h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 

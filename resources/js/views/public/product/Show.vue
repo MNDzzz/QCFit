@@ -19,8 +19,8 @@ const breadcrumbItems = computed(() => {
     return [
         { label: 'Home', to: { name: 'public.home' } },
         { label: 'Explore', to: { name: 'public.search' } },
-        { label: product.value.category?.name || 'Categoría', to: product.value.category ? { name: 'public.search', query: { category: product.value.category.name } } : null },
-        { label: product.value.brand?.name || (typeof product.value.brand === 'string' ? product.value.brand : 'Producto') }
+        { label: product.value.category?.name || 'Category', to: product.value.category ? { name: 'public.search', query: { category: product.value.category.name } } : null },
+        { label: product.value.brand?.name || (typeof product.value.brand === 'string' ? product.value.brand : 'Product') }
     ];
 });
 
@@ -38,7 +38,7 @@ async function fetchProduct() {
 
         // SEO Meta Tags
         useHead({
-            title: computed(() => product.value ? `${product.value.name} - QCFit` : 'Producto - QCFit'),
+            title: computed(() => product.value ? `${product.value.name} - QCFit` : 'Product - QCFit'),
             meta: [
                 {
                     name: 'description',

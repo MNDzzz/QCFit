@@ -3,10 +3,10 @@
         <Card>
             <template #title>
                 <div class="flex items-center justify-between w-full">
-                    <span>Gestión de Marketplaces (Sources)</span>
+                    <span>Marketplace Management (Sources)</span>
                     <div class="flex items-center gap-2">
                         <Button
-                            label="Actualizar"
+                            label="Refresh"
                             icon="pi pi-refresh"
                             size="small"
                             outlined
@@ -47,7 +47,7 @@
                     <template #empty>
                         <div class="table-empty-state text-center py-5">
                             <i class="pi pi-inbox text-4xl opacity-20 mb-3 block"></i>
-                            <p>No se encontraron marketplaces</p>
+                            <p>No marketplaces found</p>
                         </div>
                     </template>
 
