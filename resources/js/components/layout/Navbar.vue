@@ -49,9 +49,7 @@ function selectAgent(agent) {
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
                     <router-link :to="{ name: 'public.home' }" class="flex items-center gap-2">
-                        <span class="text-2xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-400">
-                            QCFit.
-                        </span>
+                        <img src="/images/qcfit.svg" alt="QCFit Logo" class="h-9 w-auto" />
                     </router-link>
                 </div>
 
