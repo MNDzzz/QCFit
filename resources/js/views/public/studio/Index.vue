@@ -205,8 +205,9 @@ function cancelSave() {
                 </router-link>
                 
                 <div class="flex flex-col">
-                    <h1 class="text-white font-display font-bold text-xl tracking-tight leading-none">
-                        QCFit<span class="text-violet-500">.</span> Studio
+                    <h1 class="flex items-center gap-2 text-white font-display font-bold text-xl tracking-tight leading-none">
+                        <img src="/images/qcfit.svg" alt="QCFit Logo" class="h-6 w-auto" />
+                        <span>Studio</span>
                     </h1>
                      <!-- Badge de Remix Mode -->
                     <div v-if="canvasStore.isRemixMode" class="flex items-center gap-1 mt-1">
