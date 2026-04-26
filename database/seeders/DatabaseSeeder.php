@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             RealProductImporterSeeder::class, 
             // OutfitSeeder depende de que existan usuarios y productos previamente insertados
             OutfitSeeder::class, 
+            // Interacciones sociales (seguidores y favoritos)
+            SocialInteractionsSeeder::class,
         ]);
     }
 }
