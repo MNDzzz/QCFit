@@ -125,7 +125,15 @@ export default [
                 path: 'profile',
                 component: () => import('../views/user/profile.vue'),
                 meta: {
-                    breadCrumb: 'Perfil',
+                    breadCrumb: 'Profile',
+                },
+            },
+            {
+                name: 'app.outfits',
+                path: 'outfits',
+                component: () => import('../views/user/outfits.vue'),
+                meta: {
+                    breadCrumb: 'My Outfits',
                 },
             },
 

@@ -6,11 +6,13 @@ import { authStore } from '../../../store/auth';
 import useAuth from '@/composables/auth';
 import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
+import { inject } from 'vue';
 
 const route = useRoute();
 const auth = authStore();
 const { logout } = useAuth();
 const toast = useToast();
+const swal = inject('$swal');
 
 const user = ref(null);
 const outfits = ref([]);
@@ -111,6 +113,47 @@ async function toggleFollow() {
 const isMe = computed(() => {
     return auth.authenticated && auth.user && auth.user.id === user.value?.id;
 });
+
+function confirmDelete(outfitId) {
+    swal({
+        title: 'Are you sure?',
+        text: "This action will permanently delete your outfit.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deleteOutfit(outfitId);
+        }
+    });
+}
+
+async function deleteOutfit(id) {
+    try {
+        await axios.delete(`/api/outfits/${id}`);
+        // Eliminar del array localmente
+        outfits.value = outfits.value.filter(o => o.id !== id);
+        if (user.value?.stats) {
+            user.value.stats.outfits_count--;
+        }
+        
+        swal(
+            'Deleted!',
+            'Your outfit has been succesfully deleted.',
+            'success'
+        );
+    } catch (e) {
+        console.error('Error deleting outfit:', e);
+        swal(
+            'Error',
+            'There was a problem deleting your outfit.',
+            'error'
+        );
+    }
+}
 
 </script>
 
@@ -278,10 +321,20 @@ const isMe = computed(() => {
                                 loading="lazy"
                             >
                             <!-- Overlay actions -->
-                            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
-                                    <i class="pi pi-eye"></i>
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
+                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="px-5 py-2 w-32 bg-white/90 hover:bg-white text-zinc-900 rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Ver Detalle">
+                                    <i class="pi pi-eye"></i> See
                                 </router-link>
+                                
+                                <template v-if="isMe">
+                                    <router-link :to="{name: 'public.studio', query: {outfit_id: outfit.id}}" class="px-5 py-2 w-32 bg-violet-600/90 hover:bg-violet-600 border border-violet-500/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Editar Outfit">
+                                        <i class="pi pi-pencil"></i> Edit
+                                    </router-link>
+                                    
+                                    <button @click.prevent="confirmDelete(outfit.id)" class="px-5 py-2 w-32 bg-red-500/90 hover:bg-red-500 border border-red-400/50 text-white rounded-full flex items-center justify-center gap-2 transition-colors text-sm font-bold shadow-lg backdrop-blur-md" title="Eliminar Outfit">
+                                        <i class="pi pi-trash"></i> Delete
+                                    </button>
+                                </template>
                             </div>
                         </div>
 
