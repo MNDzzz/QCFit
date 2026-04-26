@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\OutfitController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\PublicProfileController;
 use App\Http\Controllers\Api\AiController;
+use App\Http\Controllers\Api\FavoriteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     
     // Social
     Route::post('/follow', [FollowController::class, 'toggle']);
+    Route::post('/favorites/{productId}', [FavoriteController::class, 'toggle']);
 
     // Admin: Moderación de Outfits
     Route::get('/admin/outfits', [OutfitController::class, 'adminIndex']);
@@ -86,6 +88,7 @@ Route::get('/outfits/{id}', [OutfitController::class, 'show']);
 
 Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
 Route::get('/public/user/{id}', [PublicProfileController::class, 'show']);
+Route::get('/public/user/{id}/favorites', [FavoriteController::class, 'userFavorites']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/signin', [ProfileController::class, 'user']);
 });

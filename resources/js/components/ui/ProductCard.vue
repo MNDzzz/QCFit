@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { useToast } from 'primevue/usetoast';
 
 const props = defineProps({
     product: {
@@ -11,6 +13,24 @@ const props = defineProps({
 
 const router = useRouter();
 const isHovered = ref(false);
+const toast = useToast();
+
+const isFavorited = ref(props.product.is_favorited || false);
+
+const toggleFavorite = async (event) => {
+    event.stopPropagation();
+    try {
+        const response = await axios.post(`/api/favorites/${props.product.id}`);
+        isFavorited.value = response.data.is_favorited;
+        toast.add({ severity: 'success', summary: 'Favoritos', detail: response.data.message, life: 3000 });
+    } catch (e) {
+        if (e.response?.status === 401) {
+            toast.add({ severity: 'info', summary: 'Atención', detail: 'Inicia sesión para guardar favoritos.', life: 3000 });
+        } else {
+            console.error(e);
+        }
+    }
+};
 
 const qcImage = computed(() => {
     return props.product.images?.find(img => img.type === 'qc')?.url 
@@ -57,6 +77,15 @@ const goToDetail = () => {
                     <i class="pi pi-camera" style="font-size: 0.6rem"></i> QC
                 </span>
             </div>
+
+            <!-- Favorite Button -->
+            <button 
+                @click="toggleFavorite"
+                class="absolute top-2 right-2 z-20 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-white transition-all shadow-sm"
+                :class="{'text-red-500': isFavorited}"
+            >
+                <i class="pi" :class="isFavorited ? 'pi-heart-fill' : 'pi-heart'"></i>
+            </button>
 
             <!-- Images -->
             <img 

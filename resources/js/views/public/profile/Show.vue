@@ -6,6 +6,7 @@ import { authStore } from '../../../store/auth';
 import useAuth from '@/composables/auth';
 import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
+import ProductCard from '@/components/ui/ProductCard.vue';
 
 const route = useRoute();
 const auth = authStore();
@@ -14,6 +15,9 @@ const toast = useToast();
 
 const user = ref(null);
 const outfits = ref([]);
+const favorites = ref([]);
+const activeTab = ref('outfits');
+const loadingFavorites = ref(false);
 const loading = ref(true);
 const followLoading = ref(false);
 const error = ref(null);
@@ -29,7 +33,29 @@ onMounted(() => {
 // Watch route param changes (to reload if navigating from one profile to another)
 watch(() => route.params.id, (newId) => {
     fetchProfile(newId);
+    if (activeTab.value === 'favorites') {
+        fetchFavorites(newId);
+    }
 });
+
+async function fetchFavorites(userId) {
+    loadingFavorites.value = true;
+    try {
+        const response = await axios.get(`/api/public/user/${userId}/favorites`);
+        favorites.value = response.data.data || [];
+    } catch (e) {
+        console.error('Error fetching favorites:', e);
+    } finally {
+        loadingFavorites.value = false;
+    }
+}
+
+function setTab(tab) {
+    activeTab.value = tab;
+    if (tab === 'favorites' && favorites.value.length === 0) {
+        fetchFavorites(route.params.id);
+    }
+}
 
 async function fetchProfile(userId) {
     loading.value = true;
@@ -250,64 +276,104 @@ const isMe = computed(() => {
                 <!-- Tabs -->
                 <div class="border-b border-slate-200 dark:border-zinc-800 mb-8">
                     <nav class="flex gap-8 justify-center md:justify-start">
-                        <button class="pb-4 px-2 border-b-2 border-violet-600 text-violet-600 font-semibold transition-colors">
+                        <button 
+                            @click="setTab('outfits')"
+                            class="pb-4 px-2 border-b-2 font-semibold transition-colors"
+                            :class="activeTab === 'outfits' ? 'border-violet-600 text-violet-600 dark:text-violet-400 dark:border-violet-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'"
+                        >
                             Outfits
                         </button>
-                        <!-- Future tabs: Saved, Liked -->
-                        <!-- <button class="pb-4 px-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium transition-colors">
+                        <button 
+                            @click="setTab('favorites')"
+                            class="pb-4 px-2 border-b-2 font-semibold transition-colors"
+                            :class="activeTab === 'favorites' ? 'border-violet-600 text-violet-600 dark:text-violet-400 dark:border-violet-400' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'"
+                        >
                             Guardados
-                        </button> -->
+                        </button>
                     </nav>
                 </div>
 
-                <!-- Outfits Grid -->
-                <!-- Defensive check added -->
-                <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
-                    <div 
-                        v-for="outfit in outfits" 
-                        :key="outfit.id"
-                        class="bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group border border-slate-100 dark:border-zinc-700/50"
-                    >
-                        <!-- Image -->
-                        <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
-                            <img 
-                                :src="outfit.thumbnail_url || '/images/placeholder-outfit.jpg'" 
-                                referrerpolicy="no-referrer"
-                                :alt="outfit.title"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                loading="lazy"
-                            >
-                            <!-- Overlay actions -->
-                            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                                <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
-                                    <i class="pi pi-eye"></i>
-                                </router-link>
+                <!-- Tab Content: Outfits -->
+                <div v-show="activeTab === 'outfits'">
+                    <!-- Outfits Grid -->
+                    <div v-if="outfits && outfits.length > 0" class="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in-up">
+                        <div 
+                            v-for="outfit in outfits" 
+                            :key="outfit.id"
+                            class="bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group border border-slate-100 dark:border-zinc-700/50"
+                        >
+                            <!-- Image -->
+                            <div class="aspect-[4/5] bg-slate-100 relative overflow-hidden">
+                                <img 
+                                    :src="outfit.thumbnail_url || '/images/placeholder-outfit.jpg'" 
+                                    referrerpolicy="no-referrer"
+                                    :alt="outfit.title"
+                                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    loading="lazy"
+                                >
+                                <!-- Overlay actions -->
+                                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                                    <router-link :to="{name: 'public.outfit.show', params: {id: outfit.id}}" class="p-3 bg-white rounded-full text-zinc-900 hover:scale-110 transition-transform shadow-lg" title="Ver Detalle">
+                                        <i class="pi pi-eye"></i>
+                                    </router-link>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Content -->
-                        <div class="p-4">
-                            <h3 class="font-bold text-slate-900 dark:text-white truncate mb-1">{{ outfit.title }}</h3>
-                            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                                <span>{{ new Date(outfit.created_at).toLocaleDateString() }}</span>
-                                <span class="flex items-center gap-1">
-                                    <i class="pi pi-clone"></i>
-                                    {{ outfit.items_count || 0 }} items
-                                </span>
+                            <!-- Content -->
+                            <div class="p-4">
+                                <h3 class="font-bold text-slate-900 dark:text-white truncate mb-1">{{ outfit.title }}</h3>
+                                <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                                    <span>{{ new Date(outfit.created_at).toLocaleDateString() }}</span>
+                                    <span class="flex items-center gap-1">
+                                        <i class="pi pi-clone"></i>
+                                        {{ outfit.items_count || 0 }} items
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
+                        <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="pi pi-image text-slate-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">Sin outfits aún</h3>
+                        <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                            Este usuario aún no ha publicado ningún outfit.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Empty State -->
-                <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
-                    <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="pi pi-image text-slate-400 text-2xl"></i>
+                <!-- Tab Content: Favorites -->
+                <div v-show="activeTab === 'favorites'">
+                    <div v-if="loadingFavorites" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                        <div v-for="n in 5" :key="n" class="bg-white dark:bg-zinc-800 rounded-2xl overflow-hidden border border-slate-100 dark:border-zinc-700/50">
+                            <Skeleton width="100%" height="280px" />
+                            <div class="p-4">
+                                <Skeleton width="80%" height="1rem" class="mb-2" />
+                                <Skeleton width="40%" height="1rem" />
+                            </div>
+                        </div>
                     </div>
-                    <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">Sin outfits aún</h3>
-                    <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-                        Este usuario aún no ha publicado ningún outfit.
-                    </p>
+
+                    <div v-else-if="favorites && favorites.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 animate-fade-in-up">
+                        <ProductCard 
+                            v-for="product in favorites" 
+                            :key="product.id"
+                            :product="product"
+                        />
+                    </div>
+
+                    <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
+                        <div class="w-16 h-16 bg-slate-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="pi pi-heart text-slate-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">No hay favoritos</h3>
+                        <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                            Este usuario aún no ha guardado productos.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
