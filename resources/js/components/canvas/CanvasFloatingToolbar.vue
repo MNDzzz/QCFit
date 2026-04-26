@@ -62,7 +62,7 @@ function flipHorizontal() {
 function removeSelected() {
     if (!canvasStore.selectedId) return;
     
-    if (confirm('¿Eliminar este item del canvas?')) {
+    if (confirm('Delete this item from canvas?')) {
         canvasStore.removeItem(canvasStore.selectedId);
     }
 }
@@ -93,7 +93,7 @@ function removeBg() {
             <button
                 @click="removeBg"
                 class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-xs font-bold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-violet-900/30"
-                title="Quitar fondo (IA)"
+                title="Remove background (AI)"
             >
                 <i class="pi pi-sparkles text-[10px]"></i>
                 <span>Remove BG</span>
@@ -106,7 +106,7 @@ function removeBg() {
             <button
                 @click="bringToFront"
                 class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                title="Traer al frente"
+                title="Bring to front"
             >
                 <i class="pi pi-arrow-up text-sm"></i>
             </button>
@@ -115,7 +115,7 @@ function removeBg() {
             <button
                 @click="sendToBack"
                 class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                title="Enviar atrás"
+                title="Send to back"
             >
                 <i class="pi pi-arrow-down text-sm"></i>
             </button>
@@ -127,7 +127,7 @@ function removeBg() {
             <button
                 @click="flipHorizontal"
                 class="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-                title="Voltear horizontalmente"
+                title="Flip horizontally"
             >
                 <i class="pi pi-arrows-h text-sm"></i>
             </button>
@@ -139,7 +139,7 @@ function removeBg() {
             <button
                 @click="removeSelected"
                 class="w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-red-900/30 rounded-lg transition-colors"
-                title="Eliminar"
+                title="Delete"
             >
                 <i class="pi pi-trash text-sm"></i>
             </button>

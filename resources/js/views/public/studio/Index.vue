@@ -43,7 +43,7 @@ async function loadRemixOutfit(outfitId) {
         const outfitData = response.data.data || response.data;
         
         // Guardar título para referencia
-        remixSourceTitle.value = outfitData.title || 'Outfit sin título';
+        remixSourceTitle.value = outfitData.title || 'Untitled Outfit';
         
         // Cargar items en el canvas
         canvasStore.loadOutfit(outfitData);
@@ -54,9 +54,9 @@ async function loadRemixOutfit(outfitId) {
         console.error('Error cargando outfit para remix:', error);
         
         if (error.response?.status === 404) {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'El outfit que intentas remixear no existe.', life: 4000 });
+            toast.add({ severity: 'error', summary: 'Error', detail: 'The outfit you are trying to remix does not exist.', life: 4000 });
         } else {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Error al cargar el outfit. Intenta nuevamente.', life: 4000 });
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to load outfit. Please try again.', life: 4000 });
         }
     } finally {
         loadingRemix.value = false;
@@ -67,9 +67,9 @@ async function loadRemixOutfit(outfitId) {
 function confirmClear() {
     if (canvasStore.canvasItems.length === 0) return;
     
-    if (confirm('¿Limpiar todo el lienzo? Esta acción no se puede deshacer.')) {
+    if (confirm('Clear the entire canvas? This action cannot be undone.')) {
         canvasStore.clearCanvas();
-        toast.add({ severity: 'info', summary: 'Lienzo limpio', detail: 'Se han eliminado todos los items', life: 2000 });
+        toast.add({ severity: 'info', summary: 'Canvas cleared', detail: 'All items have been removed', life: 2000 });
     }
 }
 
@@ -77,7 +77,7 @@ function confirmClear() {
 async function handleSave() {
     // Validar que haya items en el canvas
     if (canvasStore.canvasItems.length === 0) {
-        toast.add({ severity: 'warn', summary: 'Canvas vacío', detail: 'Añade productos al canvas antes de guardar', life: 3000 });
+        toast.add({ severity: 'warn', summary: 'Empty canvas', detail: 'Add products to the canvas before saving', life: 3000 });
         return;
     }
 
@@ -88,7 +88,7 @@ async function handleSave() {
 // Confirmar guardado con título
 async function confirmSave() {
     if (!outfitTitle.value.trim()) {
-        toast.add({ severity: 'warn', summary: 'Atención', detail: 'Por favor, ingresa un título para tu outfit', life: 3000 });
+        toast.add({ severity: 'warn', summary: 'Attention', detail: 'Please enter a title for your outfit', life: 3000 });
         return;
     }
 
@@ -115,7 +115,7 @@ async function confirmSave() {
         const response = await axios.post('/api/outfits', outfitData);
 
         // Éxito: mostrar mensaje y cerrar modal
-        toast.add({ severity: 'success', summary: '¡Éxito!', detail: `Outfit "${outfitTitle.value}" guardado correctamente`, life: 3000 });
+        toast.add({ severity: 'success', summary: 'Success!', detail: `Outfit "${outfitTitle.value}" saved successfully`, life: 3000 });
 
         // Cerrar modal y limpiar
         showSaveModal.value = false;
@@ -134,15 +134,15 @@ async function confirmSave() {
         
         // Manejar errores específicos
         if (error.response?.status === 401) {
-            toast.add({ severity: 'info', summary: 'Requiere Login', detail: 'Debes iniciar sesión para guardar outfits.', life: 4000 });
+            toast.add({ severity: 'info', summary: 'Login required', detail: 'You must log in to save outfits.', life: 4000 });
             router.push({ name: 'auth.login' });
         } else if (error.response?.status === 422) {
             // Errores de validación
             const errors = error.response.data.errors;
             const firstError = Object.values(errors)[0][0];
-            toast.add({ severity: 'error', summary: 'Error de Validación', detail: firstError, life: 5000 });
+            toast.add({ severity: 'error', summary: 'Validation Error', detail: firstError, life: 5000 });
         } else {
-            toast.add({ severity: 'error', summary: 'Error', detail: 'Error al guardar el outfit. Intenta nuevamente.', life: 4000 });
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save outfit. Please try again.', life: 4000 });
         }
     } finally {
         saving.value = false;
@@ -156,14 +156,14 @@ async function confirmSave() {
 function handleExport() {
     // Validar que haya items en el canvas
     if (canvasStore.canvasItems.length === 0) {
-        toast.add({ severity: 'warn', summary: 'Canvas vacío', detail: 'Añade productos al canvas antes de exportar', life: 3000 });
+        toast.add({ severity: 'warn', summary: 'Empty canvas', detail: 'Add products to the canvas before exporting', life: 3000 });
         return;
     }
 
     // Verificar referencia al CanvasEditor
     if (!canvasEditorRef.value) {
         console.error('No hay referencia al CanvasEditor');
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al exportar. Intenta recargar la página.', life: 3000 });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Export failed. Try reloading the page.', life: 3000 });
         return;
     }
 
@@ -171,7 +171,7 @@ function handleExport() {
     const timestamp = new Date().toISOString().slice(0, 10);
     const filename = canvasStore.isRemixMode 
         ? `remix-${remixSourceTitle.value || 'outfit'}-${timestamp}`
-        : `mi-outfit-${timestamp}`;
+        : `my-outfit-${timestamp}`;
 
     // Llamar a la función de descarga
     canvasEditorRef.value.downloadImage(filename, 'png');
@@ -190,7 +190,7 @@ function cancelSave() {
         <div v-if="loadingRemix" class="fixed inset-0 bg-slate-950/90 flex items-center justify-center z-50 backdrop-blur-sm">
             <div class="text-center">
                 <i class="pi pi-spin pi-spinner text-5xl text-violet-600 mb-6"></i>
-                <p class="text-slate-300 font-display text-lg tracking-wide">Cargando outfit para remix...</p>
+                <p class="text-slate-300 font-display text-lg tracking-wide">Loading outfit for remix...</p>
             </div>
         </div>
 
@@ -238,7 +238,7 @@ function cancelSave() {
                     @click="confirmClear"
                     :disabled="canvasStore.canvasItems.length === 0"
                     class="w-10 h-10 rounded-full bg-slate-900 text-slate-400 hover:text-red-400 hover:bg-red-900/20 border border-slate-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all"
-                    title="Limpiar Lienzo"
+                    title="Clear Canvas"
                 >
                     <i class="pi pi-trash"></i>
                  </button>
@@ -276,7 +276,7 @@ function cancelSave() {
         <Dialog 
             v-model:visible="showSaveModal"
             modal
-            header="Guardar Outfit"
+            header="Save Outfit"
             :style="{ width: '450px' }"
             :draggable="false"
             :pt="{
@@ -289,7 +289,7 @@ function cancelSave() {
         >
             <div class="py-4">
                 <label for="outfit-title" class="block text-sm font-medium text-slate-400 mb-2">
-                    Título del Outfit
+                    Outfit Title
                 </label>
                 <input
                     id="outfit-title"
@@ -301,7 +301,7 @@ function cancelSave() {
                     autofocus
                 >
                 <p class="mt-3 text-xs text-slate-500">
-                    Este título será visible en tu perfil y en la galería pública.
+                    This title will be visible on your profile and in the public gallery.
                 </p>
             </div>
 
@@ -311,7 +311,7 @@ function cancelSave() {
                         @click="cancelSave"
                         class="px-4 py-2 text-sm text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
                     >
-                        Cancelar
+                        Cancel
                     </button>
                     <button
                         @click="confirmSave"
@@ -319,7 +319,7 @@ function cancelSave() {
                         class="px-6 py-2 text-sm bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-violet-900/20"
                     >
                         <i v-if="saving" class="pi pi-spin pi-spinner"></i>
-                        <span v-else>Guardar & Publicar</span>
+                        <span v-else>Save & Publish</span>
                     </button>
                 </div>
             </template>

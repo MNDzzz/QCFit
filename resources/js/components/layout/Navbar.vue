@@ -99,7 +99,7 @@ function selectAgent(agent) {
                                     class="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-300 hover:bg-slate-800 hover:text-white transition-colors"
                                 >
                                     <i class="pi pi-user text-xs"></i>
-                                    Mi Perfil
+                                    Profile
                                 </router-link>
 
                                 <router-link 
@@ -108,7 +108,7 @@ function selectAgent(agent) {
                                     class="flex items-center gap-2 px-4 py-2.5 text-sm text-stone-300 hover:bg-slate-800 hover:text-white transition-colors"
                                 >
                                     <i class="pi pi-cog text-xs"></i>
-                                    Panel Admin
+                                    Admin
                                 </router-link>
 
                                 <div class="h-px bg-slate-800 my-1 mx-2"></div>
@@ -118,7 +118,7 @@ function selectAgent(agent) {
                                     class="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors text-left"
                                 >
                                     <i class="pi pi-sign-out text-xs"></i>
-                                    Cerrar Sesión
+                                    Log Out
                                 </button>
                             </div>
                         </div>

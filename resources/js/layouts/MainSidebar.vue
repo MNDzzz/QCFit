@@ -69,6 +69,23 @@
                 </template>
             </template>
         </div>
+
+        <!-- Ir a la Web (siempre visible) -->
+        <div class="shrink-0 border-t border-gray-100 dark:border-gray-800 p-3">
+            <router-link 
+                to="/"
+                v-tooltip.right="props.isCollapsed ? 'Ir a la Web' : ''"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
+            >
+                <i class="pi pi-globe text-lg shrink-0"></i>
+                <span 
+                    class="whitespace-nowrap transition-all duration-300 origin-left text-sm font-medium"
+                    :class="[props.isCollapsed ? 'hidden' : 'w-auto opacity-100']"
+                >
+                    Ir a la Web
+                </span>
+            </router-link>
+        </div>
     </aside>
 
     <!-- Overlay for mobile -->

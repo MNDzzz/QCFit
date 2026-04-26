@@ -24,6 +24,18 @@
 
             <div class="flex items-center gap-2 sm:gap-3">
                 <ul class="flex items-center gap-1.5 sm:gap-2">
+                    <!-- Ir a la Web -->
+                    <li>
+                        <router-link 
+                            to="/" 
+                            class="header-icon-button relative flex h-10 items-center justify-center rounded-lg border transition-all duration-200 gap-2 px-3 text-sm font-medium"
+                            title="Ir a la Web pública"
+                        >
+                            <i class="pi pi-globe text-base"></i>
+                            <span class="hidden sm:inline">Ir a la Web</span>
+                        </router-link>
+                    </li>
+
                     <!-- Dark Mode Toggle -->
                     <li>
                         <button @click="toggleDarkMode" class="header-icon-button relative flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200" title="Cambiar tema">
@@ -51,33 +63,33 @@
                             <transition name="dropdown-fade">
                                 <div v-show="dropdownOpen" class="header-dropdown absolute right-0 mt-2 z-50">
                                     <div class="header-dropdown-header">
-                                        <p class="user-dropdown-name">{{ user?.name || 'Usuario' }}</p>
+                                        <p class="user-dropdown-name">{{ user?.name || 'User' }}</p>
                                         <p class="user-dropdown-email">{{ user?.email || '' }}</p>
                                     </div>
                                     <ul>
                                         <li>
                                             <router-link :to="route.path.startsWith('/app') ? '/app/profile' : '/admin/profile'" class="dropdown-menu-item">
                                                 <i class="pi pi-user"></i>
-                                                <span>Mi Perfil</span>
+                                                <span>Profile</span>
                                             </router-link>
                                         </li>
                                         <li>
                                             <router-link v-if="auth.is('admin') || auth.is('docent')" to="/admin" class="dropdown-menu-item">
                                                 <i class="pi pi-shield"></i>
-                                                <span>Panel Admin</span>
+                                                <span>Admin Panel</span>
                                             </router-link>
                                         </li>
                                         <li>
                                             <router-link to="/app" class="dropdown-menu-item">
                                                 <i class="pi pi-graduation-cap"></i>
-                                                <span>Panel Usuario</span>
+                                                <span>User Panel</span>
                                             </router-link>
                                         </li>
                                     </ul>
                                     <div class="border-t">
                                         <button @click="logout" class="dropdown-menu-item logout-button">
                                             <i class="pi pi-sign-out"></i>
-                                            <span>Cerrar Sesión</span>
+                                            <span>Log Out</span>
                                         </button>
                                     </div>
                                 </div>

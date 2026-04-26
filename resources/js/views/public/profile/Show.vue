@@ -166,6 +166,17 @@ const isMe = computed(() => {
                 <div class="absolute inset-0 opacity-20"
                     style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 20px 20px;">
                 </div>
+
+                <!-- Back to Home -->
+                <div class="absolute top-4 left-4 z-10">
+                    <router-link 
+                        to="/"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-md text-white text-sm font-medium hover:bg-white/25 transition-all"
+                    >
+                        <i class="pi pi-arrow-left text-xs"></i>
+                        Back to Home
+                    </router-link>
+                </div>
             </div>
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
@@ -236,7 +247,7 @@ const isMe = computed(() => {
                                 class="px-6 py-2.5 rounded-full bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
                             >
                                 <i class="pi pi-sign-out text-sm"></i>
-                                Cerrar Sesión
+                                Log Out
                             </button>
                          </template>
                     </div>

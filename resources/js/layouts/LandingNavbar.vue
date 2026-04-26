@@ -43,7 +43,7 @@
                             <Button label="Login" text size="small" />
                         </router-link>
                         <router-link to="/register">
-                            <Button label="Registro" severity="primary" size="small" />
+                            <Button label="Register" severity="primary" size="small" />
                         </router-link>
                     </template>
 
@@ -106,10 +106,10 @@
                     <div class="flex flex-col gap-3">
                         <template v-if="!authStore().user?.name">
                             <router-link to="/login" @click="visibleMobileMenu = false">
-                                <Button label="Iniciar Sesión" outlined class="w-full" />
+                                <Button label="Log In" outlined class="w-full" />
                             </router-link>
                             <router-link to="/register" @click="visibleMobileMenu = false">
-                                <Button label="Registrarse" class="w-full" />
+                                <Button label="Register" class="w-full" />
                             </router-link>
                         </template>
                         <template v-else>
@@ -117,8 +117,8 @@
                                 <div class="font-medium">{{ authStore().user.name }}</div>
                                 <div class="text-xs text-gray-500">{{ authStore().user.email }}</div>
                             </div>
-                            <Button label="Ir al Dashboard" icon="pi pi-th-large" outlined @click="navigateToDashboard" />
-                            <Button label="Cerrar Sesión" icon="pi pi-power-off" severity="danger" text @click="handleLogout" />
+                            <Button label="Go to Dashboard" icon="pi pi-th-large" outlined @click="navigateToDashboard" />
+                            <Button label="Log Out" icon="pi pi-power-off" severity="danger" text @click="handleLogout" />
                         </template>
                     </div>
                     
@@ -126,7 +126,7 @@
                     <div 
                         class="mt-auto flex items-center justify-between p-3 rounded-lg"
                         :class="isDarkTheme ? 'bg-gray-800' : 'bg-gray-50'">
-                        <span class="text-sm font-medium">Tema</span>
+                        <span class="text-sm font-medium">Theme</span>
                         <button 
                             @click="toggleDarkMode"
                             class="p-2 rounded-lg transition-colors"
@@ -161,23 +161,23 @@ const { processing, logout } = useAuth();
 const { toggleDarkMode, isDarkTheme, setDefaultMode } = useLayout();
 
 const navLinks = [
-    { label: 'Inicio', route: '/', icon: 'pi pi-home' }
+    { label: 'Home', route: '/', icon: 'pi pi-home' }
 ];
 
 const items = computed(() => [
     {
         items: [
-            { label: 'Perfil', icon: 'pi pi-user', command: () => router.push('/app/profile') },
+            { label: 'Profile', icon: 'pi pi-user', command: () => router.push('/app/profile') },
             { 
-                label: 'Panel Admin', 
+                label: 'Admin Panel', 
                 icon: 'pi pi-cog', 
                 route: '/admin', 
                 visible: authStore().user?.roles?.some(r => r.name.includes('admin')) || false
             },
-            { label: 'Mi Panel', icon: 'pi pi-th-large', route: '/app' },
+            { label: 'My Panel', icon: 'pi pi-th-large', route: '/app' },
             { separator: true },
             {
-                label: 'Cerrar sesión',
+                label: 'Log Out',
                 icon: 'pi pi-power-off',
                 class: 'text-red-500',
                 command: () => {
