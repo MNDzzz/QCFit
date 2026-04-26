@@ -60,6 +60,36 @@ const filteredOutfits = computed(() => {
     return filtered;
 });
 
+const favoriteSearchQuery = ref('');
+const favoriteSortBy = ref('newest'); // 'newest', 'oldest', 'alpha'
+
+const filteredFavorites = computed(() => {
+    let filtered = [...favorites.value];
+
+    if (favoriteSearchQuery.value.trim()) {
+        const query = favoriteSearchQuery.value.toLowerCase().trim();
+        filtered = filtered.filter(product =>
+            product.name?.toLowerCase().includes(query) ||
+            product.brand?.name?.toLowerCase().includes(query)
+        );
+    }
+
+    switch (favoriteSortBy.value) {
+        case 'oldest':
+            filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+            break;
+        case 'alpha':
+            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            break;
+        case 'newest':
+        default:
+            filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            break;
+    }
+
+    return filtered;
+});
+
 // Modal state
 const showFollowersModal = ref(false);
 const modalType = ref('followers');
@@ -563,12 +593,46 @@ async function saveProfile() {
 
                 <!-- Contenedor Favorites -->
                 <div v-show="activeTab === 'favorites'">
-                    <div v-if="favorites && favorites.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up">
+                    <!-- Barra de filtrado y ordenación local -->
+                    <div v-if="favorites && favorites.length > 0" class="flex flex-col sm:flex-row items-center gap-3 mb-6">
+                        <div class="relative w-full sm:w-64">
+                            <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                            <input
+                                v-model="favoriteSearchQuery"
+                                type="text"
+                                placeholder="Filter favorites..."
+                                class="w-full pl-9 pr-4 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 transition-all"
+                            />
+                        </div>
+
+                        <select
+                            v-model="favoriteSortBy"
+                            class="px-3 py-2 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg text-sm text-slate-700 dark:text-white focus:outline-none focus:border-violet-500 cursor-pointer"
+                        >
+                            <option value="newest">Newest first</option>
+                            <option value="oldest">Oldest first</option>
+                            <option value="alpha">Alphabetical (A-Z)</option>
+                        </select>
+
+                        <span class="text-xs text-slate-400 ml-auto">
+                            {{ filteredFavorites.length }} of {{ favorites.length }} favorites
+                        </span>
+                    </div>
+
+                    <div v-if="filteredFavorites.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up">
                         <ProductCard 
-                            v-for="product in favorites" 
+                            v-for="product in filteredFavorites" 
                             :key="product.id"
                             :product="product"
                         />
+                    </div>
+                    
+                    <!-- Estado vacío por filtro local -->
+                    <div v-else-if="favorites.length > 0 && filteredFavorites.length === 0" class="text-center py-16 bg-white dark:bg-zinc-800/50 rounded-2xl border border-slate-200 dark:border-zinc-700">
+                        <i class="pi pi-filter-slash text-4xl text-slate-300 mb-3"></i>
+                        <h3 class="text-lg font-semibold text-slate-800 dark:text-white mb-1">No matches</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm">No favorites matching "{{ favoriteSearchQuery }}"</p>
+                        <button @click="favoriteSearchQuery = ''" class="mt-4 text-violet-600 font-semibold text-sm hover:underline">Clear filter</button>
                     </div>
                     
                     <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
