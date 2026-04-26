@@ -188,12 +188,90 @@ function selectAgent(agent) {
             </div>
         </div>
 
-        <!-- Mobile Menu -->
+        <!-- Menú Móvil -->
         <div v-show="isOpen" class="md:hidden bg-slate-900 border-b border-slate-800">
-             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <router-link :to="{ name: 'public.explore' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Explore</router-link>
-                <router-link :to="{ name: 'public.brands' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Brands</router-link>
-                <router-link :to="{ name: 'public.studio' }" class="block px-3 py-2 rounded-md text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800">Studio</router-link>
+             <div class="px-4 pt-3 pb-4 space-y-1">
+                <!-- Navegación principal -->
+                <router-link @click="isOpen = false" :to="{ name: 'public.explore' }" class="block px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors">Explore</router-link>
+                <router-link @click="isOpen = false" :to="{ name: 'public.brands' }" class="block px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors">Brands</router-link>
+                <router-link @click="isOpen = false" :to="{ name: 'public.studio' }" class="block px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors">Studio</router-link>
+
+                <!-- Separador -->
+                <div class="h-px bg-slate-800 my-2"></div>
+
+                <!-- Agent Selector Móvil -->
+                <div class="px-3 py-2">
+                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-2 font-semibold">Agent</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button
+                            v-for="agent in agents"
+                            :key="agent.value"
+                            @click="selectAgent(agent.value)"
+                            class="px-3 py-1.5 rounded-full text-sm font-medium border transition-all"
+                            :class="preferenceStore.preferredAgent === agent.value
+                                ? 'bg-violet-600 text-white border-violet-500'
+                                : 'text-stone-400 border-slate-700 hover:border-slate-500 hover:text-white'"
+                        >
+                            {{ agent.label }}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dark Mode Toggle Móvil -->
+                <button
+                    @click="toggleDarkMode"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                    <i class="pi" :class="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+                    {{ isDarkTheme ? 'Light Mode' : 'Dark Mode' }}
+                </button>
+
+                <!-- Separador -->
+                <div class="h-px bg-slate-800 my-2"></div>
+
+                <!-- Auth Móvil -->
+                <template v-if="!store.authenticated">
+                    <router-link
+                        @click="isOpen = false"
+                        :to="{ name: 'auth.login' }"
+                        class="block px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors"
+                    >
+                        <i class="pi pi-sign-in mr-2 text-sm"></i> Log in
+                    </router-link>
+                    <router-link
+                        @click="isOpen = false"
+                        :to="{ name: 'auth.register' }"
+                        class="block mx-3 mt-2 text-center bg-violet-600 hover:bg-violet-500 text-white px-4 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-violet-500/20 transition-all"
+                    >
+                        Join Free
+                    </router-link>
+                </template>
+                <template v-else>
+                    <router-link
+                        @click="isOpen = false"
+                        :to="{ name: 'public.profile', params: { id: store.user?.id || 0 } }"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors"
+                    >
+                        <div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                            {{ store.user?.name ? store.user.name.charAt(0) : 'U' }}
+                        </div>
+                        Profile
+                    </router-link>
+                    <router-link
+                        v-if="store.is('admin')"
+                        @click="isOpen = false"
+                        :to="{ name: 'admin.index' }"
+                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-stone-300 hover:text-white hover:bg-slate-800 transition-colors"
+                    >
+                        <i class="pi pi-cog text-sm"></i> Admin
+                    </router-link>
+                    <button
+                        @click="logout; isOpen = false"
+                        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors text-left"
+                    >
+                        <i class="pi pi-sign-out text-sm"></i> Log Out
+                    </button>
+                </template>
              </div>
         </div>
     </nav>
