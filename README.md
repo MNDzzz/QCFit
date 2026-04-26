@@ -1,7 +1,7 @@
 # QCFit - The Ultimate Weidian & Taobao QC Finder
-> *Proyecto Académico: Desarrollo de Aplicaciones Web Híbridas*
+> *Proyecto Académico: Desarrollo de Aplicaciones Web Híbridas (Senior Level)*
 
-**QCFit** es una plataforma integral diseñada para resolver el problema de la "compra a ciegas" en marketplaces asiáticos (Weidian, Taobao, 1688). Combina un buscador inteligente de fotos reales (QC Photos) con un estudio de diseño de outfits (Canvas), permitiendo a los usuarios visualizar sus compras antes de realizarlas.
+**QCFit** es una plataforma integral diseñada para resolver el problema de la "compra a ciegas" en marketplaces asiáticos (Weidian, Taobao, 1688). Combina un buscador inteligente de fotos reales (QC Photos) con un estudio de diseño de outfits (Canvas), permitiendo a los usuarios visualizar sus compras antes de realizarlas y compartir su estilo con la comunidad.
 
 ![QCFit Banner](/public/images/og-default.jpg)
 
@@ -9,39 +9,40 @@
 
 ### 🔍 1. FindQC (Discovery)
 - **Smart Search**: Detecta automáticamente enlaces de marketplaces (Weidian/Taobao) y extrae su ID.
-- **Live Feed**: Carrusel en tiempo real con las últimas QC Photos encontradas.
+- **Live Feed**: Carrusel en tiempo real con las últimas QC Photos encontradas en la comunidad.
 - **Toggle View**: Comparación instantánea entre foto original (marketing) y foto QC (realidad).
 - **Affiliate Integration**: Generación de enlaces para agentes populares (CNFans, Mulebuy, Hoobuy, Pandabuy).
 
 ### 🎨 2. The Studio (Outfit Builder)
-- **Canvas Interactivo**: Editor visual Drag & Drop potenciado por `vue-konva`.
-- **Layer System**: Control total de capas (z-index), rotación, escalado y volteo.
-- **Remix Mode**: Posibilidad de abrir cualquier outfit público y editarlo/mejorarlo.
-- **Wardrobe**: Panel lateral con favoritos y buscador integrado.
-- **Export**: Descarga de outfits en alta resolución (PNG/JPG).
+- **Canvas Interactivo**: Editor visual Drag & Drop potenciado por `vue-konva` con soporte para múltiples capas.
+- **Layer System**: Control total de capas (z-index), rotación, escalado, volteo y **eliminación de fondo**.
+- **Remix Mode**: Posibilidad de abrir cualquier outfit público y editarlo/mejorarlo en el Studio.
+- **Wardrobe**: Panel lateral con favoritos y buscador integrado para añadir productos rápidamente.
+- **Export**: Descarga de outfits en alta resolución (PNG/JPG) listos para redes sociales.
 
-### 🌐 3. Social & Monetización
-- **Perfiles Públicos**: Portfolio de outfits creado por cada usuario.
-- **Sistema de Seguidores**: Follow/Unfollow con contadores en tiempo real.
-- **Affiliate Hijacking**: Inyección automática de códigos de referido en enlaces de salida.
+### 🌐 3. Social & Perfil Público
+- **Perfiles Sociales**: Portfolio dinámico con outfits y wishlist (favoritos) de cada usuario.
+- **Filtrado Avanzado**: Buscador y ordenación local (Más recientes, A-Z) tanto en outfits como en favoritos.
+- **Sistema de Seguidores**: Follow/Unfollow con contadores en tiempo real y modales de seguimiento.
+- **Affiliate Hijacking**: Inyección automática de códigos de referido en todos los enlaces de salida.
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Stack Tecnológico & Arquitectura
 
-### Backend (Laravel 12 API)
-- **Arquitectura**: Repository Pattern Service-Oriented.
-- **Base de Datos**: MySQL con relaciones N:M complejas (Pivots con atributos).
-- **Recursos**: API Resources para transformación de datos JSON.
-- **Validación**: FormRequests robustos con reglas personalizadas.
-- **Autenticación**: Laravel Sanctum (SPA Authentication).
+### Backend (Laravel 10+ MVC)
+- **Arquitectura**: Patrón **MVC estricto** con separación de responsabilidades.
+- **Capa de Persistencia**: Repository Pattern para la lógica de búsqueda (`ProductSearchRepository`).
+- **Base de Datos**: MySQL con relaciones N:M complejas (Pivots con atributos de diseño).
+- **Vistas de Datos**: Uso extensivo de **Eloquent Resources** para una API JSON limpia y escalable.
+- **Validación**: Lógica de validación desacoplada en **FormRequests**.
+- **Autenticación**: Laravel Sanctum para sesiones seguras en la SPA.
 
-### Frontend (Vue 3.5 + Vite 7)
-- **Core**: Composition API + `<script setup>`.
-- **Estado**: Pinia con persistencia (localStorage).
-- **UI Framework**: Tailwind CSS v4 + PrimeVue 4 (Aura Theme).
-- **Gráficos**: Konva.js (Canvas 2D).
-- **SEO**: `@unhead/vue` para meta tags dinámicos.
+### Frontend (Vue 3 + Vite)
+- **Core**: Composition API con `<script setup>` y organización modular.
+- **Estado**: Pinia con persistencia automática de preferencias (Agente, Tema).
+- **UI & UX**: Tailwind CSS + PrimeVue (Aura) con diseño Dark Mode Premium y micro-animaciones.
+- **Lienzo**: Konva.js para la manipulación avanzada del Canvas.
 
 ---
 
@@ -64,44 +65,36 @@ cd qcfit
 cp .env.example .env
 composer install
 php artisan key:generate
-php artisan migrate --seed # Importante: Carga productos de prueba
+# Importante: Carga productos, outfits e interacciones sociales de prueba
+php artisan migrate:fresh --seed 
 ```
-*Asegúrate de configurar DB_DATABASE, DB_USERNAME, etc. en el .env*
 
 ### 3. Configuración Frontend
 ```bash
 npm install
-npm run build # Para producción
-# o
-npm run dev # Para desarrollo
+npm run dev
 ```
 
-### 4. Ejecución
-```bash
-php artisan serve
-```
 Acceder a: `http://127.0.0.1:8000`
 
 ---
 
-## 📚 Estructura del Proyecto
+## 📚 Estructura y Requisitos Académicos
 
-### Relaciones N:M (Requisito Académico)
-El proyecto implementa 3 relaciones Many-to-Many clave:
-1. **Outfits <-> Products**: Tabla `outfit_product`.
-   - Atributos Pivot: `pos_x`, `pos_y`, `rotation`, `scale_x`, `scale_y`, `z_index`, `is_flipped`.
+### Relaciones Many-to-Many (N:M)
+El proyecto implementa 3 relaciones complejas obligatorias:
+1. **Outfits <-> Products**: Tabla `outfit_product`. Almacena coordenadas (X, Y), escala, rotación y capa.
 2. **Users <-> Products** (Wishlist): Tabla `product_user`.
 3. **Users <-> Users** (Followers): Tabla `followers`.
 
----
+### Organización de Archivos
+- **/app/Http/Controllers/Api**: Controladores del sistema.
+- **/app/Http/Resources**: Transformación de modelos a JSON.
+- **/resources/js/views**: Vistas principales de la SPA (The "V" in MVC).
+- **/resources/js/components/layout**: Componentes estructurales (Navbar, Sidebar).
+- **/docs**: Carpeta con manuales, wireframes y documentación técnica del proyecto.
 
+---
 
 ## 👥 Créditos
-Desarrollado como Proyecto Final de Desarrollo Web.
-- **Autores**: Álvaro Méndez y Manel Muñoz
-- **Asignatura**: Desarrollo Web Entorno Servidor / Cliente
-
----
-
-*Nota: Este proyecto es educativo y no está afiliado a Weidian, Taobao ni a los agentes mencionados.*
-
+Desarrollado como Proyecto Final de Desarrollo Web por el equipo de QCFit.

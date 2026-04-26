@@ -71,8 +71,8 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLayout } from '../composables/layout';
-import MainSidebar from './MainSidebar.vue';
-import MainHeader from './MainHeader.vue';
+import MainSidebar from '@/components/layout/MainSidebar.vue';
+import MainHeader from '@/components/layout/MainHeader.vue';
 
 const props = defineProps({
     menuItems: {
