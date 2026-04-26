@@ -31,7 +31,6 @@
         "@primevue/themes": "^4.2.4",
         "@unhead/vue": "^2.1.2",
         "@vueuse/head": "^2.0.0",
-        "bootstrap": "^5.3.6",
         "install": "^0.13.0",
         "js-cookie": "^3.0.5",
         "konva": "^10.2.0",

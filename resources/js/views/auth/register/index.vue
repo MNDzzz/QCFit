@@ -1,141 +1,138 @@
 <template>
-    <!-- Página de Register - Maquetada con Bootstrap 5 -->
-    <div class="bs-auth-page min-vh-100 d-flex align-items-center justify-content-center py-5 px-3">
-        <div style="max-width: 600px; width: 100%;">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl w-full">
             <!-- Logo y título -->
-            <div class="text-center mb-4">
-                <img src="/images/qcfit.svg" alt="QCFit Logo" class="mb-3" style="height: 48px; width: auto;">
-                <h2 class="fw-bold mb-1">{{ $t('register') }}</h2>
-                <p class="text-muted">Regístrate para comenzar</p>
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold">
+                    {{ $t('register') }}
+                </h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Regístrate para comenzar
+                </p>
             </div>
 
-            <!-- Formulario con Card de Bootstrap -->
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4 p-md-5">
-                    <form @submit.prevent="submitRegister">
+            <!-- Formulario -->
+            <Card>
+                <template #content>
+                    <form @submit.prevent="submitRegister" class="space-y-6">
                         <!-- Name -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label fw-semibold">{{ $t('name') }}</label>
-                            <input
+                        <div class="flex flex-col gap-2">
+                            <label for="name" class="font-medium">{{ $t('name') }}</label>
+                            <InputText
                                 id="name"
-                                type="text"
-                                class="form-control form-control-lg rounded-3"
                                 v-model="registerForm.name"
                                 placeholder="Nombre completo"
-                                :class="{ 'is-invalid': validationErrors?.name }"
+                                :invalid="!!validationErrors?.name"
                             />
-                            <div v-if="validationErrors?.name" class="invalid-feedback">
+                            <small v-if="validationErrors?.name" class="text-red-500">
                                 {{ validationErrors.name[0] }}
-                            </div>
+                            </small>
                         </div>
 
                         <!-- Surname1 y Surname2 -->
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="surname1" class="form-label fw-semibold">{{ $t('surname1') }}</label>
-                                <input
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label for="surname1" class="font-medium">{{ $t('surname1') }}</label>
+                                <InputText
                                     id="surname1"
-                                    type="text"
-                                    class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.surname1"
                                     placeholder="Primer apellido"
-                                    :class="{ 'is-invalid': validationErrors?.surname1 }"
+                                    :invalid="!!validationErrors?.surname1"
                                 />
-                                <div v-if="validationErrors?.surname1" class="invalid-feedback">
+                                <small v-if="validationErrors?.surname1" class="text-red-500">
                                     {{ validationErrors.surname1[0] }}
-                                </div>
+                                </small>
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="surname2" class="form-label fw-semibold">{{ $t('surname2') }}</label>
-                                <input
+                            <div class="flex flex-col gap-2">
+                                <label for="surname2" class="font-medium">{{ $t('surname2') }}</label>
+                                <InputText
                                     id="surname2"
-                                    type="text"
-                                    class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.surname2"
                                     placeholder="Segundo apellido"
-                                    :class="{ 'is-invalid': validationErrors?.surname2 }"
+                                    :invalid="!!validationErrors?.surname2"
                                 />
-                                <div v-if="validationErrors?.surname2" class="invalid-feedback">
+                                <small v-if="validationErrors?.surname2" class="text-red-500">
                                     {{ validationErrors.surname2[0] }}
-                                </div>
+                                </small>
                             </div>
                         </div>
 
                         <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-semibold">{{ $t('email') }}</label>
-                            <input
+                        <div class="flex flex-col gap-2">
+                            <label for="email" class="font-medium">{{ $t('email') }}</label>
+                            <InputText
                                 id="email"
                                 type="email"
-                                class="form-control form-control-lg rounded-3"
                                 v-model="registerForm.email"
-                                placeholder="your@email.com"
-                                :class="{ 'is-invalid': validationErrors?.email }"
+                                placeholder="tu@email.com"
+                                :invalid="!!validationErrors?.email"
                             />
-                            <div v-if="validationErrors?.email" class="invalid-feedback">
+                            <small v-if="validationErrors?.email" class="text-red-500">
                                 {{ validationErrors.email[0] }}
-                            </div>
+                            </small>
                         </div>
 
                         <!-- Password y Confirm Password -->
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="password" class="form-label fw-semibold">{{ $t('password') }}</label>
-                                <input
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label for="password" class="font-medium">{{ $t('password') }}</label>
+                                <Password
                                     id="password"
-                                    type="password"
-                                    class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.password"
                                     placeholder="••••••••"
-                                    :class="{ 'is-invalid': validationErrors?.password }"
+                                    toggleMask
+                                    :feedback="false"
+                                    :invalid="!!validationErrors?.password"
+                                    fluid
                                 />
-                                <div v-if="validationErrors?.password" class="invalid-feedback">
+                                <small v-if="validationErrors?.password" class="text-red-500">
                                     {{ validationErrors.password[0] }}
-                                </div>
+                                </small>
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="password_confirmation" class="form-label fw-semibold">{{ $t('confirm_password') }}</label>
-                                <input
+                            <div class="flex flex-col gap-2">
+                                <label for="password_confirmation" class="font-medium">{{ $t('confirm_password') }}</label>
+                                <Password
                                     id="password_confirmation"
-                                    type="password"
-                                    class="form-control form-control-lg rounded-3"
                                     v-model="registerForm.password_confirmation"
                                     placeholder="••••••••"
-                                    :class="{ 'is-invalid': validationErrors?.password_confirmation }"
+                                    toggleMask
+                                    :feedback="false"
+                                    :invalid="!!validationErrors?.password_confirmation"
+                                    fluid
                                 />
-                                <div v-if="validationErrors?.password_confirmation" class="invalid-feedback">
+                                <small v-if="validationErrors?.password_confirmation" class="text-red-500">
                                     {{ validationErrors.password_confirmation[0] }}
-                                </div>
+                                </small>
                             </div>
                         </div>
 
-                        <!-- Submit Button con Bootstrap -->
-                        <button
+                        <!-- Submit Button -->
+                        <Button
                             type="submit"
-                            class="btn btn-primary btn-lg w-100 rounded-3 fw-bold"
+                            :label="$t('register')"
+                            :loading="processing"
                             :disabled="processing"
-                        >
-                            <span v-if="processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            {{ $t('register') }}
-                        </button>
+                            class="w-full"
+                            size="large"
+                        />
 
                         <!-- Login link -->
-                        <div class="text-center mt-4">
-                            <p class="text-muted mb-0">
+                        <div class="text-center">
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
                                 ¿Ya tienes una cuenta?
                                 <router-link
                                     :to="{ name: 'auth.login' }"
-                                    class="text-primary text-decoration-none fw-semibold"
+                                    class="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                                 >
                                     Inicia sesión aquí
                                 </router-link>
                             </p>
                         </div>
                     </form>
-                </div>
-            </div>
+                </template>
+            </Card>
         </div>
     </div>
 </template>
@@ -145,32 +142,3 @@ import useAuth from '@/composables/auth';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 </script>
-
-<style scoped>
-/* Personalización del btn-primary para el estilo violeta del proyecto */
-.btn-primary {
-    background-color: #7c3aed;
-    border-color: #7c3aed;
-}
-.btn-primary:hover {
-    background-color: #6d28d9;
-    border-color: #6d28d9;
-}
-.btn-primary:focus {
-    box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.5);
-}
-
-/* Form control focus violeta */
-.form-control:focus {
-    border-color: #7c3aed;
-    box-shadow: 0 0 0 0.2rem rgba(124, 58, 237, 0.25);
-}
-
-/* Links */
-.text-primary {
-    color: #7c3aed !important;
-}
-.text-primary:hover {
-    color: #6d28d9 !important;
-}
-</style>
