@@ -93,7 +93,7 @@ function removeBg() {
             <button
                 @click="removeBg"
                 class="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white text-xs font-bold rounded-full transition-all transform hover:scale-105 shadow-lg shadow-violet-900/30"
-                title="Remove background (AI)"
+                title="Remove background"
             >
                 <i class="pi pi-sparkles text-[10px]"></i>
                 <span>Remove BG</span>

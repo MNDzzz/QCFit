@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AiController extends Controller
+class ImageProcessingController extends Controller
 {
     public function removeBackground(Request $request)
     {
@@ -13,17 +13,14 @@ class AiController extends Controller
             'image_url' => 'required|url'
         ]);
 
-        // Mocking the AI Service
-        // In real life: HTTP POST to Python Microservice -> receive Base64/URL back
-
+        // Mocking the Background Removal Service
         // Simulating delay
         sleep(2);
 
-        // Return a mock result (For demo purposes, we return the same URL but with a flag or just the same URL)
-        // Ideally we would return a processed image URL.
+        // Return a mock result
         return response()->json([
             'original' => $request->image_url,
-            'processed_url' => $request->image_url, // In a real demo I'd replace this with a transparency mock if I had one
+            'processed_url' => $request->image_url, 
             'message' => 'Background removed successfully (Mock)'
         ]);
     }

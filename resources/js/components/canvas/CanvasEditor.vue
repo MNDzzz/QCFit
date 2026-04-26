@@ -226,13 +226,13 @@ function downloadImage(filename = 'outfit', format = 'png') {
 
 /**
  * Manejar la acción "Remove BG" del Floating Toolbar.
- * Por ahora es un placeholder para futura integración con IA.
+ * Placeholder para futura integración con servicios de procesamiento de imagen.
  * @param {string} itemId - ID del item al que quitar el fondo
  */
 function handleRemoveBg(itemId) {
     console.log('Remove BG solicitado para item:', itemId);
-    // TODO: Integrar con endpoint /api/ai/remove-bg
-    alert('La función "Quitar Fondo" con IA estará disponible pronto.');
+    // TODO: Integrar con endpoint /api/media/remove-bg
+    alert('La función "Quitar Fondo" estará disponible pronto.');
 }
 
 // Watch: Actualizar transformer cuando cambia la selección

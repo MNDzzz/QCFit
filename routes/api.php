@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OutfitController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\PublicProfileController;
-use App\Http\Controllers\Api\AiController;
+use App\Http\Controllers\Api\ImageProcessingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -90,7 +90,7 @@ Route::get('/public/user/{id}/followers', [PublicProfileController::class, 'foll
 Route::get('/public/user/{id}/following', [PublicProfileController::class, 'following']);
 Route::get('/users/{id}/favorites', [PublicProfileController::class, 'favorites']);
 
-Route::post('/ai/remove-bg', [AiController::class, 'removeBackground']);
+Route::post('/media/remove-bg', [ImageProcessingController::class, 'removeBackground']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/signin', [ProfileController::class, 'user']);
 });
