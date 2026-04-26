@@ -334,9 +334,12 @@ async function deleteOutfit(id) {
                          </button>
 
                          <template v-else>
-                            <button class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-700 font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors">
+                            <router-link 
+                                :to="{ name: 'app.profile' }"
+                                class="px-6 py-2.5 rounded-full border border-slate-300 dark:border-zinc-700 font-medium hover:bg-slate-50 dark:hover:bg-zinc-800 transition-colors"
+                            >
                                 Editar Perfil
-                            </button>
+                            </router-link>
                             <button 
                                 @click="logout"
                                 class="px-6 py-2.5 rounded-full bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-950/50 transition-colors flex items-center gap-2"
