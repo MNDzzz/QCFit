@@ -7,6 +7,7 @@ import useAuth from '@/composables/auth';
 import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
 import FollowersModal from '@/components/ui/FollowersModal.vue';
+import ProductCard from '@/components/ui/ProductCard.vue';
 
 const route = useRoute();
 const auth = authStore();
@@ -16,6 +17,8 @@ const swal = inject('$swal');
 
 const user = ref(null);
 const outfits = ref([]);
+const favorites = ref([]);
+const activeTab = ref('outfits');
 const loading = ref(true);
 const followLoading = ref(false);
 const error = ref(null);
@@ -117,6 +120,8 @@ async function fetchProfile(userId) {
             console.warn('Unexpected outfits structure, defaulting to empty array', outfitsData);
             outfits.value = [];
         }
+        
+        favorites.value = response.data.favorites || [];
     } catch (e) {
         console.error('Error fetching profile:', e);
         error.value = 'User not found or connection error.';
@@ -439,14 +444,27 @@ async function saveProfile() {
                 <!-- Tabs -->
                 <div class="border-b border-slate-200 dark:border-zinc-800 mb-8">
                     <nav class="flex gap-8 justify-center md:justify-start">
-                        <button class="pb-4 px-2 border-b-2 border-violet-600 text-violet-600 font-semibold transition-colors">
+                        <button 
+                            @click="activeTab = 'outfits'"
+                            class="pb-4 px-2 border-b-2 font-semibold transition-colors"
+                            :class="activeTab === 'outfits' ? 'border-violet-600 text-violet-600' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
+                        >
                             Outfits
+                        </button>
+                        <button 
+                            @click="activeTab = 'favorites'"
+                            class="pb-4 px-2 border-b-2 font-semibold transition-colors"
+                            :class="activeTab === 'favorites' ? 'border-violet-600 text-violet-600' : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'"
+                        >
+                            Favorites
                         </button>
                     </nav>
                 </div>
 
-                <!-- Barra de filtrado y ordenación local (sobre el array ya cargado) -->
-                <div v-if="outfits && outfits.length > 0" class="flex flex-col sm:flex-row items-center gap-3 mb-6">
+                <!-- Contenedor Outfits -->
+                <div v-show="activeTab === 'outfits'">
+                    <!-- Barra de filtrado y ordenación local (sobre el array ya cargado) -->
+                    <div v-if="outfits && outfits.length > 0" class="flex flex-col sm:flex-row items-center gap-3 mb-6">
                     <!-- Buscador local sobre el array -->
                     <div class="relative w-full sm:w-64">
                         <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
@@ -540,6 +558,28 @@ async function saveProfile() {
                     <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
                         This user hasn't published any outfits yet.
                     </p>
+                </div>
+                </div> <!-- End Contenedor Outfits -->
+
+                <!-- Contenedor Favorites -->
+                <div v-show="activeTab === 'favorites'">
+                    <div v-if="favorites && favorites.length > 0" class="grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in-up">
+                        <ProductCard 
+                            v-for="product in favorites" 
+                            :key="product.id"
+                            :product="product"
+                        />
+                    </div>
+                    
+                    <div v-else class="text-center py-20 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-zinc-700">
+                        <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="pi pi-heart-fill text-red-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">No favorites yet</h3>
+                        <p class="text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+                            This user hasn't added any items to their favorites yet.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -39,9 +39,16 @@ class PublicProfileController extends Controller
             ->latest()
             ->paginate(12);
 
+        // Cargar productos favoritos (wishlist)
+        $favorites = $user->favorites()
+            ->with(['brand', 'images', 'source', 'marketplace'])
+            ->latest()
+            ->get();
+
         return response()->json([
             'user' => new PublicUserResource($user),
             'outfits' => OutfitSimpleResource::collection($outfits)->response()->getData(true),
+            'favorites' => ProductResource::collection($favorites),
         ]);
     }
 
