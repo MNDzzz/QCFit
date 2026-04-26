@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import axios from 'axios'
 import { useToast } from './useToast'
 import { useValidation } from './useValidation'
+import { authStore } from '../store/auth'
 
 export default function useProfile() {
   const initialProfile = {
