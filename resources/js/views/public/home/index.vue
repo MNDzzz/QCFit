@@ -12,7 +12,6 @@ const products = ref([]);
 const loading = ref(false);
 const tickerItems = ref([]);
 
-// Categorías para el filtro
 const categories = [
     { label: 'All', value: 'all', icon: '✦' },
     { label: 'Shoes', value: 'Shoes', icon: '👟' },
@@ -22,7 +21,7 @@ const categories = [
 ];
 const activeCategory = ref('all');
 
-// Marcas para la sección Browse by Brand
+// Marcas para la sección Browse by Brand (8 marcas para cuadrícula perfecta)
 const brandList = [
     { name: 'KENZO', display: 'KENZO' },
     { name: 'NIKE', display: 'NIKE' },
@@ -31,6 +30,7 @@ const brandList = [
     { name: "ARC'TERYX", display: "ARC'TERYX" },
     { name: 'CARHARTT', display: 'CARHARTT' },
     { name: 'STUSSY', display: 'STÜSSY' },
+    { name: 'SUPREME', display: 'Supreme' },
 ];
 
 // Productos filtrados por categoría seleccionada
@@ -38,7 +38,19 @@ const filteredProducts = computed(() => {
     if (activeCategory.value === 'all') return products.value;
     return products.value.filter(p => {
         const catName = p.category?.name || '';
-        return catName.toLowerCase() === activeCategory.value.toLowerCase();
+        
+        switch (activeCategory.value.toLowerCase()) {
+            case 'shoes':
+                return catName === 'Sneakers';
+            case 'tops':
+                return ['Hoodies', 'Jackets', 'Sweaters', 'T-Shirts'].includes(catName);
+            case 'bottoms':
+                return catName === 'Pants';
+            case 'accessories':
+                return catName === 'Accessories';
+            default:
+                return true;
+        }
     });
 });
 
@@ -268,15 +280,15 @@ async function loadOutfits() {
         </div>
 
         <!-- ===== BROWSE BY BRAND ===== -->
-        <div class="bg-white border-t border-slate-100 py-16">
+        <div class="bg-white border-t border-slate-100 py-20">
             <div class="max-w-6xl mx-auto px-6">
                 <h3 class="text-center text-sm font-bold text-slate-400 tracking-[0.2em] uppercase mb-10">BROWSE BY BRAND</h3>
 
-                <div class="flex justify-center flex-wrap gap-4">
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 w-full">
                     <div
                         v-for="brand in brandList"
                         :key="brand.name"
-                        class="w-28 h-16 md:w-32 md:h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group"
+                        class="w-full h-16 md:h-20 bg-white rounded-xl border border-slate-200 flex items-center justify-center hover:border-slate-900 hover:shadow-lg transition-all cursor-pointer group"
                         @click="$router.push({ name: 'public.search', query: { brand: brand.name } })"
                     >
                         <span class="font-black font-display text-slate-800 text-sm md:text-base group-hover:scale-110 transition-transform tracking-tight">{{ brand.display }}</span>
