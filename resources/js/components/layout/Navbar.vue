@@ -30,7 +30,7 @@ const { logout } = useAuth();
 const isOpen = ref(false);
 
 const agents = [
-    { label: 'CNFans', value: 'cnfans' },
+    { label: 'Pandabuy', value: 'pandabuy' },
     { label: 'CNFans', value: 'cnfans' },
     { label: 'Mulebuy', value: 'mulebuy' },
     { label: 'Hoobuy', value: 'hoobuy' },

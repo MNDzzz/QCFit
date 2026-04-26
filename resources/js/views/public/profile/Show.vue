@@ -213,6 +213,7 @@ const avatarFile = ref(null);
 const avatarPreview = ref(null);
 
 const agentOptions = ref([
+    { name: 'Pandabuy', value: 'pandabuy' },
     { name: 'CNFans', value: 'cnfans' },
     { name: 'Mulebuy', value: 'mulebuy' },
     { name: 'Hoobuy', value: 'hoobuy' },
