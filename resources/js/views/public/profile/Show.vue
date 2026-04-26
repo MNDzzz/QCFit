@@ -156,6 +156,8 @@ async function toggleFollow() {
     }
 }
 
+const isMe = computed(() => {
+    return auth.authenticated && auth.user && auth.user.id === user.value?.id;
 });
 
 function confirmDelete(outfitId) {
