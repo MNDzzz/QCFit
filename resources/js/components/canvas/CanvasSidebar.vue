@@ -208,8 +208,8 @@ function processFiles(files) {
                         <!-- Imagen del producto -->
                         <div class="aspect-square bg-slate-800 overflow-hidden">
                             <img
-                                v-if="product.images && product.images.length"
-                                :src="product.images[0].url"
+                                v-if="(product.images && product.images.length) || product.thumbnail"
+                                :src="product.thumbnail || product.images[0].url"
                                 referrerpolicy="no-referrer"
                                 :alt="product.name"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -222,7 +222,7 @@ function processFiles(files) {
                         <!-- Info del producto -->
                         <div class="p-2">
                             <p class="text-xs font-semibold truncate">{{ product.name }}</p>
-                            <p class="text-[10px] text-slate-400 truncate">{{ product.brand }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">{{ product.brand?.name || product.brand }}</p>
                         </div>
                     </div>
                 </div>
@@ -255,8 +255,8 @@ function processFiles(files) {
                         <!-- Imagen del producto -->
                         <div class="aspect-square bg-slate-800 overflow-hidden">
                             <img
-                                v-if="product.images && product.images.length"
-                                :src="product.images[0].url"
+                                v-if="(product.images && product.images.length) || product.thumbnail"
+                                :src="product.thumbnail || product.images[0].url"
                                 referrerpolicy="no-referrer"
                                 :alt="product.name"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -269,7 +269,7 @@ function processFiles(files) {
                         <!-- Info del producto -->
                         <div class="p-2">
                             <p class="text-xs font-semibold truncate">{{ product.name }}</p>
-                            <p class="text-[10px] text-slate-400 truncate">{{ product.brand }}</p>
+                            <p class="text-[10px] text-slate-400 truncate">{{ product.brand?.name || product.brand }}</p>
                         </div>
                     </div>
                 </div>

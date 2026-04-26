@@ -293,11 +293,11 @@ const formattedDate = computed(() => {
                         <!-- Product Image -->
                         <div class="aspect-square overflow-hidden bg-slate-100 relative">
                             <img 
-                                v-if="item.product?.images?.length"
-                                :src="item.product.images[0].url" 
+                                v-if="item.product?.images?.length || item.product?.thumbnail"
+                                :src="item.product?.thumbnail || item.product?.images[0]?.url" 
                                 referrerpolicy="no-referrer"
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                :alt="item.product.name"
+                                :alt="item.product?.name"
                             />
                             <div v-else class="w-full h-full flex items-center justify-center text-slate-400">
                                 <i class="pi pi-image text-4xl"></i>
@@ -321,7 +321,7 @@ const formattedDate = computed(() => {
                         <!-- Product Info -->
                         <div class="p-4">
                             <p class="text-xs text-violet-600 font-bold uppercase mb-1">
-                                {{ item.product?.brand || 'N/A' }}
+                                {{ item.product?.brand?.name || item.product?.brand || 'N/A' }}
                             </p>
                             <h3 class="font-bold text-slate-800 text-sm line-clamp-2">
                                 {{ item.product?.name || 'Producto' }}
