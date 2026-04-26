@@ -290,7 +290,7 @@ async function saveProfile() {
              <!-- Header Skeleton -->
             <div class="h-48 md:h-64 bg-slate-200 dark:bg-zinc-800 w-full relative overflow-hidden"></div>
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
                 <div class="flex flex-col md:flex-row items-center md:items-end gap-6 mb-8">
                     <!-- Avatar Skeleton -->
                     <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 bg-slate-200 dark:bg-zinc-800 overflow-hidden shadow-xl">
@@ -348,7 +348,7 @@ async function saveProfile() {
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
                 <div class="flex flex-col md:flex-row items-center md:items-end gap-6 mb-8">
                     <!-- Avatar -->
                     <div class="relative group">

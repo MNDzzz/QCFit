@@ -119,12 +119,12 @@ const agents = [
         <div v-else-if="product">
             <!-- Header Strip -->
             <div class="bg-white border-b border-slate-200 py-4 px-4 sticky top-16 z-30 shadow-sm">
-                <div class="max-w-[1600px] mx-auto">
+                <div class="max-w-6xl mx-auto">
                     <Breadcrumbs :items="breadcrumbItems" />
                 </div>
             </div>
 
-            <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="max-w-6xl mx-auto px-4 py-8">
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
                 
                 <!-- Left: Gallery Section -->
