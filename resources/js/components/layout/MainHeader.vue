@@ -105,9 +105,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { useLayout } from '../composables/layout';
-import useAuth from '../composables/auth';
-import { authStore } from '../store/auth';
+import { useLayout } from '@/composables/layout';
+import useAuth from '@/composables/auth';
+import { authStore } from '@/store/auth';
 
 const route = useRoute();
 
