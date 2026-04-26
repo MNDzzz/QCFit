@@ -5,7 +5,7 @@
         <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
             <!-- Logo -->
             <router-link to="/" class="flex items-center gap-2">
-                <img src="/images/logo.svg" alt="logo" class="h-10 w-auto"/>
+                <img src="/images/qcfit.svg" alt="logo" class="h-10 w-auto"/>
             </router-link>
 
             <!-- Mobile Menu Button -->
@@ -75,7 +75,7 @@
                 <!-- Header -->
                 <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
                     <div class="flex items-center gap-2">
-                        <img src="/images/logo.svg" alt="logo" class="h-8"/>
+                        <img src="/images/qcfit.svg" alt="logo" class="h-8"/>
                         <span class="font-bold text-lg">Menu</span>
                     </div>
                     <button 
