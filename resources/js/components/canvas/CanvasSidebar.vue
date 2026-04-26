@@ -124,16 +124,16 @@ function processFiles(files) {
 </script>
 
 <template>
-    <div class="canvas-sidebar h-full flex flex-col bg-slate-950 text-white">
+    <div class="canvas-sidebar h-full flex flex-col bg-[#0B0F19]/80 backdrop-blur-md text-white border-r border-white/5 relative z-10">
         <!-- Tabs -->
-        <div class="flex border-b border-slate-800">
+        <div class="flex border-b border-white/5">
             <button
                 @click="activeTab = 'search'"
                 :class="[
                     'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
                     activeTab === 'search' 
-                        ? 'bg-slate-900 text-white border-violet-600' 
-                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-white/5 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
                 ]"
             >
                 <i class="pi pi-search mr-1"></i>
@@ -144,8 +144,8 @@ function processFiles(files) {
                 :class="[
                     'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
                     activeTab === 'wardrobe' 
-                        ? 'bg-slate-900 text-white border-violet-600' 
-                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-white/5 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
                 ]"
             >
                 <i class="pi pi-heart mr-1"></i>
@@ -156,8 +156,8 @@ function processFiles(files) {
                 :class="[
                     'flex-1 px-2 py-3 text-xs font-medium transition-colors border-b-2',
                     activeTab === 'uploads' 
-                        ? 'bg-slate-900 text-white border-violet-600' 
-                        : 'text-slate-400 border-transparent hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-white/5 text-white border-violet-600' 
+                        : 'text-slate-400 border-transparent hover:text-white hover:bg-white/5'
                 ]"
             >
                 <i class="pi pi-upload mr-1"></i>
@@ -168,7 +168,7 @@ function processFiles(files) {
         <!-- Tab Content: Search -->
         <div v-show="activeTab === 'search'" class="flex-1 flex flex-col overflow-hidden">
             <!-- Buscador -->
-            <div class="p-4 border-b border-slate-800">
+            <div class="p-4 border-b border-white/5">
                 <div class="relative">
                     <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
                     <input
@@ -176,7 +176,7 @@ function processFiles(files) {
                         @keyup.enter="searchProducts"
                         type="text"
                         placeholder="Search products..."
-                        class="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600"
+                        class="w-full pl-10 pr-4 py-2 bg-black/40 border border-white/10 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-600 focus:ring-1 focus:ring-violet-600"
                     >
                 </div>
                 <button
@@ -203,10 +203,10 @@ function processFiles(files) {
                         draggable="true"
                         @dragstart="handleDragStart(product, $event)"
                         @click="addProductToCanvas(product)"
-                        class="bg-slate-900 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group"
+                        class="bg-white/5 border border-white/5 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group"
                     >
                         <!-- Imagen del producto -->
-                        <div class="aspect-square bg-slate-800 overflow-hidden">
+                        <div class="aspect-square bg-black/40 overflow-hidden">
                             <img
                                 v-if="(product.images && product.images.length) || product.thumbnail"
                                 :src="product.thumbnail || product.images[0].url"
@@ -250,10 +250,10 @@ function processFiles(files) {
                         draggable="true"
                         @dragstart="handleDragStart(product, $event)"
                         @click="addProductToCanvas(product)"
-                        class="bg-slate-900 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group"
+                        class="bg-white/5 border border-white/5 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group"
                     >
                         <!-- Imagen del producto -->
-                        <div class="aspect-square bg-slate-800 overflow-hidden">
+                        <div class="aspect-square bg-black/40 overflow-hidden">
                             <img
                                 v-if="(product.images && product.images.length) || product.thumbnail"
                                 :src="product.thumbnail || product.images[0].url"
@@ -279,10 +279,10 @@ function processFiles(files) {
         <!-- Tab Content: Uploads -->
         <div v-show="activeTab === 'uploads'" class="flex-1 flex flex-col overflow-hidden">
             <!-- Dropzone -->
-            <div class="p-4 border-b border-slate-800">
+            <div class="p-4 border-b border-white/5">
                 <div 
-                    class="border-2 border-dashed border-slate-700 rounded-lg p-6 text-center transition-colors relative"
-                    :class="{'border-violet-500 bg-violet-500/10': isDraggingFile, 'hover:border-slate-500 hover:bg-slate-900': !isDraggingFile}"
+                    class="border-2 border-dashed border-white/20 rounded-lg p-6 text-center transition-colors relative"
+                    :class="{'border-violet-500 bg-violet-500/10': isDraggingFile, 'hover:border-white/40 hover:bg-white/5': !isDraggingFile}"
                     @dragover.prevent="isDraggingFile = true"
                     @dragleave.prevent="isDraggingFile = false"
                     @drop.prevent="onFileDrop"
@@ -314,10 +314,10 @@ function processFiles(files) {
                         draggable="true"
                         @dragstart="handleDragStart(product, $event)"
                         @click="addProductToCanvas(product)"
-                        class="bg-slate-900 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group relative"
+                        class="bg-white/5 border border-white/5 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing hover:ring-2 hover:ring-violet-600 transition-all group relative"
                     >
                         <!-- Imagen del producto -->
-                        <div class="aspect-square bg-slate-800 overflow-hidden">
+                        <div class="aspect-square bg-black/40 overflow-hidden">
                             <img
                                 :src="product.images[0].url"
                                 :alt="product.name"
@@ -338,7 +338,7 @@ function processFiles(files) {
         </div>
 
         <!-- Ayuda de drag & drop -->
-        <div class="p-3 border-t border-slate-800 bg-slate-900/50">
+        <div class="p-3 border-t border-white/5 bg-black/20">
             <p class="text-[10px] text-slate-500 text-center">
                 <i class="pi pi-info-circle mr-1"></i>
                 Drag items to the canvas or click to add
