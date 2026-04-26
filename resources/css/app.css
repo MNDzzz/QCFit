@@ -719,6 +719,10 @@
         background: var(--gradient-info);
     }
 
+    .stat-icon-purple {
+        background: var(--gradient-purple);
+    }
+
     .stat-card-info {
         @apply flex-1 min-w-0;
     }

@@ -19,8 +19,8 @@ class RoleHasPermissionsTableSeeder extends Seeder
         DB::table('role_has_permissions')->delete();
 
         $adminRoleId = 1;
-        // Rango de IDs basado en los 29 permisos definidos en PermissionsTableSeeder
-        $allPermissions = range(1, 29); 
+        // Rango de IDs basado en los 32 permisos definidos en PermissionsTableSeeder
+        $allPermissions = range(1, 32); 
 
         $rolePermissions = [];
 

@@ -54,7 +54,10 @@ class PermissionsTableSeeder extends Seeder
             ['id' => 27, 'name' => 'source-edit', 'guard_name' => 'web'],
             ['id' => 28, 'name' => 'source-delete', 'guard_name' => 'web'],
 
-            ['id' => 29, 'name' => 'outfit-delete', 'guard_name' => 'web'],
+            ['id' => 29, 'name' => 'outfit-list', 'guard_name' => 'web'],
+            ['id' => 30, 'name' => 'outfit-create', 'guard_name' => 'web'],
+            ['id' => 31, 'name' => 'outfit-edit', 'guard_name' => 'web'],
+            ['id' => 32, 'name' => 'outfit-delete', 'guard_name' => 'web'],
         ];
 
         // Inserción masiva en la tabla de permisos

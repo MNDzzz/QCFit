@@ -28,22 +28,22 @@
                 <template v-if="item.items">
                      <!-- Submenu Items -->
                      <template v-for="(subItem, subIndex) in item.items" :key="subItem.label">
-                        <router-link :to="subItem.route" v-if="subItem.route" custom v-slot="{ href, navigate, isActive }">
+                        <router-link :to="subItem.route" v-if="subItem.route" custom v-slot="{ href, navigate, isExactActive }">
                             <a :href="href" @click="navigate" 
                                v-tooltip.right="props.isCollapsed ? subItem.label : ''"
                                class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200"
                                :class="[
-                                   isActive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
+                                   isExactActive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
                                ]"
                             >
-                                <i class="text-lg shrink-0 transition-colors" :class="[subItem.icon, isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-500']"></i>
+                                <i class="text-lg shrink-0 transition-colors" :class="[subItem.icon, isExactActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-500']"></i>
                                 
                                 <span class="whitespace-nowrap transition-all duration-300 origin-left"
                                       :class="[props.isCollapsed ? 'hidden' : 'w-auto opacity-100']">
                                     {{ subItem.label }}
                                 </span>
 
-                                <span v-if="isActive" class="absolute right-2 w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
+                                <span v-if="isExactActive" class="absolute right-2 w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
                             </a>
                         </router-link>
                      </template>
@@ -161,7 +161,7 @@ const menuModel = computed(() => {
         }
         if (item.items) {
             item.items = item.items.filter(child => {
-                return !child.permission || can(child.permission);
+                return !child.permission || child.permission === 'all' || can(child.permission);
             });
             return item.items.length > 0;
         }

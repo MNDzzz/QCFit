@@ -156,6 +156,34 @@
                         </router-link>
 
                         <router-link
+                            to="/admin/sources"
+                            class="dashboard-action-item"
+                        >
+                            <div class="dashboard-action-icon stat-icon-purple">
+                                <i class="pi pi-globe"></i>
+                            </div>
+                            <div class="dashboard-action-info">
+                                <p class="dashboard-action-title">Gestionar Marketplaces</p>
+                                <p class="dashboard-action-description">Ver y editar marketplaces</p>
+                            </div>
+                            <i class="pi pi-chevron-right dashboard-action-arrow"></i>
+                        </router-link>
+
+                        <router-link
+                            to="/admin/brands"
+                            class="dashboard-action-item"
+                        >
+                            <div class="dashboard-action-icon stat-icon-purple">
+                                <i class="pi pi-briefcase"></i>
+                            </div>
+                            <div class="dashboard-action-info">
+                                <p class="dashboard-action-title">Gestionar Marcas</p>
+                                <p class="dashboard-action-description">Ver y editar marcas</p>
+                            </div>
+                            <i class="pi pi-chevron-right dashboard-action-arrow"></i>
+                        </router-link>
+
+                        <router-link
                             to="/admin/roles"
                             class="dashboard-action-item"
                         >
