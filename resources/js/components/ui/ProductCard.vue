@@ -11,6 +11,14 @@ const props = defineProps({
 
 const router = useRouter();
 const isHovered = ref(false);
+const isFavoriteLocal = ref(props.product.is_favorite || false);
+
+const emit = defineEmits(['add-to-studio']);
+
+const toggleFavoriteAction = () => {
+    isFavoriteLocal.value = !isFavoriteLocal.value;
+    emit('add-to-studio', props.product);
+};
 
 const qcImage = computed(() => {
     return props.product.images?.find(img => img.type === 'qc')?.url 
@@ -49,10 +57,7 @@ const goToDetail = () => {
         <!-- Image Container -->
         <div class="aspect-square bg-slate-100 relative overflow-hidden flex items-center justify-center p-4">
             <!-- Badge -->
-            <div 
-                class="absolute top-2 left-2 z-10"
-                v-if="!isHovered"
-            >
+            <div class="absolute top-2 left-2 z-10">
                 <span class="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
                     <i class="pi pi-camera" style="font-size: 0.6rem"></i> QC
                 </span>
@@ -76,12 +81,12 @@ const goToDetail = () => {
             >
 
            <!-- Quick Add Button -->
-            <div class="absolute bottom-3 right-3 z-20 translate-y-10 group-hover:translate-y-0 transition-transform duration-300">
+            <div class="absolute bottom-3 right-3 z-20 transition-all duration-300">
                 <button 
-                    @click.stop="$emit('add-to-studio', product)"
-                    class="h-10 w-10 bg-violet-600 hover:bg-violet-700 text-white rounded-full shadow-lg flex items-center justify-center transition-colors"
+                    @click.stop="toggleFavoriteAction"
+                    class="h-10 w-10 bg-violet-600 hover:bg-violet-700 active:scale-90 text-white rounded-full shadow-lg flex items-center justify-center transition-all cursor-pointer"
                 >
-                    <i class="pi pi-plus text-lg font-bold"></i>
+                    <i :class="isFavoriteLocal ? 'pi pi-heart-fill' : 'pi pi-heart'" class="text-lg font-bold"></i>
                 </button>
             </div>
         </div>

@@ -34,6 +34,7 @@ class ProductResource extends JsonResource
             'images' => ProductImageResource::collection($this->whenLoaded('images')),
             
             'created_at' => $this->created_at?->format('d/m/Y H:i'),
+            'is_favorite' => auth('sanctum')->check() ? auth('sanctum')->user()->favorites()->where('product_id', $this->id)->exists() : false,
         ];
     }
 }

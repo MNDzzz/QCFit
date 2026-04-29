@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import ProductCard from '@/components/ui/ProductCard.vue';
+import useProducts from '@/composables/products';
 import OutfitCard from '@/components/ui/OutfitCard.vue';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.vue';
 
@@ -11,6 +12,7 @@ const router = useRouter();
 
 const results = ref([]);
 const loading = ref(false);
+const { toggleFavorite } = useProducts();
 const searchQuery = ref(route.query.q || '');
 const currentType = ref(route.query.type || 'products'); // 'products' o 'outfits'
 
@@ -155,8 +157,7 @@ const toggleFilter = (filterGroup, id) => {
 };
 
 const addToStudio = (product) => {
-    // console.log("Adding to studio", product);
-    // Logic to add to pinia store studio would go here
+    toggleFavorite(product.id);
 };
 
 onMounted(async () => {

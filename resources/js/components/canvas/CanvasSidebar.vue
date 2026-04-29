@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 import { useCanvasStore } from '@/store/canvas';
+import { authStore } from '@/store/auth';
 import useProducts from '@/composables/products';
 
 const canvasStore = useCanvasStore();
+const useAuth = authStore();
 
 // Reutilizamos el composable de productos (mismo que usa el Panel Admin)
 const { products: searchResults, isLoading: searchLoading, searchProducts: composableSearch, getProducts } = useProducts();
@@ -17,7 +20,7 @@ const activeTab = ref('search');
 // Búsqueda
 const searchQuery = ref('');
 
-// Wardrobe (productos favoritos / recientes)
+// Favourites (productos favoritos / recientes)
 const wardrobeItems = ref([]);
 const wardrobeLoading = ref(false);
 
@@ -28,9 +31,9 @@ const isDraggingFile = ref(false);
 // Estado de drag & drop
 const draggedProduct = ref(null);
 
-// Cargar productos del wardrobe al montar
+// Cargar productos de favourites al montar
 onMounted(() => {
-    loadWardrobe();
+    loadFavourites();
 });
 
 // Buscar productos (reutiliza el composable en vez de axios directo)
@@ -43,15 +46,22 @@ async function searchProducts() {
     await composableSearch(searchQuery.value, { limit: 12 });
 }
 
-// Cargar productos del wardrobe usando el composable
-async function loadWardrobe() {
+// Cargar productos de favourites usando el composable
+async function loadFavourites() {
     wardrobeLoading.value = true;
     
     try {
-        await wardrobeProducts.getProducts({ limit: 12 });
-        wardrobeItems.value = wardrobeProducts.products.value || [];
+        const userId = useAuth.user?.id;
+        if (userId) {
+            const response = await axios.get(`/api/users/${userId}/favorites`);
+            wardrobeItems.value = response.data.data || response.data || [];
+        } else {
+            // Fallback si no hay usuario: productos recientes
+            await wardrobeProducts.getProducts({ limit: 12 });
+            wardrobeItems.value = wardrobeProducts.products.value || [];
+        }
     } catch (error) {
-        console.error('Error cargando wardrobe:', error);
+        console.error('Error cargando favourites:', error);
         wardrobeItems.value = [];
     } finally {
         wardrobeLoading.value = false;
@@ -149,7 +159,7 @@ function processFiles(files) {
                 ]"
             >
                 <i class="pi pi-heart mr-1"></i>
-                Wardrobe
+                Favourites
             </button>
             <button
                 @click="activeTab = 'uploads'"
@@ -234,7 +244,7 @@ function processFiles(files) {
             <div class="flex-1 overflow-y-auto p-4">
                 <div v-if="wardrobeLoading" class="text-center text-slate-500 py-8">
                     <i class="pi pi-spin pi-spinner text-3xl mb-2"></i>
-                    <p class="text-sm">Loading wardrobe...</p>
+                    <p class="text-sm">Loading favourites...</p>
                 </div>
 
                 <div v-else-if="wardrobeItems.length === 0" class="text-center text-slate-500 py-8">
