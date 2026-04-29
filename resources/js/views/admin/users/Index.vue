@@ -40,7 +40,7 @@
                 :loading="loading"
                 filter-display="menu"
                 :filter-delay="300"
-                :global-filter-fields="['alias', 'name', 'surname1', 'surname2', 'email']"
+                :global-filter-fields="['alias', 'name', 'email']"
 
             >
                 <Column field="id" header="ID" sortable class="w-[60px]">

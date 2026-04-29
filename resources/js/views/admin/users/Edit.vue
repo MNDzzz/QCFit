@@ -67,37 +67,7 @@
                     </small>
                 </div>
 
-                <div class="mb-4">
-                    <div class="flex items-center gap-3">
-                        <label for="surname1">Primer apellido:</label>
-                        <InputText 
-                            v-model="user.surname1" 
-                            size="small" 
-                            type="text" 
-                            id="surname1" 
-                            :class="{ 'p-invalid': hasError('surname1') }"
-                        />
-                    </div>
-                    <small v-if="hasError('surname1')" class="p-error">
-                        {{ getError('surname1') }}
-                    </small>
-                </div>
 
-                <div class="mb-4">
-                    <div class="flex items-center gap-3">
-                        <label for="surname2">Segundo apellido:</label>
-                        <InputText 
-                            v-model="user.surname2" 
-                            type="text" 
-                            size="small" 
-                            id="surname2" 
-                            :class="{ 'p-invalid': hasError('surname2') }"
-                        />
-                    </div>
-                    <small v-if="hasError('surname2')" class="p-error">
-                        {{ getError('surname2') }}
-                    </small>
-                </div>
 
                 <div class="mb-4">
                     <div class="flex items-center gap-3">
