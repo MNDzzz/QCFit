@@ -77,6 +77,13 @@ npm run dev
 
 Acceder a: `http://127.0.0.1:8000`
 
+### 4. Pruebas Automatizadas (Testing)
+El proyecto cuenta con una batería de tests de integración (Feature Tests) sobre la API y la lógica de negocio usando SQLite en memoria.
+Para ejecutarlos y comprobar que todo funciona correctamente:
+```bash
+php artisan test
+```
+
 ---
 
 ## 📚 Estructura y Requisitos Académicos
