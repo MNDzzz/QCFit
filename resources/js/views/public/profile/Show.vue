@@ -8,6 +8,7 @@ import { useToast } from "primevue/usetoast";
 import { useHead } from '@vueuse/head';
 import FollowersModal from '@/components/ui/FollowersModal.vue';
 import ProductCard from '@/components/ui/ProductCard.vue';
+import useProducts from '@/composables/products';
 
 const route = useRoute();
 const auth = authStore();
@@ -22,6 +23,7 @@ const activeTab = ref('outfits');
 const loading = ref(true);
 const followLoading = ref(false);
 const error = ref(null);
+const { toggleFavorite } = useProducts();
 
 // --- Filtrado y ordenación local (íntegramente en Vue, sin petición al servidor) ---
 const outfitSearchQuery = ref('');
@@ -315,6 +317,10 @@ async function saveProfile() {
         saveLoading.value = false;
     }
 }
+
+const addToStudio = async (product) => {
+    await toggleFavorite(product.id);
+};
 
 </script>
 
@@ -624,6 +630,7 @@ async function saveProfile() {
                             v-for="product in filteredFavorites" 
                             :key="product.id"
                             :product="product"
+                            @add-to-studio="addToStudio"
                         />
                     </div>
                     

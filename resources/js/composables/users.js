@@ -15,8 +15,6 @@ export default function useUsers() {
         name: '',
         email: '',
         password: '',
-        surname1: '',
-        surname2: '',
         role_id: [],
         avatar: null
     }
@@ -35,8 +33,6 @@ export default function useUsers() {
         name: yup.string().required('El nombre es obligatorio'),
         email: yup.string().email('Email inválido').required('El email es obligatorio'),
         password: yup.string().min(8, 'La contraseña debe tener al menos 8 caracteres').nullable(),
-        surname1: yup.string().required('El primer apellido es obligatorio'),
-        surname2: yup.string().nullable(),
         role_id: yup.array().min(1, 'Debe seleccionar al menos un rol').nullable()
     })
 
@@ -59,8 +55,6 @@ export default function useUsers() {
             name: data.name ?? '',
             email: data.email ?? '',
             password: '',
-            surname1: data.surname1 ?? '',
-            surname2: data.surname2 ?? '',
             role_id: data.roles ?? [],
             avatar: data.avatar ?? null
         }

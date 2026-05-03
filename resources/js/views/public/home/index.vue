@@ -3,6 +3,7 @@ import { ref, onMounted, watch, computed } from 'vue';
 import axios from 'axios';
 import SmartSearch from '@/components/SmartSearch.vue';
 import ProductCard from '@/components/ui/ProductCard.vue';
+import useProducts from '@/composables/products';
 import { authStore } from '@/store/auth';
 
 const useAuth = authStore();
@@ -10,6 +11,7 @@ const activeTab = ref('trending');
 const outfits = ref([]);
 const products = ref([]);
 const loading = ref(false);
+const { toggleFavorite } = useProducts();
 const tickerItems = ref([]);
 
 const categories = [
@@ -99,6 +101,10 @@ async function loadOutfits() {
     } finally {
         loading.value = false;
     }
+}
+
+async function addToStudio(product) {
+    await toggleFavorite(product.id);
 }
 </script>
 
@@ -269,6 +275,7 @@ async function loadOutfits() {
                         v-for="product in filteredProducts.slice(0, 8)"
                         :key="product.id"
                         :product="product"
+                        @add-to-studio="addToStudio"
                     />
                 </div>
 

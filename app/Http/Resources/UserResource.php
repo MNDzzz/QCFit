@@ -18,8 +18,6 @@ class UserResource extends JsonResource
             'id'   => $this->id,
             'alias' => $this->alias,
             'name' => $this->name,
-            'surname1' => $this->surname1,
-            'surname2' => $this->surname2,
             'email' => $this->email,
             'roles' => RoleResource::collection($this->roles),
             'avatar' => count($this->getMedia('*')) > 0 ? $this->getMedia('*')[0]->getUrl() : null,

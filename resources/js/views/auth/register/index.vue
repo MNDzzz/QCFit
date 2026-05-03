@@ -29,38 +29,7 @@
                             </div>
                         </div>
 
-                        <!-- Surname1 y Surname2 (row / col-md-6) -->
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="surname1" class="form-label fw-semibold">{{ $t('surname1') }}</label>
-                                <input
-                                    id="surname1"
-                                    type="text"
-                                    class="form-control form-control-lg rounded-3"
-                                    v-model="registerForm.surname1"
-                                    placeholder="First surname"
-                                    :class="{ 'is-invalid': validationErrors?.surname1 }"
-                                />
-                                <div v-if="validationErrors?.surname1" class="invalid-feedback" style="display:block;">
-                                    {{ validationErrors.surname1[0] }}
-                                </div>
-                            </div>
 
-                            <div class="col-md-6">
-                                <label for="surname2" class="form-label fw-semibold">{{ $t('surname2') }}</label>
-                                <input
-                                    id="surname2"
-                                    type="text"
-                                    class="form-control form-control-lg rounded-3"
-                                    v-model="registerForm.surname2"
-                                    placeholder="Second surname"
-                                    :class="{ 'is-invalid': validationErrors?.surname2 }"
-                                />
-                                <div v-if="validationErrors?.surname2" class="invalid-feedback" style="display:block;">
-                                    {{ validationErrors.surname2[0] }}
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Email -->
                         <div class="mb-3">

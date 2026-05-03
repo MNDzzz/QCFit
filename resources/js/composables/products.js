@@ -122,6 +122,29 @@ export default function useProducts() {
     }
 
     /**
+     * Alternar favorito (Wardrobe)
+     * @param {number|string} id - ID del producto
+     */
+    const toggleFavorite = async (id) => {
+        try {
+            const response = await axios.post(`/api/favorites/${id}`)
+            const isFavorite = response.data.is_favorite
+            
+            if (isFavorite) {
+                toast.success('Added to Favourites')
+            } else {
+                toast.info('Removed from Favourites')
+            }
+            
+            return response.data
+        } catch (error) {
+            console.error('Error toggling favorite:', error)
+            toast.error('Could not update Wardrobe')
+            throw error
+        }
+    }
+
+    /**
      * Búsqueda pública de productos a través de la API /api/search.
      * Reutilizable tanto en el Panel Admin como en el Web Client (CanvasSidebar).
      * @param {string} query - Término de búsqueda
@@ -162,6 +185,7 @@ export default function useProducts() {
         setProduct,
         getProducts,
         searchProducts,
+        toggleFavorite,
         createProduct,
         updateProduct,
         deleteProduct

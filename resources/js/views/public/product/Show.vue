@@ -2,15 +2,21 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import useProducts from '@/composables/products';
+import { authStore } from '@/store/auth';
 import { usePreferenceStore } from '@/store/preference';
 import { useHead } from '@vueuse/head';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.vue';
 
 const route = useRoute();
 const preferenceStore = usePreferenceStore();
+const useAuth = authStore();
 
 const product = ref(null);
 const loading = ref(true);
+const { toggleFavorite } = useProducts();
+const isFavoriteLocal = ref(false);
+const isButtonHovered = ref(false);
 const activeImage = ref('');
 const isQcMode = ref(true); // Toggle logic
 
@@ -34,6 +40,7 @@ async function fetchProduct() {
         const id = route.params.id;
         const res = await axios.get(`/api/products/${id}`);
         product.value = res.data.data || res.data;
+        isFavoriteLocal.value = product.value.is_favorite || false;
         updateActiveImage();
 
         // SEO Meta Tags
@@ -91,15 +98,37 @@ const currentImages = computed(() => {
     if (!product.value?.images) return [];
     // If QC mode, show QC images first, then others if needed, or filter strictly?
     // Let's filter strictly for the carousel to match the "Toggle" concept
-    const typeTarget = isQcMode.value ? 'qc' : 'original';
     const images = product.value.images.filter(i => isQcMode.value ? i.type === 'qc' : i.type !== 'qc');
     return images.length > 0 ? images : product.value.images;
+});
+
+const favouriteButtonText = computed(() => {
+    if (!isFavoriteLocal.value) return 'Add to Favourites';
+    return isButtonHovered.value ? 'Remove item? :(' : 'Favourite';
 });
 
 const handleW2C = () => {
     if (!product.value) return;
     const link = preferenceStore.getAffiliateLink(product.value);
     window.open(link, '_blank');
+};
+
+const addToStudio = async () => {
+    if (!product.value) return;
+    
+    if (!useAuth.authenticated) {
+        // Redirigir a login o mostrar mensaje
+        alert('You must be logged in to add to favourites.');
+        return;
+    }
+
+    isFavoriteLocal.value = !isFavoriteLocal.value;
+    try {
+        await toggleFavorite(product.value.id);
+    } catch (e) {
+        // Revertir si falla
+        isFavoriteLocal.value = !isFavoriteLocal.value;
+    }
 };
 
 const agents = [
@@ -222,10 +251,13 @@ const agents = [
                     </button>
 
                     <button 
-                        @click="$router.push({name: 'public.studio'})"
-                         class="w-full py-3 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl font-bold transition-all flex items-center justify-center gap-2 mb-8"
+                        @click="addToStudio"
+                        @mouseenter="isButtonHovered = true"
+                        @mouseleave="isButtonHovered = false"
+                        class="w-full py-3 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 active:scale-95 rounded-xl font-bold transition-all flex items-center justify-center gap-2 mb-8 cursor-pointer"
                     >
-                        <i class="pi pi-plus"></i> ADD TO STUDIO
+                        <i :class="['pi', isFavoriteLocal ? 'pi-heart-fill text-red-500' : 'pi-heart']"></i> 
+                        {{ favouriteButtonText }}
                     </button>
 
                     <!-- Agent Widget -->

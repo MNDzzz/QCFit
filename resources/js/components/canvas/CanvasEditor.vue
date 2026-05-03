@@ -311,7 +311,7 @@ defineExpose({
             <div class="text-center text-slate-700">
                 <i class="pi pi-plus-circle text-6xl mb-4 opacity-20"></i>
                 <p class="text-lg font-bold uppercase tracking-widest opacity-40">Start Creating</p>
-                <p class="text-xs mt-2 opacity-30">Drag items from wardrobe</p>
+                <p class="text-xs mt-2 opacity-30">Drag items from favourites</p>
             </div>
         </div>
 

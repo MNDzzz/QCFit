@@ -16,35 +16,7 @@
                 </div>
             </div>
 
-            <div class="mb-3">
-                <div class="flex items-center gap-3">
-                    <label for="user-surname1">Surname 1:</label>
-                    <InputText v-model="user.surname1" id="user-surname1" type="text" size="small" :invalid="!!errors.surname1" />
-                </div>
-                <div class="text-red-400 mt-1">
-                    {{ errors.surname1 }}
-                </div>
-                <div class="mt-1">
-                    <div v-for="message in validationErrors?.surname1" class="text-red-400">
-                        {{ message }}
-                    </div>
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <div class="flex items-center gap-3">
-                    <label for="user-surname2">Surname 2:</label>
-                    <InputText v-model="user.surname2" id="user-surname2" type="text" size="small" :invalid="!!errors.surname2" />
-                </div>
-                <div class="text-red-400 mt-1">
-                    {{ errors.surname2 }}
-                </div>
-                <div class="mt-1">
-                    <div v-for="message in validationErrors?.surname2" class="text-red-400">
-                        {{ message }}
-                    </div>
-                </div>
-            </div>
 
             <div class="mb-3">
                 <div class="flex items-center gap-3">
