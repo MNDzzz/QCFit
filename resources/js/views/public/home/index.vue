@@ -25,14 +25,14 @@ const activeCategory = ref('all');
 
 // Marcas para la sección Browse by Brand (8 marcas para cuadrícula perfecta)
 const brandList = [
-    { name: 'KENZO', display: 'KENZO' },
-    { name: 'NIKE', display: 'NIKE' },
-    { name: 'ADIDAS', display: 'adidas' },
-    { name: 'BALENCIAGA', display: 'BB' },
-    { name: "ARC'TERYX", display: "ARC'TERYX" },
-    { name: 'CARHARTT', display: 'CARHARTT' },
-    { name: 'STUSSY', display: 'STÜSSY' },
-    { name: 'SUPREME', display: 'Supreme' },
+    { name: 'Prada', display: 'PRADA' },
+    { name: 'Nike', display: 'NIKE' },
+    { name: 'Yeezy', display: 'YEEZY' },
+    { name: 'Balenciaga', display: 'BALENCIAGA' },
+    { name: "Arc'teryx", display: "ARC'TERYX" },
+    { name: 'Carhartt', display: 'CARHARTT' },
+    { name: 'Stussy', display: 'STÜSSY' },
+    { name: 'Supreme', display: 'SUPREME' },
 ];
 
 // Productos filtrados por categoría seleccionada
