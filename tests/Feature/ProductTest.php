@@ -80,6 +80,8 @@ class ProductTest extends TestCase
 
         $productData = [
             'name' => 'Illegal Product',
+            'external_id' => 'EXT_ILLEGAL',
+            'original_link' => 'https://example.com/illegal',
             'category_id' => $category->id,
         ];
 

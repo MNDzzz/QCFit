@@ -41,9 +41,7 @@ class AuthTest extends TestCase
                 'user' => [
                     'id',
                     'name',
-                    'email',
-                    'roles',
-                    'permissions'
+                    'email'
                 ],
                 'token'
             ]);
