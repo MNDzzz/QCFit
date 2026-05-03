@@ -19,7 +19,7 @@
             </template>
 
             <template #subtitle>
-                Revisa y modera los outfits creados por los usuarios. Elimina contenido inapropiado o que infrinja las normas.
+                Review and moderate user-created outfits. Remove inappropriate content or items that violate guidelines.
             </template>
 
             <template #content>
@@ -68,7 +68,7 @@
                         </template>
                     </Column>
 
-                    <Column header="Miniatura" class="w-[80px]">
+                    <Column header="Thumbnail" class="w-[80px]">
                         <template #body="slotProps">
                             <img
                                 v-if="slotProps.data.thumbnail_url"
@@ -92,7 +92,7 @@
                         </template>
                     </Column>
 
-                    <Column header="Autor" class="min-w-[160px]">
+                    <Column header="Author" class="min-w-[160px]">
                         <template #body="slotProps">
                             <div v-if="slotProps.data.user" class="flex items-center gap-2">
                                 <Avatar
@@ -103,20 +103,20 @@
                                 />
                                 <span class="text-sm">{{ slotProps.data.user.name }}</span>
                             </div>
-                            <span v-else class="text-gray-400 text-sm">Desconocido</span>
+                            <span v-else class="text-gray-400 text-sm">Unknown</span>
                         </template>
                     </Column>
 
                     <Column header="Items" class="w-[80px]">
                         <template #body="slotProps">
                             <Tag
-                                :value="(slotProps.data.products_count || 0) + ' prendas'"
+                                :value="(slotProps.data.products_count || 0) + ' items'"
                                 severity="info"
                             />
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha" sortable class="min-w-[150px]">
+                    <Column field="created_at" header="Date" sortable class="min-w-[150px]">
                         <template #body="slotProps">
                             <span class="text-sm table-cell-date">
                                 <i class="pi pi-calendar mr-2 text-xs opacity-70"></i>
@@ -125,12 +125,12 @@
                         </template>
                     </Column>
 
-                    <Column header="Acciones" class="w-[100px]">
+                    <Column header="Actions" class="w-[100px]">
                         <template #body="slotProps">
                             <div class="flex gap-2">
                                 <Button
                                     v-if="can('outfit-delete')"
-                                    v-tooltip.top="'Eliminar outfit'"
+                                    v-tooltip.top="'Delete outfit'"
                                     icon="pi pi-trash"
                                     rounded
                                     text
@@ -172,11 +172,11 @@ const confirmDeleteOutfit = (outfit) => {
 
     swal({
         icon: 'warning',
-        title: '¿Eliminar outfit?',
-        text: `El outfit "${outfit.title || 'Sin título'}" de ${outfit.user?.name || 'usuario desconocido'} se eliminará de forma permanente.`,
+        title: 'Delete outfit?',
+        text: `The outfit "${outfit.title || 'Untitled'}" by ${outfit.user?.name || 'unknown user'} will be permanently deleted.`,
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -188,7 +188,7 @@ const confirmDeleteOutfit = (outfit) => {
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

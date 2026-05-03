@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('permission-create')"
-                            label="Nuevo Permiso"
+                            label="New Permission"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Administra y gestiona los permisos del sistema. Crea, edita y elimina permisos según tus permisos.
+                Manage and administer system permissions. Create, edit and delete permissions based on your access level.
             </template>
 
             <template #content>
@@ -79,17 +79,17 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[200px]">
+                    <Column field="name" header="Name" sortable filter class="min-w-[200px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="10rem" height="1rem" />
                             <span v-else class="table-cell-name">{{ slotProps.data.name || '-' }}</span>
                         </template>
                         <template #filter="{ filterModel }">
-                            <InputText v-model="filterModel.value" placeholder="Nombre" class="w-full" />
+                            <InputText v-model="filterModel.value" placeholder="Name" class="w-full" />
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha de Creación" sortable class="min-w-[170px]">
+                    <Column field="created_at" header="Created At" sortable class="min-w-[170px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="8rem" height="1rem" />
                             <span v-else class="text-sm table-cell-date">
@@ -98,17 +98,17 @@
                             </span>
                         </template>
                         <template #filter="{ filterModel }">
-                            <InputText v-model="filterModel.value" placeholder="Nombre" class="w-full" />
+                            <InputText v-model="filterModel.value" placeholder="Name" class="w-full" />
                         </template>
                     </Column>
 
-                    <Column header="Acciones" class="w-[150px]">
+                    <Column header="Actions" class="w-[150px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="4rem" height="2rem" />
                             <div v-else class="flex gap-2">
                                 <Button
                                     v-if="can('permission-edit')"
-                                    v-tooltip.top="'Editar permiso'"
+                                    v-tooltip.top="'Edit permission'"
                                     icon="pi pi-pencil"
                                     rounded
                                     text
@@ -118,7 +118,7 @@
                                 />
                                 <Button
                                     v-if="can('permission-delete')"
-                                    v-tooltip.top="'Eliminar permiso'"
+                                    v-tooltip.top="'Delete permission'"
                                     icon="pi pi-trash"
                                     rounded
                                     text
@@ -136,17 +136,17 @@
         <Dialog
             v-model:visible="permissionDialog.open"
             modal
-            :header="permissionDialog.type === 'create' ? 'Crear Permiso' : 'Editar Permiso'"
+            :header="permissionDialog.type === 'create' ? 'Create Permission' : 'Edit Permission'"
             :style="{ width: '400px' }"
             class="permission-dialog"
         >
             <div class="flex flex-col gap-4">
                 <div>
-                    <label for="permission-name" class="dialog-label">Nombre del permiso</label>
+                    <label for="permission-name" class="dialog-label">Permission name</label>
                     <InputText
                         id="permission-name"
                         v-model="permission.name"
-                        placeholder="Nombre"
+                        placeholder="Name"
                         class="w-full"
                         :class="{ 'p-invalid': hasError('name') }"
                     />
@@ -157,21 +157,21 @@
             </div>
             <template #footer>
                 <Button
-                    label="Cancelar"
+                    label="Cancel"
                     severity="secondary"
                     @click="closeDialog"
                     :disabled="isSubmitting"
                 />
                 <Button
                     v-if="permissionDialog.type === 'create'"
-                    label="Crear"
+                    label="Create"
                     @click="submitCreate"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                 />
                 <Button
                     v-else
-                    label="Guardar"
+                    label="Save"
                     @click="submitUpdate"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
@@ -292,11 +292,11 @@ const confirmDeletePermission = (currentPermission) => {
 
     swal({
         icon: 'warning',
-        title: '¿Eliminar permiso?',
-        text: `El permiso "${currentPermission.name}" se eliminará de forma permanente.`,
+        title: 'Delete permission?',
+        text: `The permission "${currentPermission.name}" will be permanently deleted.`,
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -308,7 +308,7 @@ const confirmDeletePermission = (currentPermission) => {
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

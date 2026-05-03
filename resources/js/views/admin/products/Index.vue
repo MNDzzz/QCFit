@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('product-create')"
-                            label="Nuevo Producto"
+                            label="New Product"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Catálogo global de productos indexados en QCFit.
+                Global product catalog indexed in QCFit.
             </template>
 
             <template #content>
@@ -57,7 +57,7 @@
                         </template>
                     </Column>
 
-                    <Column header="Imagen" class="w-[100px]">
+                    <Column header="Image" class="w-[100px]">
                         <template #body="slotProps">
                             <div class="h-12 w-12 rounded overflow-hidden shadow-sm border border-gray-100 bg-slate-50 flex items-center justify-center">
                                 <img v-if="slotProps.data.thumbnail" :src="slotProps.data.thumbnail" class="h-full w-full object-cover" />
@@ -66,7 +66,7 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[200px]">
+                    <Column field="name" header="Name" sortable filter class="min-w-[200px]">
                         <template #body="slotProps">
                             <div class="flex flex-col">
                                 <span class="font-medium text-slate-700">{{ slotProps.data.name }}</span>
@@ -75,21 +75,21 @@
                         </template>
                     </Column>
 
-                    <Column field="category.name" header="Categoría" sortable class="min-w-[120px]">
+                    <Column field="category.name" header="Category" sortable class="min-w-[120px]">
                         <template #body="slotProps">
                             <Tag v-if="slotProps.data.category" :value="slotProps.data.category.name" severity="secondary" />
                             <span v-else class="text-slate-300">-</span>
                         </template>
                     </Column>
 
-                    <Column field="brand.name" header="Marca" sortable class="min-w-[120px]">
+                    <Column field="brand.name" header="Brand" sortable class="min-w-[120px]">
                         <template #body="slotProps">
                             <span v-if="slotProps.data.brand" class="font-semibold">{{ slotProps.data.brand.name }}</span>
                             <span v-else class="text-slate-300">-</span>
                         </template>
                     </Column>
 
-                    <Column field="source.name" header="Origen" class="w-[120px]">
+                    <Column field="source.name" header="Source" class="w-[120px]">
                         <template #body="slotProps">
                              <div v-if="slotProps.data.source" class="flex items-center gap-2">
                                 <img v-if="slotProps.data.source.logo_url" :src="slotProps.data.source.logo_url" class="h-4" />
@@ -98,7 +98,7 @@
                         </template>
                     </Column>
 
-                    <Column header="Acciones" class="w-[120px]">
+                    <Column header="Actions" class="w-[120px]">
                         <template #body="slotProps">
                             <div class="flex gap-2">
                                 <Button
@@ -130,12 +130,12 @@
         <Dialog
             v-model:visible="productDialog.open"
             modal
-            :header="productDialog.type === 'create' ? 'Nuevo Producto' : 'Editar Producto'"
+            :header="productDialog.type === 'create' ? 'New Product' : 'Edit Product'"
             :style="{ width: '650px' }"
         >
             <div class="grid grid-cols-2 gap-4 py-4">
                 <div class="col-span-2 flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Nombre del Producto</label>
+                    <label class="font-semibold text-sm">Product Name</label>
                     <InputText v-model="product.name" :class="{ 'p-invalid': hasError('name') }" />
                     <small v-if="hasError('name')" class="text-red-500">{{ getError('name') }}</small>
                 </div>
@@ -152,44 +152,44 @@
                         :options="categoryList"
                         optionLabel="name"
                         optionValue="id"
-                        placeholder="Seleccionar..."
+                        placeholder="Select..."
                         class="w-full"
                     />
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Marca</label>
+                    <label class="font-semibold text-sm">Brand</label>
                     <Select
                         v-model="product.brand_id"
                         :options="brandList"
                         optionLabel="name"
                         optionValue="id"
-                        placeholder="Seleccionar..."
+                        placeholder="Select..."
                         class="w-full"
                     />
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Marketplace (Origen)</label>
+                    <label class="font-semibold text-sm">Marketplace (Source)</label>
                     <Select
                         v-model="product.source_id"
                         :options="sourceList"
                         optionLabel="name"
                         optionValue="id"
-                        placeholder="Seleccionar..."
+                        placeholder="Select..."
                         class="w-full"
                     />
                 </div>
 
                 <div class="col-span-2 flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Enlace Original</label>
+                    <label class="font-semibold text-sm">Original Link</label>
                     <InputText v-model="product.original_link" placeholder="https://taobao.com/item/..." />
                 </div>
             </div>
 
             <template #footer>
-                <Button label="Cancelar" text severity="secondary" @click="productDialog.open = false" />
-                <Button label="Guardar" @click="saveProduct" :loading="isLoading" />
+                <Button label="Cancel" text severity="secondary" @click="productDialog.open = false" />
+                <Button label="Save" @click="saveProduct" :loading="isLoading" />
             </template>
         </Dialog>
     </div>
@@ -248,12 +248,12 @@ const saveProduct = async () => {
 
 const confirmDeleteProduct = (data) => {
     swal({
-        title: '¿Eliminar producto?',
-        text: `"${data.name}" se eliminará del sistema.`,
+        title: 'Delete product?',
+        text: `"${data.name}" will be removed from the system.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {

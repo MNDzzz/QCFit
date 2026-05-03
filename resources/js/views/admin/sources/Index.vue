@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('source-create')"
-                            label="Nuevo Marketplace"
+                            label="New Marketplace"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Administra los orígenes de los productos (Taobao, Weidian, 1688, etc.).
+                Manage the product sources (Taobao, Weidian, 1688, etc.).
             </template>
 
             <template #content>
@@ -66,17 +66,17 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[150px]"></Column>
+                    <Column field="name" header="Name" sortable filter class="min-w-[150px]"></Column>
                     <Column field="slug" header="Slug" sortable filter class="min-w-[150px]"></Column>
-                    <Column field="base_url" header="URL Base" class="min-w-[200px]">
+                    <Column field="base_url" header="Base URL" class="min-w-[200px]">
                         <template #body="slotProps">
                             <a :href="slotProps.data.base_url" target="_blank" class="text-blue-500 hover:underline text-xs">{{ slotProps.data.base_url || '-' }}</a>
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha" sortable class="w-[150px]"></Column>
+                    <Column field="created_at" header="Date" sortable class="w-[150px]"></Column>
 
-                    <Column header="Acciones" class="w-[120px]">
+                    <Column header="Actions" class="w-[120px]">
                         <template #body="slotProps">
                             <div class="flex gap-2">
                                 <Button
@@ -107,12 +107,12 @@
         <Dialog
             v-model:visible="sourceDialog.open"
             modal
-            :header="sourceDialog.type === 'create' ? 'Crear Marketplace' : 'Editar Marketplace'"
+            :header="sourceDialog.type === 'create' ? 'Create Marketplace' : 'Edit Marketplace'"
             :style="{ width: '500px' }"
         >
             <div class="flex flex-col gap-4 py-2">
                 <div class="flex flex-col gap-1">
-                    <label for="name" class="font-semibold text-sm">Nombre</label>
+                    <label for="name" class="font-semibold text-sm">Name</label>
                     <InputText v-model="source.name" id="name" :class="{ 'p-invalid': hasError('name') }" @input="updateSlug" />
                     <small v-if="hasError('name')" class="text-red-500">{{ getError('name') }}</small>
                 </div>
@@ -131,9 +131,9 @@
                 </div>
             </div>
             <template #footer>
-                <Button label="Cancelar" text severity="secondary" @click="closeDialog" />
-                <Button v-if="sourceDialog.type === 'create'" label="Crear" @click="submitCreate" :loading="isLoading" />
-                <Button v-else label="Guardar" @click="submitUpdate" :loading="isLoading" />
+                <Button label="Cancel" text severity="secondary" @click="closeDialog" />
+                <Button v-if="sourceDialog.type === 'create'" label="Create" @click="submitCreate" :loading="isLoading" />
+                <Button v-else label="Save" @click="submitUpdate" :loading="isLoading" />
             </template>
         </Dialog>
     </div>
@@ -201,12 +201,12 @@ const submitUpdate = async () => {
 
 const confirmDeleteSource = (data) => {
     swal({
-        title: '¿Eliminar marketplace?',
-        text: `El marketplace "${data.name}" se eliminará permanentemente.`,
+        title: 'Delete marketplace?',
+        text: `The marketplace "${data.name}" will be permanently deleted.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {

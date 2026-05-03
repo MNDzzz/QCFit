@@ -14,7 +14,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                         <div class="flex flex-col gap-1">
-                            <label for="name" class="text-sm font-medium text-surface-700">Nombre</label>
+                            <label for="name" class="text-sm font-medium text-surface-700">Name</label>
                             <InputText id="name" v-model="profile.name" autocomplete="name" :invalid="hasError('name')" />
                             <small v-if="hasError('name')" class="p-error">{{ getError('name') }}</small>
                         </div>
@@ -22,8 +22,8 @@
                     </div>
                 
                     <div class="flex justify-end gap-3 pt-2">
-                        <Button type="button" label="Restablecer" icon="pi pi-refresh" severity="secondary" text :disabled="isLoading" @click="getProfile" />
-                        <Button type="submit" label="Guardar cambios" icon="pi pi-save" :loading="isLoading" />
+                        <Button type="button" label="Reset" icon="pi pi-refresh" severity="secondary" text :disabled="isLoading" @click="getProfile" />
+                        <Button type="submit" label="Save changes" icon="pi pi-save" :loading="isLoading" />
                     </div>
 
                 </form>

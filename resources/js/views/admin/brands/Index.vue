@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('brand-create')"
-                            label="Nueva Marca"
+                            label="New Brand"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Administra las marcas de los productos (Nike, Adidas, Stussy, etc.).
+                Manage the product brands (Nike, Adidas, Stussy, etc.).
             </template>
 
             <template #content>
@@ -66,18 +66,18 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[150px]"></Column>
+                    <Column field="name" header="Name" sortable filter class="min-w-[150px]"></Column>
                     <Column field="slug" header="Slug" sortable filter class="min-w-[150px]"></Column>
                     
-                    <Column field="description" header="Descripción" class="min-w-[200px]">
+                    <Column field="description" header="Description" class="min-w-[200px]">
                         <template #body="slotProps">
                             <span class="text-xs text-slate-500 line-clamp-1">{{ slotProps.data.description || '-' }}</span>
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha" sortable class="w-[150px]"></Column>
+                    <Column field="created_at" header="Date" sortable class="w-[150px]"></Column>
 
-                    <Column header="Acciones" class="w-[120px]">
+                    <Column header="Actions" class="w-[120px]">
                         <template #body="slotProps">
                             <div class="flex gap-2">
                                 <Button
@@ -87,7 +87,7 @@
                                     rounded
                                     severity="info"
                                     size="small"
-                                    v-tooltip.top="'Ver Productos'"
+                                    v-tooltip.top="'View Products'"
                                     @click="openProductsDialog(slotProps.data)"
                                 />
                                 <Button
@@ -118,12 +118,12 @@
         <Dialog
             v-model:visible="brandDialog.open"
             modal
-            :header="brandDialog.type === 'create' ? 'Crear Marca' : 'Editar Marca'"
+            :header="brandDialog.type === 'create' ? 'Create Brand' : 'Edit Brand'"
             :style="{ width: '500px' }"
         >
             <div class="flex flex-col gap-4 py-2">
                 <div class="flex flex-col gap-1">
-                    <label for="name" class="font-semibold text-sm">Nombre</label>
+                    <label for="name" class="font-semibold text-sm">Name</label>
                     <InputText v-model="brand.name" id="name" :class="{ 'p-invalid': hasError('name') }" @input="updateSlug" />
                     <small v-if="hasError('name')" class="text-red-500">{{ getError('name') }}</small>
                 </div>
@@ -142,9 +142,9 @@
                 </div>
             </div>
             <template #footer>
-                <Button label="Cancelar" text severity="secondary" @click="closeDialog" />
-                <Button v-if="brandDialog.type === 'create'" label="Crear" @click="submitCreate" :loading="isLoading" />
-                <Button v-else label="Guardar" @click="submitUpdate" :loading="isLoading" />
+                <Button label="Cancel" text severity="secondary" @click="closeDialog" />
+                <Button v-if="brandDialog.type === 'create'" label="Create" @click="submitCreate" :loading="isLoading" />
+                <Button v-else label="Save" @click="submitUpdate" :loading="isLoading" />
             </template>
         </Dialog>
 
@@ -152,7 +152,7 @@
         <Dialog 
             v-model:visible="productsDialog.open" 
             modal 
-            :header="'Productos de ' + productsDialog.brandName" 
+            :header="'Products of ' + productsDialog.brandName" 
             :style="{ width: '800px' }"
         >
             <DataTable 
@@ -163,18 +163,18 @@
                 striped-rows
             >
                 <template #empty>
-                    <div class="text-center py-4 text-slate-400">Esta marca no tiene productos asociados.</div>
+                    <div class="text-center py-4 text-slate-400">This brand has no associated products.</div>
                 </template>
 
                 <Column field="id" header="ID" class="w-[60px]"></Column>
-                <Column header="Imagen" class="w-[80px]">
+                <Column header="Image" class="w-[80px]">
                     <template #body="slotProps">
                         <img v-if="slotProps.data.thumbnail" :src="slotProps.data.thumbnail" class="h-8 w-8 object-cover rounded" />
                     </template>
                 </Column>
-                <Column field="name" header="Nombre" sortable></Column>
+                <Column field="name" header="Name" sortable></Column>
                 
-                <Column header="Reasignar Marca" class="w-[220px]">
+                <Column header="Reassign Brand" class="w-[220px]">
                     <template #body="slotProps">
                         <div class="flex items-center gap-2">
                             <Select 
@@ -182,7 +182,7 @@
                                 :options="brandList" 
                                 optionLabel="name" 
                                 optionValue="id" 
-                                placeholder="Mover a..." 
+                                placeholder="Move to..." 
                                 class="w-full text-xs"
                                 @change="onReassignBrand(slotProps.data)"
                             />
@@ -191,7 +191,7 @@
                 </Column>
             </DataTable>
             <template #footer>
-                <Button label="Cerrar" severity="secondary" @click="productsDialog.open = false" />
+                <Button label="Close" severity="secondary" @click="productsDialog.open = false" />
             </template>
         </Dialog>
     </div>
@@ -269,12 +269,12 @@ const onReassignBrand = async (productData) => {
     if (productData.temp_brand_id === productsDialog.brandId) return;
 
     swal({
-        title: '¿Reasignar producto?',
-        text: `El producto se moverá de "${productsDialog.brandName}" a la marca seleccionada.`,
+        title: 'Reassign product?',
+        text: `The product will be moved from "${productsDialog.brandName}" to the selected brand.`,
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Sí, mover',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'Yes, move',
+        cancelButtonText: 'Cancel'
     }).then(async (result) => {
         if (result.isConfirmed) {
             const success = await updateProductBrand(
@@ -311,12 +311,12 @@ const submitUpdate = async () => {
 
 const confirmDeleteBrand = (data) => {
     swal({
-        title: '¿Eliminar marca?',
-        text: `La marca "${data.name}" se eliminará permanentemente.`,
+        title: 'Delete brand?',
+        text: `The brand "${data.name}" will be permanently deleted.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {

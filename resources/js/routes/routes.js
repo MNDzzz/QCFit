@@ -171,14 +171,14 @@ export default [
             {
                 name: 'products',
                 path: 'products',
-                meta: { breadCrumb: 'Productos' },
+                meta: { breadCrumb: 'Products' },
                 children: [
                     {
                         name: 'products.index',
                         path: '',
                         component: () => import('../views/admin/products/Index.vue'),
                         meta: {
-                            breadCrumb: 'Ver productos',
+                            breadCrumb: 'View Products',
                             hideBreadcrumb: true
                         }
                     },
@@ -187,14 +187,14 @@ export default [
             {
                 name: 'categories',
                 path: 'categories',
-                meta: { breadCrumb: 'Categorías' },
+                meta: { breadCrumb: 'Categories' },
                 children: [
                     {
                         name: 'categories.index',
                         path: '',
                         component: () => import('../views/admin/categories/Index.vue'),
                         meta: {
-                            breadCrumb: 'Ver categorías',
+                            breadCrumb: 'View Categories',
                             hideBreadcrumb: true
                         }
                     },
@@ -210,7 +210,7 @@ export default [
                         path: '',
                         component: () => import('../views/admin/sources/Index.vue'),
                         meta: {
-                            breadCrumb: 'Ver marketplaces',
+                            breadCrumb: 'View Marketplaces',
                             hideBreadcrumb: true
                         }
                     },
@@ -219,14 +219,14 @@ export default [
             {
                 name: 'brands',
                 path: 'brands',
-                meta: { breadCrumb: 'Marcas' },
+                meta: { breadCrumb: 'Brands' },
                 children: [
                     {
                         name: 'brands.index',
                         path: '',
                         component: () => import('../views/admin/brands/Index.vue'),
                         meta: {
-                            breadCrumb: 'Ver marcas',
+                            breadCrumb: 'View Brands',
                             hideBreadcrumb: true
                         }
                     },
@@ -242,7 +242,7 @@ export default [
                         path: '',
                         component: () => import('../views/admin/outfits/Index.vue'),
                         meta: {
-                            breadCrumb: 'Moderación de Outfits',
+                            breadCrumb: 'Outfit Moderation',
                             hideBreadcrumb: true
                         }
                     },
@@ -252,7 +252,7 @@ export default [
             {
                 name: 'permissions',
                 path: 'permissions',
-                meta: { breadCrumb: 'Permisos' },
+                meta: { breadCrumb: 'Permissions' },
                 children: [
                     {
                         name: 'permissions.index',
@@ -268,15 +268,15 @@ export default [
             {
                 name: 'users',
                 path: 'users',
-                meta: { breadCrumb: 'Usuarios' },
+                meta: { breadCrumb: 'Users' },
                 children: [
                     {
                         name: 'users.index',
                         path: '',
                         component: () => import('../views/admin/users/Index.vue'),
                         meta: {
-                            breadCrumb: 'Usuarios',
-                            hideBreadcrumb: true // Ocultar breadcrumb del layout porque la Card tiene su propio header
+                            breadCrumb: 'Users',
+                            hideBreadcrumb: true // Hide layout breadcrumb because the Card has its own header
                         }
                     },
                     {
@@ -284,7 +284,7 @@ export default [
                         path: 'create',
                         component: () => import('../views/admin/users/Create.vue'),
                         meta: {
-                            breadCrumb: 'Crear Usuario',
+                            breadCrumb: 'Create User',
                             linked: false
                         }
                     },
@@ -293,7 +293,7 @@ export default [
                         path: 'edit/:id',
                         component: () => import('../views/admin/users/Edit.vue'),
                         meta: {
-                            breadCrumb: 'Editar Usuario',
+                            breadCrumb: 'Edit User',
                             linked: false
                         }
                     }
@@ -319,7 +319,7 @@ export default [
                         path: 'edit/:id',
                         component: () => import('../views/admin/roles/Edit.vue'),
                         meta: {
-                            breadCrumb: 'Editar Rol',
+                            breadCrumb: 'Edit Role',
                             linked: false
                         }
                     }

@@ -125,7 +125,7 @@ const formattedDate = computed(() => {
     if (!outfit.value?.created_at) return '';
     
     const date = new Date(outfit.value.created_at);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
@@ -203,7 +203,7 @@ const formattedDate = computed(() => {
 
                         <!-- Badge de cantidad de items -->
                         <div class="absolute top-6 right-6 bg-slate-900/80 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold">
-                            {{ outfit.items_count || outfit.items?.length || 0 }} prendas
+                            {{ outfit.items_count || outfit.items?.length || 0 }} items
                         </div>
                     </div>
 
