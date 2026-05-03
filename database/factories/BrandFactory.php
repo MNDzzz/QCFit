@@ -11,8 +11,10 @@ class BrandFactory extends Factory
 
     public function definition(): array
     {
+        $name = $this->faker->unique()->company;
         return [
-            'name' => $this->faker->company,
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name),
             'description' => $this->faker->sentence,
         ];
     }

@@ -11,9 +11,11 @@ class SourceFactory extends Factory
 
     public function definition(): array
     {
+        $name = $this->faker->unique()->word;
         return [
-            'name' => $this->faker->unique()->word,
-            'url' => $this->faker->url,
+            'name' => $name,
+            'slug' => \Illuminate\Support\Str::slug($name),
+            'base_url' => $this->faker->url,
         ];
     }
 }

@@ -20,6 +20,7 @@ return new class extends Migration {
             
             // Eliminar columnas que ya no usaremos como strings/enums
             $table->dropColumn('marketplace');
+            $table->dropIndex(['brand']); // Drop index before column for SQLite compatibility
             $table->dropColumn('brand');
         });
     }
