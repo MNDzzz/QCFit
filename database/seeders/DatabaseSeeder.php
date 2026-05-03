@@ -24,8 +24,8 @@ class DatabaseSeeder extends Seeder
 
         // 2. Entidades de Dominio (Datos de Negocio de QCFit)
         $this->call([
-            // RealProductImporterSeeder sigue la nueva estructura relacional (FKs para Marcas y Fuentes)
-            RealProductImporterSeeder::class, 
+            // LocalProductSeeder crea productos desde las imágenes locales en public/images/products/
+            LocalProductSeeder::class, 
             // OutfitSeeder depende de que existan usuarios y productos previamente insertados
             OutfitSeeder::class, 
             // Interacciones sociales (seguidores y favoritos)
