@@ -14,7 +14,9 @@ export default function useProducts() {
         category_id: null,
         brand_id: null,
         source_id: null,
-        images: []
+        images: [],
+        images_upload: [],
+        remove_image_ids: []
     }
     const product = ref({ ...initialProduct })
     const isLoading = ref(false)
@@ -30,13 +32,13 @@ export default function useProducts() {
     } = useValidation()
 
     const productSchema = yup.object({
-        name: yup.string().required('El nombre es obligatorio'),
-        external_id: yup.string().required('El ID de marketplace es obligatorio'),
-        original_link: yup.string().url('URL inválida').required('El enlace original es necesario'),
+        name: yup.string().required('Product name is required'),
+        external_id: yup.string().nullable(),
+        original_link: yup.string().url('Invalid URL format').nullable(),
     })
 
     const withLoading = async (fn) => {
-        if (isLoading.value) throw new Error('Operación en curso')
+        if (isLoading.value) throw new Error('Operation in progress')
         isLoading.value = true
         try {
             return await fn()
@@ -46,7 +48,7 @@ export default function useProducts() {
     }
 
     const resetProduct = () => {
-        product.value = { ...initialProduct }
+        product.value = { ...initialProduct, images: [], images_upload: [], remove_image_ids: [] }
         clearErrors()
     }
 
@@ -59,9 +61,40 @@ export default function useProducts() {
             category_id: data.category_id ?? null,
             brand_id: data.brand_id ?? null,
             source_id: data.source_id ?? null,
-            images: data.images ?? []
+            images: data.images ?? [],
+            images_upload: [],
+            remove_image_ids: []
         }
         clearErrors()
+    }
+
+    /**
+     * Build FormData from product data to support file uploads.
+     */
+    const buildFormData = () => {
+        const fd = new FormData()
+        fd.append('name', product.value.name || '')
+        if (product.value.external_id) fd.append('external_id', product.value.external_id)
+        if (product.value.original_link) fd.append('original_link', product.value.original_link)
+        if (product.value.category_id) fd.append('category_id', product.value.category_id)
+        if (product.value.brand_id) fd.append('brand_id', product.value.brand_id)
+        if (product.value.source_id) fd.append('source_id', product.value.source_id)
+
+        // Append uploaded files
+        if (product.value.images_upload?.length) {
+            product.value.images_upload.forEach(file => {
+                fd.append('images_upload[]', file)
+            })
+        }
+
+        // Append IDs of images to remove (for update)
+        if (product.value.remove_image_ids?.length) {
+            product.value.remove_image_ids.forEach(id => {
+                fd.append('remove_image_ids[]', id)
+            })
+        }
+
+        return fd
     }
 
     const getProducts = async (params = {}) => {
@@ -85,13 +118,16 @@ export default function useProducts() {
         if (!isValid) return
 
         try {
+            const fd = buildFormData()
             const response = await withLoading(() =>
-                axios.post('/api/products', product.value)
+                axios.post('/api/products', fd, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
             )
-            toast.crud.created('Producto')
+            toast.crud.created('Product')
             return response.data.data
         } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'No se pudo crear el producto' })
+            handleRequestError(error, { fallbackMessage: 'Could not create the product' })
         }
     }
 
@@ -100,13 +136,17 @@ export default function useProducts() {
         if (!isValid) return
 
         try {
+            const fd = buildFormData()
+            fd.append('_method', 'PUT') // Laravel needs this for PUT with FormData
             const response = await withLoading(() =>
-                axios.put(`/api/products/${product.value.id}`, product.value)
+                axios.post(`/api/products/${product.value.id}`, fd, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
             )
-            toast.crud.updated('Producto')
+            toast.crud.updated('Product')
             return response.data.data
         } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'No se pudo actualizar el producto' })
+            handleRequestError(error, { fallbackMessage: 'Could not update the product' })
         }
     }
 
@@ -114,16 +154,16 @@ export default function useProducts() {
         try {
             const response = await withLoading(() => axios.delete(`/api/products/${id}`))
             products.value = products.value.filter(p => p.id !== id)
-            toast.crud.deleted('Producto')
+            toast.crud.deleted('Product')
             return response
         } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'No se pudo eliminar el producto' })
+            handleRequestError(error, { fallbackMessage: 'Could not delete the product' })
         }
     }
 
     /**
-     * Alternar favorito (Wardrobe)
-     * @param {number|string} id - ID del producto
+     * Toggle favorite (Wardrobe)
+     * @param {number|string} id - Product ID
      */
     const toggleFavorite = async (id) => {
         try {
@@ -145,11 +185,11 @@ export default function useProducts() {
     }
 
     /**
-     * Búsqueda pública de productos a través de la API /api/search.
-     * Reutilizable tanto en el Panel Admin como en el Web Client (CanvasSidebar).
-     * @param {string} query - Término de búsqueda
-     * @param {Object} extraParams - Parámetros adicionales (limit, etc.)
-     * @returns {Array} - Array de productos encontrados
+     * Public product search via /api/search.
+     * Reusable in both Admin Panel and Web Client (CanvasSidebar).
+     * @param {string} query - Search term
+     * @param {Object} extraParams - Additional params (limit, etc.)
+     * @returns {Array} - Array of found products
      */
     const searchProducts = async (query, extraParams = {}) => {
         if (!query || !query.trim()) {
@@ -166,7 +206,7 @@ export default function useProducts() {
             products.value = data
             return data
         } catch (error) {
-            console.error('Error en búsqueda de productos:', error)
+            console.error('Error searching products:', error)
             products.value = []
             return []
         } finally {
