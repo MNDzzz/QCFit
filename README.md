@@ -77,6 +77,10 @@ npm run dev
 
 Acceder a: `http://127.0.0.1:8000`
 
+**Usuarios de prueba (Seeders):**
+- **Admin**: `admin@demo.com` | Password: `12345678`
+- **Usuario Normal**: `user@demo.com` | Password: `12345678`
+
 ### 4. Pruebas Automatizadas (Testing)
 El proyecto cuenta con una batería de tests de integración (Feature Tests) sobre la API y la lógica de negocio usando SQLite en memoria.
 Para ejecutarlos y comprobar que todo funciona correctamente:
@@ -104,4 +108,4 @@ El proyecto implementa 3 relaciones complejas obligatorias:
 ---
 
 ## 👥 Créditos
-Desarrollado como Proyecto Final de Desarrollo Web por el equipo de QCFit.
+Álvaro Méndez y Manuel Muñoz.
