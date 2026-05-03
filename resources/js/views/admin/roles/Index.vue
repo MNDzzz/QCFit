@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('role-create')"
-                            label="Nuevo Rol"
+                            label="New Role"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Administra y gestiona los roles del sistema. Crea, edita y elimina roles según tus permisos.
+                Manage and administer system roles. Create, edit and delete roles based on your permissions.
             </template>
 
             <template #content>
@@ -63,17 +63,17 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[200px]">
+                    <Column field="name" header="Name" sortable filter class="min-w-[200px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="10rem" height="1rem" />
                             <span v-else class="table-cell-name">{{ slotProps.data.name || '-' }}</span>
                         </template>
                         <template #filter="{ filterModel }">
-                            <InputText v-model="filterModel.value" placeholder="Nombre" class="w-full" />
+                            <InputText v-model="filterModel.value" placeholder="Name" class="w-full" />
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha de Creación" sortable class="min-w-[170px]">
+                    <Column field="created_at" header="Created At" sortable class="min-w-[170px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="8rem" height="1rem" />
                             <span v-else class="text-sm table-cell-date">
@@ -83,13 +83,13 @@
                         </template>
                     </Column>
 
-                    <Column header="Acciones" class="w-[150px]">
+                    <Column header="Actions" class="w-[150px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="4rem" height="2rem" />
                             <div v-else class="flex gap-2">
                         <Button
                             v-if="can('role-edit')"
-                            v-tooltip.top="'Editar rol'"
+                            v-tooltip.top="'Edit role'"
                             icon="pi pi-pencil"
                             rounded
                             text
@@ -99,7 +99,7 @@
                         />
                                 <Button
                                     v-if="can('role-delete')"
-                                    v-tooltip.top="'Eliminar rol'"
+                                    v-tooltip.top="'Delete role'"
                                     icon="pi pi-trash"
                                     rounded
                                     text
@@ -117,17 +117,17 @@
         <Dialog
             v-model:visible="roleDialog.open"
             modal
-            :header="roleDialog.type === 'create' ? 'Crear Rol' : 'Editar Rol'"
+            :header="roleDialog.type === 'create' ? 'Create Role' : 'Edit Role'"
             :style="{ width: '400px' }"
             class="role-dialog"
         >
             <div class="flex flex-col gap-4">
                 <div>
-                    <label for="role-name" class="dialog-label">Nombre del rol</label>
+                    <label for="role-name" class="dialog-label">Role name</label>
                     <InputText
                         id="role-name"
                         v-model="role.name"
-                        placeholder="Nombre"
+                        placeholder="Name"
                         class="w-full"
                         :class="{ 'p-invalid': hasError('name') }"
                     />
@@ -138,13 +138,13 @@
             </div>
             <template #footer>
                 <Button
-                    label="Cancelar"
+                    label="Cancel"
                     severity="secondary"
                     @click="closeDialog"
                     :disabled="isSubmitting"
                 />
                 <Button
-                    label="Crear"
+                    label="Create"
                     @click="submitCreate"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
@@ -249,11 +249,11 @@ const confirmDeleteRole = (currentRole) => {
 
     swal({
         icon: 'warning',
-        title: '¿Eliminar rol?',
-        text: `El rol "${currentRole.name}" se eliminará de forma permanente.`,
+        title: 'Delete role?',
+        text: `The role "${currentRole.name}" will be permanently deleted.`,
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -265,7 +265,7 @@ const confirmDeleteRole = (currentRole) => {
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

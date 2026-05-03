@@ -50,10 +50,10 @@
                 <h5 class="user-name text-2xl font-bold mb-1">{{ user.name }}</h5>
             </template>
             <div>
-                <h6 class="mb-4 text-lg font-bold">Datos personales</h6>
+                <h6 class="mb-4 text-lg font-bold">Personal Data</h6>
                 <div class="mb-4">
                     <div class="flex items-center gap-3">
-                        <label for="name">Nombre:</label>
+                        <label for="name">Name:</label>
                         <InputText 
                             v-model="user.name" 
                             type="text" 
@@ -111,7 +111,7 @@
                             :options="roles" 
                             optionLabel="name" 
                             optionValue="id"
-                            placeholder="Seleciona los roles" 
+                            placeholder="Select roles" 
                             appendTo=".show-d"
                             class="w-100"
                             :class="{ 'p-invalid': hasError('role_id') }"
@@ -128,8 +128,8 @@
             </div>
             <div class="text-right self-end">
                 <Button :disabled="isLoading" @click="submitForm" :loading="isLoading">
-                    <span v-if="!isLoading">Guardar</span>
-                    <span v-else>Guardando...</span>
+                    <span v-if="!isLoading">Save</span>
+                    <span v-else>Saving...</span>
                 </Button>
             </div>
 

@@ -70,11 +70,11 @@
             </template>
         </div>
 
-        <!-- Ir a la Web (siempre visible) -->
+        <!-- Go to Website (always visible) -->
         <div class="shrink-0 border-t border-gray-100 dark:border-gray-800 p-3">
             <router-link 
                 to="/"
-                v-tooltip.right="props.isCollapsed ? 'Ir a la Web' : ''"
+                v-tooltip.right="props.isCollapsed ? 'Go to Website' : ''"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200"
             >
                 <i class="pi pi-globe text-lg shrink-0"></i>
@@ -82,7 +82,7 @@
                     class="whitespace-nowrap transition-all duration-300 origin-left text-sm font-medium"
                     :class="[props.isCollapsed ? 'hidden' : 'w-auto opacity-100']"
                 >
-                    Ir a la Web
+                    Go to Website
                 </span>
             </router-link>
         </div>
@@ -128,27 +128,27 @@ const menuModel = computed(() => {
     const items = [
         {
             icon: 'pi pi-home',
-            label: 'Principal',
+            label: 'Main',
             // Used as header if items present
              items: [
                 { label: 'Dashboard', icon: 'pi pi-compass', route: '/admin', permission: 'all' }
             ]
         },
         {
-            label: 'Gestión',
+            label: 'Management',
             items: [
-                { label: 'Usuarios', icon: 'pi pi-users', route: '/admin/users', permission: 'user-list' },
+                { label: 'Users', icon: 'pi pi-users', route: '/admin/users', permission: 'user-list' },
                 { label: 'Roles', icon: 'pi pi-shield', route: '/admin/roles', permission: 'role-list' },
-                { label: 'Permisos', icon: 'pi pi-key', route: '/admin/permissions', permission: 'permission-list' }
+                { label: 'Permissions', icon: 'pi pi-key', route: '/admin/permissions', permission: 'permission-list' }
             ]
         },
         {
-            label: 'Contenido',
+            label: 'Content',
             items: [
-                { label: 'Productos', icon: 'pi pi-box', route: '/admin/products', permission: 'product-list' },
-                { label: 'Categorías', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
+                { label: 'Products', icon: 'pi pi-box', route: '/admin/products', permission: 'product-list' },
+                { label: 'Categories', icon: 'pi pi-tags', route: '/admin/categories', permission: 'category-list' },
                 { label: 'Marketplaces', icon: 'pi pi-globe', route: '/admin/sources', permission: 'source-list' },
-                { label: 'Marcas', icon: 'pi pi-briefcase', route: '/admin/brands', permission: 'brand-list' },
+                { label: 'Brands', icon: 'pi pi-briefcase', route: '/admin/brands', permission: 'brand-list' },
                 { label: 'Outfits', icon: 'pi pi-images', route: '/admin/outfits', permission: 'outfit-list' }
             ]
         }

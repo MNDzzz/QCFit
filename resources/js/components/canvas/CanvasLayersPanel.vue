@@ -43,7 +43,7 @@ function moveLayerDown(itemId) {
  * Eliminar item desde el panel de capas.
  */
 function deleteLayer(itemId, productName) {
-    if (confirm(`¿Eliminar "${productName}" del canvas?`)) {
+    if (confirm(`Remove "${productName}" from canvas?`)) {
         canvasStore.removeItem(itemId);
     }
 }

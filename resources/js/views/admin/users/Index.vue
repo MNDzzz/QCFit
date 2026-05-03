@@ -15,7 +15,7 @@
                     />
                     <Button 
                         v-if="can('user-create')"
-                        label="Nuevo Usuario" 
+                        label="New User" 
                         icon="pi pi-plus" 
                         size="small" 
                         severity="primary" 
@@ -50,7 +50,7 @@
                     </template>
                 </Column>
 
-                <Column field="name" header="Nombre" sortable filter :filter-placeholder="'Nombre'" class="min-w-[200px]">
+                <Column field="name" header="Name" sortable filter :filter-placeholder="'Name'" class="min-w-[200px]">
                     <template #body="slotProps">
                         <Skeleton v-if="loading" width="10rem" height="1rem" />
                         <div v-else class="flex items-center space-x-2">
@@ -59,7 +59,7 @@
                         </div>
                     </template>
                     <template #filter="{ filterModel }">
-                        <InputText v-model="filterModel.value" placeholder="Nombre" class="w-full" />
+                        <InputText v-model="filterModel.value" placeholder="Name" class="w-full" />
                     </template>
                 </Column>
 
@@ -96,7 +96,7 @@
                             />
                             <Tag
                                 v-if="!slotProps.data.roles?.length"
-                                value="Sin roles"
+                                value="No roles"
                                 severity="secondary"
                                 size="small"
                             />
@@ -107,20 +107,20 @@
                     </template>
                 </Column>
 
-                <Column field="created_at" header="Fecha de Creación" sortable class="min-w-[150px]">
+                <Column field="created_at" header="Created At" sortable class="min-w-[150px]">
                     <template #body="slotProps">
                         <Skeleton v-if="loading" width="8rem" height="1rem" />
                         <span v-else class="text-sm table-cell-date">{{ formatDate(slotProps.data.created_at) }}</span>
                     </template>
                 </Column>
 
-                <Column header="Acciones" class="w-[150px]">
+                <Column header="Actions" class="w-[150px]">
                     <template #body="slotProps">
                         <Skeleton v-if="loading" width="4rem" height="2rem" />
                         <div v-else class="flex gap-2">
                             <Button
                                 v-if="can('user-edit')"
-                                v-tooltip.top="'Editar usuario'"
+                                v-tooltip.top="'Edit user'"
                                 icon="pi pi-pencil"
                                 rounded
                                 text
@@ -130,7 +130,7 @@
                             />
                             <Button
                                 v-if="can('user-delete')"
-                                v-tooltip.top="'Eliminar usuario'"
+                                v-tooltip.top="'Delete user'"
                                 icon="pi pi-trash"
                                 rounded
                                 text
@@ -197,7 +197,7 @@ const filterRoles = (value, filter) => {
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

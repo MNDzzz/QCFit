@@ -16,7 +16,7 @@
                         />
                         <Button
                             v-if="can('category-create')"
-                            label="Nueva Categoría"
+                            label="New Category"
                             icon="pi pi-plus"
                             size="small"
                             severity="primary"
@@ -27,7 +27,7 @@
             </template>
 
             <template #subtitle>
-                Administra y gestiona las categorías del sistema. Crea, edita y elimina categorías según tus permisos.
+                Manage and administer system categories. Create, edit and delete categories based on your permissions.
             </template>
 
             <template #content>
@@ -79,7 +79,7 @@
                         </template>
                     </Column>
 
-                    <Column field="name" header="Nombre" sortable filter class="min-w-[220px]">
+                    <Column field="name" header="Name" sortable filter class="min-w-[220px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="12rem" height="1rem" />
                             <span v-else class="table-cell-name">{{ slotProps.data.name || '-' }}</span>
@@ -89,7 +89,7 @@
                         </template>
                     </Column>
 
-                    <Column field="created_at" header="Fecha de Creación" sortable class="min-w-[180px]">
+                    <Column field="created_at" header="Created At" sortable class="min-w-[180px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="8rem" height="1rem" />
                             <span v-else class="text-sm table-cell-date">
@@ -99,13 +99,13 @@
                         </template>
                     </Column>
 
-                    <Column header="Acciones" class="w-[160px]">
+                    <Column header="Actions" class="w-[160px]">
                         <template #body="slotProps">
                             <Skeleton v-if="isLoading" width="4rem" height="2rem" />
                             <div v-else class="flex gap-2">
                                 <Button
                                     v-if="can('category-edit')"
-                                    v-tooltip.top="'Editar categoría'"
+                                    v-tooltip.top="'Edit category'"
                                     icon="pi pi-pencil"
                                     rounded
                                     text
@@ -115,7 +115,7 @@
                                 />
                                 <Button
                                     v-if="can('category-delete')"
-                                    v-tooltip.top="'Eliminar categoría'"
+                                    v-tooltip.top="'Delete category'"
                                     icon="pi pi-trash"
                                     rounded
                                     text
@@ -133,7 +133,7 @@
         <Dialog
             v-model:visible="categoryDialog.open"
             modal
-            :header="categoryDialog.type === 'create' ? 'Crear Categoría' : 'Editar Categoría'"
+            :header="categoryDialog.type === 'create' ? 'Create Category' : 'Edit Category'"
             :style="{ width: '500px' }"
             class="category-dialog"
         >
@@ -145,7 +145,7 @@
                         id="category-name"
                         class="w-full"
                         :class="{ 'p-invalid': hasError('name') }"
-                        placeholder="Nombre de la categoría"
+                        placeholder="Category name"
                     />
                     <small v-if="hasError('name')" class="dialog-error">
                         {{ getError('name') }}
@@ -155,20 +155,20 @@
             <template #footer>
                 <Button
                     severity="secondary"
-                    label="Cancelar"
+                    label="Cancel"
                     @click="closeDialog"
                     :disabled="isSubmitting"
                 />
                 <Button
                     v-if="categoryDialog.type === 'create'"
-                    label="Crear"
+                    label="Create"
                     @click="submitCreate"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
                 />
                 <Button
                     v-else
-                    label="Guardar"
+                    label="Save"
                     @click="submitUpdate"
                     :loading="isSubmitting"
                     :disabled="isSubmitting"
@@ -287,11 +287,11 @@ const confirmDeleteCategory = (currentCategory) => {
 
     swal({
         icon: 'warning',
-        title: '¿Eliminar categoría?',
-        text: `La categoría "${currentCategory.name}" se eliminará de forma permanente.`,
+        title: 'Delete category?',
+        text: `The category "${currentCategory.name}" will be permanently deleted.`,
         showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
     }).then((result) => {
         if (result.isConfirmed) {
@@ -303,7 +303,7 @@ const confirmDeleteCategory = (currentCategory) => {
 const formatDate = (dateString) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'

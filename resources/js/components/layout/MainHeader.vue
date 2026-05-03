@@ -15,7 +15,7 @@
                 <button 
                     @click="emit('toggleCollapse')" 
                     class="hidden lg:flex items-center justify-center w-9 h-9 rounded-lg border transition-colors"
-                    :title="props.isCollapsed ? 'Expandir sidebar' : 'Colapsar sidebar'"
+                    :title="props.isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
                     aria-label="Toggle sidebar"
                 >
                     <i :class="props.isCollapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'" class="text-lg"></i>
@@ -24,21 +24,21 @@
 
             <div class="flex items-center gap-2 sm:gap-3">
                 <ul class="flex items-center gap-1.5 sm:gap-2">
-                    <!-- Ir a la Web -->
+                    <!-- Go to Website -->
                     <li>
                         <router-link 
                             to="/" 
                             class="header-icon-button relative flex h-10 items-center justify-center rounded-lg border transition-all duration-200 gap-2 px-3 text-sm font-medium"
-                            title="Ir a la Web pública"
+                            title="Go to public Website"
                         >
                             <i class="pi pi-globe text-base"></i>
-                            <span class="hidden sm:inline">Ir a la Web</span>
+                            <span class="hidden sm:inline">Go to Website</span>
                         </router-link>
                     </li>
 
                     <!-- Dark Mode Toggle -->
                     <li>
-                        <button @click="toggleDarkMode" class="header-icon-button relative flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200" title="Cambiar tema">
+                        <button @click="toggleDarkMode" class="header-icon-button relative flex h-10 w-10 items-center justify-center rounded-lg border transition-all duration-200" title="Toggle theme">
                             <i :class="isDarkTheme ? 'pi pi-sun' : 'pi pi-moon'" class="text-base"></i>
                         </button>
                     </li>
@@ -48,8 +48,8 @@
                         <div class="relative">
                             <button @click="toggleDropdown" class="header-user-button flex items-center gap-3 rounded-lg px-2 py-1.5 transition-all duration-200 hover:bg-opacity-50">
                                 <span class="hidden text-right lg:block min-w-[80px]">
-                                    <span class="block text-sm font-semibold leading-tight user-name">{{ user?.name || 'Usuario' }}</span>
-                                    <span class="block text-xs leading-tight user-role">{{ user?.roles?.[0]?.name || 'Rol' }}</span>
+                                    <span class="block text-sm font-semibold leading-tight user-name">{{ user?.name || 'User' }}</span>
+                                    <span class="block text-xs leading-tight user-role">{{ user?.roles?.[0]?.name || 'Role' }}</span>
                                 </span>
                                 <div class="header-avatar relative h-10 w-10 shrink-0 rounded-full overflow-hidden ring-2 ring-offset-2">
                                     <img v-if="user?.avatar" :src="user.avatar" alt="User" class="h-full w-full object-cover"/>
