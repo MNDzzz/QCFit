@@ -3,8 +3,6 @@
 
 **QCFit** es una plataforma integral diseñada para resolver el problema de la "compra a ciegas" en marketplaces asiáticos (Weidian, Taobao, 1688). Combina un buscador inteligente de fotos reales (QC Photos) con un estudio de diseño de outfits (Canvas), permitiendo a los usuarios visualizar sus compras antes de realizarlas y compartir su estilo con la comunidad.
 
-![QCFit Banner](/public/images/og-default.jpg)
-
 ## 🚀 Funcionalidades Clave
 
 ### 🔍 1. FindQC (Discovery)
@@ -18,7 +16,6 @@
 - **Layer System**: Control total de capas (z-index), rotación, escalado, volteo y **eliminación de fondo**.
 - **Remix Mode**: Posibilidad de abrir cualquier outfit público y editarlo/mejorarlo en el Studio.
 - **Wardrobe**: Panel lateral con favoritos y buscador integrado para añadir productos rápidamente.
-- **Export**: Descarga de outfits en alta resolución (PNG/JPG) listos para redes sociales.
 
 ### 🌐 3. Social & Perfil Público
 - **Perfiles Sociales**: Portfolio dinámico con outfits y wishlist (favoritos) de cada usuario.
@@ -101,7 +98,7 @@ El proyecto implementa 3 relaciones complejas obligatorias:
 ### Organización de Archivos
 - **/app/Http/Controllers/Api**: Controladores del sistema.
 - **/app/Http/Resources**: Transformación de modelos a JSON.
-- **/resources/js/views**: Vistas principales de la SPA (The "V" in MVC).
+- **/resources/js/views**: Vistas principales de la SPA.
 - **/resources/js/components/layout**: Componentes estructurales (Navbar, Sidebar).
 - **/docs**: Carpeta con manuales, wireframes y documentación técnica del proyecto.
 
