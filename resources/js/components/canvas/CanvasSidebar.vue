@@ -81,9 +81,9 @@ function handleDragStart(product, event) {
 
 // Añadir producto al canvas con selección de imagen
 function addProductToCanvas(product) {
-    // Si el producto tiene imágenes, usar la primera QC o la primera disponible
-    const qcImage = product.images?.find(img => img.type === 'qc');
-    const firstImage = qcImage || product.images?.[0];
+    // Prefer the 'original' reference image for the canvas
+    const originalImage = product.images?.find(img => img.type === 'original');
+    const firstImage = originalImage || product.images?.[0];
     
     if (firstImage) {
         canvasStore.addItem(product, firstImage.url);
