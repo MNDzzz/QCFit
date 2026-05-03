@@ -58,7 +58,7 @@ class LocalProductSeeder extends Seeder
         ],
         'EssentialsOfGod-Hoodie' => [
             'name' => 'Fear of God Essentials Hoodie',
-            'brand' => 'Fear of God',
+            'brand' => 'Essentials',
             'category' => 'Hoodies',
         ],
         'GalleryDept-Flared-Pants' => [
