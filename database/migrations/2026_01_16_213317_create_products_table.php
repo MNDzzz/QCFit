@@ -14,10 +14,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('category_id')->nullable()->constrained();
             $table->string('name');
-            $table->string('source_id')->index(); // ID del marketplace
+            $table->string('source_id')->nullable()->index(); // ID del marketplace
             $table->enum('marketplace', ['taobao', 'weidian', '1688']);
             $table->string('brand')->nullable()->index(); // Para filtrar por marca
-            $table->text('original_link');
+            $table->text('original_link')->nullable();
             $table->timestamps();
         });
     }

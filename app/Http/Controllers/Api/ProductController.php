@@ -13,9 +13,10 @@ use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
- * Controlador para la gestión de Productos (Búsqueda y CRUD Admin)
+ * Controller for Product management (Search & Admin CRUD)
  */
 class ProductController extends Controller
 {
@@ -27,7 +28,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Listado administrativo de productos con filtros
+     * Admin product listing with filters
      */
     public function index()
     {
@@ -61,7 +62,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Motor de búsqueda para el frontend (Smart Search)
+     * Smart Search engine for frontend
      */
     public function search(Request $request)
     {
@@ -74,7 +75,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Feed de imágenes QC para la home
+     * QC images feed for homepage
      */
     public function liveFeed(Request $request)
     {
@@ -84,7 +85,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Crear un nuevo producto (Admin)
+     * Create a new product (Admin)
      */
     public function store(StoreProductRequest $request)
     {
@@ -93,6 +94,7 @@ class ProductController extends Controller
         return DB::transaction(function () use ($request) {
             $product = Product::create($request->validated());
 
+            // Handle URL-based images (API/legacy)
             if ($request->has('images')) {
                 foreach ($request->images as $img) {
                     ProductImage::create([
@@ -103,18 +105,23 @@ class ProductController extends Controller
                 }
             }
 
+            // Handle file uploads from admin panel
+            if ($request->hasFile('images_upload')) {
+                $this->handleImageUploads($product, $request->file('images_upload'));
+            }
+
             return new ProductResource($product->load(['images', 'category', 'brand', 'source']));
         });
     }
 
     /**
-     * Mostrar detalle de un producto (público y admin)
+     * Show product detail (public and admin)
      */
     public function show($id, QcScraperService $qcScraper)
     {
         $product = Product::with(['images', 'category', 'brand', 'source'])->findOrFail($id);
 
-        // Intento de Mock Scraping si no tiene imágenes QC
+        // Auto-fetch QC images if none exist
         $qcCount = $product->images->where('type', 'qc')->count();
 
         if ($qcCount === 0) {
@@ -130,7 +137,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Actualizar producto (Admin)
+     * Update product (Admin)
      */
     public function update(Product $product, StoreProductRequest $request)
     {
@@ -139,8 +146,8 @@ class ProductController extends Controller
         return DB::transaction(function () use ($product, $request) {
             $product->update($request->validated());
 
+            // Handle URL-based images
             if ($request->has('images')) {
-                // Para simplificar, reemplazamos imágenes si se envían nuevas
                 $product->images()->delete();
                 foreach ($request->images as $img) {
                     ProductImage::create([
@@ -151,12 +158,30 @@ class ProductController extends Controller
                 }
             }
 
+            // Handle file uploads from admin panel
+            if ($request->hasFile('images_upload')) {
+                $this->handleImageUploads($product, $request->file('images_upload'));
+            }
+
+            // Handle removal of existing images
+            if ($request->has('remove_image_ids')) {
+                $idsToRemove = is_array($request->remove_image_ids)
+                    ? $request->remove_image_ids
+                    : json_decode($request->remove_image_ids, true);
+
+                if (!empty($idsToRemove)) {
+                    ProductImage::where('product_id', $product->id)
+                        ->whereIn('id', $idsToRemove)
+                        ->delete();
+                }
+            }
+
             return new ProductResource($product->load(['images', 'category', 'brand', 'source']));
         });
     }
 
     /**
-     * Eliminar producto (Admin)
+     * Delete product (Admin)
      */
     public function destroy(Product $product)
     {
@@ -167,7 +192,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Alternar favorito para el usuario autenticado
+     * Toggle favorite for authenticated user
      */
     public function toggleFavorite($id)
     {
@@ -180,7 +205,30 @@ class ProductController extends Controller
 
         return response()->json([
             'is_favorite' => $isFavorite,
-            'message' => $isFavorite ? 'Producto añadido a favoritos' : 'Producto eliminado de favoritos'
+            'message' => $isFavorite ? 'Added to favorites' : 'Removed from favorites'
         ]);
+    }
+
+    /**
+     * Handle uploaded image files: save to public/images/products/ and create DB records.
+     */
+    private function handleImageUploads(Product $product, array $files): void
+    {
+        $destinationPath = public_path('images/products');
+
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        foreach ($files as $file) {
+            $filename = Str::slug($product->name) . '-' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($destinationPath, $filename);
+
+            ProductImage::create([
+                'product_id' => $product->id,
+                'url' => '/images/products/' . $filename,
+                'type' => 'original',
+            ]);
+        }
     }
 }

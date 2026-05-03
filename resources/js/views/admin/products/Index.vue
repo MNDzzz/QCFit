@@ -126,64 +126,141 @@
             </template>
         </Card>
 
-        <!-- Dialogo de Creación/Edición -->
+        <!-- Create/Edit Dialog -->
         <Dialog
             v-model:visible="productDialog.open"
             modal
             :header="productDialog.type === 'create' ? 'New Product' : 'Edit Product'"
-            :style="{ width: '650px' }"
+            :style="{ width: '700px' }"
         >
-            <div class="grid grid-cols-2 gap-4 py-4">
-                <div class="col-span-2 flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Product Name</label>
-                    <InputText v-model="product.name" :class="{ 'p-invalid': hasError('name') }" />
+            <div class="flex flex-col gap-5 py-4">
+                <!-- Product Name -->
+                <div class="flex flex-col gap-1">
+                    <label class="font-semibold text-sm">Product Name <span class="text-red-500">*</span></label>
+                    <InputText v-model="product.name" :class="{ 'p-invalid': hasError('name') }" placeholder="e.g. Nike Air Force 1 White" />
                     <small v-if="hasError('name')" class="text-red-500">{{ getError('name') }}</small>
                 </div>
 
-                <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">ID Marketplace (External ID)</label>
-                    <InputText v-model="product.external_id" placeholder="Ej: 6824563" />
+                <!-- Two columns -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm">Category</label>
+                        <Select
+                            v-model="product.category_id"
+                            :options="categoryList"
+                            optionLabel="name"
+                            optionValue="id"
+                            placeholder="Select..."
+                            class="w-full"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm">Brand</label>
+                        <Select
+                            v-model="product.brand_id"
+                            :options="brandList"
+                            optionLabel="name"
+                            optionValue="id"
+                            placeholder="Select..."
+                            class="w-full"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm">Marketplace (Source)</label>
+                        <Select
+                            v-model="product.source_id"
+                            :options="sourceList"
+                            optionLabel="name"
+                            optionValue="id"
+                            placeholder="Select..."
+                            class="w-full"
+                        />
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label class="font-semibold text-sm">External ID</label>
+                        <InputText v-model="product.external_id" placeholder="e.g. 6824563" />
+                    </div>
                 </div>
 
+                <!-- Original Link -->
                 <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Category</label>
-                    <Select
-                        v-model="product.category_id"
-                        :options="categoryList"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Select..."
-                        class="w-full"
-                    />
-                </div>
-
-                <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Brand</label>
-                    <Select
-                        v-model="product.brand_id"
-                        :options="brandList"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Select..."
-                        class="w-full"
-                    />
-                </div>
-
-                <div class="flex flex-col gap-1">
-                    <label class="font-semibold text-sm">Marketplace (Source)</label>
-                    <Select
-                        v-model="product.source_id"
-                        :options="sourceList"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Select..."
-                        class="w-full"
-                    />
-                </div>
-
-                <div class="col-span-2 flex flex-col gap-1">
                     <label class="font-semibold text-sm">Original Link</label>
-                    <InputText v-model="product.original_link" placeholder="https://taobao.com/item/..." />
+                    <InputText v-model="product.original_link" placeholder="https://weidian.com/item/..." />
+                </div>
+
+                <!-- Existing Images (edit mode) -->
+                <div v-if="productDialog.type === 'edit' && product.images?.length" class="flex flex-col gap-2">
+                    <label class="font-semibold text-sm">Current Images</label>
+                    <div class="flex flex-wrap gap-3">
+                        <div
+                            v-for="img in product.images"
+                            :key="img.id"
+                            class="relative group"
+                        >
+                            <div
+                                class="h-20 w-20 rounded-lg overflow-hidden border-2 transition-all"
+                                :class="product.remove_image_ids?.includes(img.id) ? 'border-red-400 opacity-40' : 'border-slate-200'"
+                            >
+                                <img :src="img.url" class="h-full w-full object-cover" />
+                            </div>
+                            <button
+                                type="button"
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-red-600 transition-colors"
+                                @click="toggleRemoveImage(img.id)"
+                                :title="product.remove_image_ids?.includes(img.id) ? 'Undo remove' : 'Remove image'"
+                            >
+                                <i :class="product.remove_image_ids?.includes(img.id) ? 'pi pi-undo' : 'pi pi-times'" style="font-size: 0.6rem"></i>
+                            </button>
+                            <span class="text-[9px] text-center block mt-1 text-slate-400">{{ img.type }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload New Images -->
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-sm">
+                        {{ productDialog.type === 'create' ? 'Product Images' : 'Add More Images' }}
+                    </label>
+                    <div
+                        class="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center cursor-pointer hover:border-violet-400 hover:bg-violet-50/50 transition-all"
+                        @click="triggerFileInput"
+                        @dragover.prevent="dragOver = true"
+                        @dragleave.prevent="dragOver = false"
+                        @drop.prevent="handleDrop"
+                        :class="{ 'border-violet-400 bg-violet-50/50': dragOver }"
+                    >
+                        <i class="pi pi-cloud-upload text-3xl text-slate-400 mb-2"></i>
+                        <p class="text-sm text-slate-500">Click or drag & drop images here</p>
+                        <p class="text-xs text-slate-400 mt-1">JPEG, PNG, WebP, GIF — Max 5MB each</p>
+                    </div>
+                    <input
+                        ref="fileInput"
+                        type="file"
+                        multiple
+                        accept="image/jpeg,image/png,image/webp,image/gif"
+                        class="hidden"
+                        @change="handleFileSelect"
+                    />
+
+                    <!-- Preview selected files -->
+                    <div v-if="previewFiles.length" class="flex flex-wrap gap-3 mt-2">
+                        <div v-for="(preview, index) in previewFiles" :key="index" class="relative group">
+                            <div class="h-20 w-20 rounded-lg overflow-hidden border-2 border-violet-300">
+                                <img :src="preview.url" class="h-full w-full object-cover" />
+                            </div>
+                            <button
+                                type="button"
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-red-600 transition-colors"
+                                @click="removePreviewFile(index)"
+                            >
+                                <i class="pi pi-times" style="font-size: 0.6rem"></i>
+                            </button>
+                            <span class="text-[9px] text-center block mt-1 text-slate-500 truncate w-20">{{ preview.name }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -221,18 +298,71 @@ const productDialog = reactive({
     type: 'create'
 });
 
+const fileInput = ref(null);
+const previewFiles = ref([]);
+const dragOver = ref(false);
+
 const fetchProducts = () => getProducts();
 
 const openCreateDialog = () => {
     resetProduct();
+    previewFiles.value = [];
     productDialog.type = 'create';
     productDialog.open = true;
 };
 
 const openEditDialog = (data) => {
     setProduct(data);
+    previewFiles.value = [];
     productDialog.type = 'edit';
     productDialog.open = true;
+};
+
+const triggerFileInput = () => {
+    fileInput.value?.click();
+};
+
+const handleFileSelect = (event) => {
+    addFiles(Array.from(event.target.files));
+    // Reset input so same file can be selected again
+    event.target.value = '';
+};
+
+const handleDrop = (event) => {
+    dragOver.value = false;
+    const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    addFiles(files);
+};
+
+const addFiles = (files) => {
+    files.forEach(file => {
+        if (file.size > 5 * 1024 * 1024) return; // Skip files > 5MB
+        previewFiles.value.push({
+            file,
+            name: file.name,
+            url: URL.createObjectURL(file)
+        });
+    });
+    // Sync with product model
+    product.value.images_upload = previewFiles.value.map(p => p.file);
+};
+
+const removePreviewFile = (index) => {
+    URL.revokeObjectURL(previewFiles.value[index].url);
+    previewFiles.value.splice(index, 1);
+    product.value.images_upload = previewFiles.value.map(p => p.file);
+};
+
+const toggleRemoveImage = (imageId) => {
+    if (!product.value.remove_image_ids) {
+        product.value.remove_image_ids = [];
+    }
+    const idx = product.value.remove_image_ids.indexOf(imageId);
+    if (idx >= 0) {
+        product.value.remove_image_ids.splice(idx, 1);
+    } else {
+        product.value.remove_image_ids.push(imageId);
+    }
 };
 
 const saveProduct = async () => {
@@ -242,6 +372,7 @@ const saveProduct = async () => {
     
     if (success) {
         productDialog.open = false;
+        previewFiles.value = [];
         fetchProducts();
     }
 };
