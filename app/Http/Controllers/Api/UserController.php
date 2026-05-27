@@ -25,6 +25,8 @@ class UserController extends Controller
 
     public function index()
     {
+        $this->authorize('user-list');
+
         $orderColumn = request('order_column', 'created_at');
         if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
             $orderColumn = 'created_at';
@@ -65,6 +67,8 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('user-create');
+
         $role = Role::find($request->role_id);
         $user = new User();
         $user->name = $request->name;
@@ -88,6 +92,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        if (auth()->id() !== $user->id) {
+            $this->authorize('user-list');
+        }
+
         $user->load('roles');
         return new UserResource($user);
     }
@@ -101,6 +109,12 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        if (auth()->id() === $user->id) {
+            $this->authorize('profile-edit-own');
+        } else {
+            $this->authorize('user-edit');
+        }
+
         $role = Role::find($request->role_id);
 
         $user->name = $request->name;
@@ -121,7 +135,14 @@ class UserController extends Controller
 
     public function updateimg(Request $request)
     {
+        $request->validate(['id' => 'required|exists:users,id']);
         $user = User::find($request->id);
+
+        if (auth()->id() === $user->id) {
+            $this->authorize('profile-edit-own');
+        } else {
+            $this->authorize('user-edit');
+        }
       
         if($request->hasFile('picture')) {
             $user->media()->delete();

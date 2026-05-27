@@ -9,6 +9,8 @@ class ImageProcessingController extends Controller
 {
     public function removeBackground(Request $request)
     {
+        $this->authorize('image-remove-bg');
+
         $request->validate([
             'image_url' => 'required|url'
         ]);

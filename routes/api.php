@@ -73,6 +73,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Admin: Moderación de Outfits
     Route::get('/admin/outfits', [OutfitController::class, 'adminIndex']);
     Route::delete('/admin/outfits/{id}', [OutfitController::class, 'adminDestroy']);
+
+    // Procesamiento de Imágenes (Canvas Studio)
+    Route::post('/media/remove-bg', [ImageProcessingController::class, 'removeBackground']);
 });
 
 // Rutas Públicas
@@ -90,7 +93,6 @@ Route::get('/public/user/{id}/followers', [PublicProfileController::class, 'foll
 Route::get('/public/user/{id}/following', [PublicProfileController::class, 'following']);
 Route::get('/users/{id}/favorites', [PublicProfileController::class, 'favorites']);
 
-Route::post('/media/remove-bg', [ImageProcessingController::class, 'removeBackground']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/signin', [ProfileController::class, 'user']);
 });

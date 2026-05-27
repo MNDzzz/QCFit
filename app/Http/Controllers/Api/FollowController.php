@@ -13,6 +13,8 @@ class FollowController extends Controller
 {
     public function toggle(Request $request)
     {
+        $this->authorize('follow-user');
+
         $request->validate(['user_id' => 'required|exists:users,id']);
 
         $targetUser = User::findOrFail($request->user_id);

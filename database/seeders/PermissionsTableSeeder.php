@@ -58,6 +58,18 @@ class PermissionsTableSeeder extends Seeder
             ['id' => 30, 'name' => 'outfit-create', 'guard_name' => 'web'],
             ['id' => 31, 'name' => 'outfit-edit', 'guard_name' => 'web'],
             ['id' => 32, 'name' => 'outfit-delete', 'guard_name' => 'web'],
+
+            // Permisos específicos de usuario final y moderación de QCFit
+            ['id' => 33, 'name' => 'outfit-list-own', 'guard_name' => 'web'],
+            ['id' => 34, 'name' => 'outfit-edit-own', 'guard_name' => 'web'],
+            ['id' => 35, 'name' => 'outfit-delete-own', 'guard_name' => 'web'],
+            ['id' => 36, 'name' => 'outfit-moderate', 'guard_name' => 'web'],
+            ['id' => 37, 'name' => 'outfit-delete-any', 'guard_name' => 'web'],
+            ['id' => 38, 'name' => 'outfit-edit-any', 'guard_name' => 'web'],
+            ['id' => 39, 'name' => 'favorite-toggle', 'guard_name' => 'web'],
+            ['id' => 40, 'name' => 'follow-user', 'guard_name' => 'web'],
+            ['id' => 41, 'name' => 'profile-edit-own', 'guard_name' => 'web'],
+            ['id' => 42, 'name' => 'image-remove-bg', 'guard_name' => 'web'],
         ];
 
         // Inserción masiva en la tabla de permisos
