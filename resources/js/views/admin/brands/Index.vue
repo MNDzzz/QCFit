@@ -266,31 +266,33 @@ const openProductsDialog = async (data) => {
 };
 
 const onReassignBrand = async (productData) => {
-    if (productData.temp_brand_id === productsDialog.brandId) return;
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: Encadenamiento opcional
+    if (productData?.temp_brand_id === productsDialog?.brandId) return;
 
-    swal({
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await para modales anidados
+    const result = await swal({
         title: 'Reassign product?',
-        text: `The product will be moved from "${productsDialog.brandName}" to the selected brand.`,
+        text: `The product will be moved from "${productsDialog?.brandName || 'esta marca'}" to the selected brand.`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, move',
         cancelButtonText: 'Cancel'
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            const success = await updateProductBrand(
-                productsDialog.brandId, 
-                productData.id, 
-                productData.temp_brand_id
-            );
-            if (success) {
-                // Quitamos el producto de la lista actual
-                associatedProducts.value = associatedProducts.value.filter(p => p.id !== productData.id);
-            }
-        } else {
-            // Revertimos el select si cancela
-            productData.temp_brand_id = productsDialog.brandId;
-        }
     });
+
+    if (result.isConfirmed) {
+        const success = await updateProductBrand(
+            productsDialog?.brandId, 
+            productData?.id, 
+            productData?.temp_brand_id
+        );
+        if (success) {
+            // Quitamos el producto de la lista actual
+            associatedProducts.value = associatedProducts.value.filter(p => p.id !== productData?.id);
+        }
+    } else {
+        // Revertimos el select si cancela
+        if (productData) productData.temp_brand_id = productsDialog?.brandId;
+    }
 };
 
 const submitCreate = async () => {
@@ -309,20 +311,21 @@ const submitUpdate = async () => {
     }
 };
 
-const confirmDeleteBrand = (data) => {
-    swal({
+const confirmDeleteBrand = async (data) => {
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await y fallback con operador ||
+    const result = await swal({
         title: 'Delete brand?',
-        text: `The brand "${data.name}" will be permanently deleted.`,
+        text: `The brand "${data?.name || 'seleccionada'}" will be permanently deleted.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteBrand(data.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        deleteBrand(data?.id);
+    }
 };
 
 onMounted(() => {

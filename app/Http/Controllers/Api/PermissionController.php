@@ -13,20 +13,15 @@ use Spatie\Permission\Models\Role;
 class PermissionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Mostramos listado del resource.
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $orderColumn = request('order_column', 'created_at');
-        if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
-            $orderColumn = 'created_at';
-        }
-        $orderDirection = request('order_direction', 'desc');
-        if (!in_array($orderDirection, ['asc', 'desc'])) {
-            $orderDirection = 'desc';
-        }
+        // HERENCIA: Usamos los métodos del Controlador Base
+        $orderColumn = $this->getOrderColumn(['id', 'name', 'created_at']);
+        $orderDirection = $this->getOrderDirection();
         $permissions = Permission::
         when(request('search_id'), function ($query) {
             $query->where('id', request('search_id'));

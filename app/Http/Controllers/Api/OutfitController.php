@@ -57,6 +57,8 @@ class OutfitController extends Controller
      */
     public function store(StoreOutfitRequest $request)
     {
+        $this->authorize('create', Outfit::class);
+
         // Obtener datos validados
         $validated = $request->validated();
 
@@ -105,10 +107,8 @@ class OutfitController extends Controller
         // Buscar outfit y verificar propiedad
         $outfit = Outfit::findOrFail($id);
 
-        // Verificar que el usuario sea el dueño
-        if ($outfit->user_id !== auth()->id()) {
-            abort(403, 'No tienes permiso para editar este outfit.');
-        }
+        // Autorizar mediante política
+        $this->authorize('update', $outfit);
 
         // Obtener datos validados
         $validated = $request->validated();
@@ -156,10 +156,8 @@ class OutfitController extends Controller
         // Buscar outfit
         $outfit = Outfit::findOrFail($id);
 
-        // Verificar propiedad
-        if ($outfit->user_id !== auth()->id()) {
-            abort(403, 'No tienes permiso para eliminar este outfit.');
-        }
+        // Autorizar mediante política
+        $this->authorize('delete', $outfit);
 
         // Eliminar relaciones pivote y el outfit
         $outfit->products()->detach();
@@ -214,6 +212,8 @@ class OutfitController extends Controller
      */
     public function adminIndex()
     {
+        $this->authorize('viewAny', Outfit::class);
+
         $outfits = Outfit::with(['user'])
             ->withCount('products')
             ->latest()
@@ -232,6 +232,9 @@ class OutfitController extends Controller
     public function adminDestroy($id)
     {
         $outfit = Outfit::findOrFail($id);
+
+        // Autorizar mediante política
+        $this->authorize('delete', $outfit);
 
         // Eliminar relaciones pivote y el outfit
         $outfit->products()->detach();

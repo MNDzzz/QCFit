@@ -2,25 +2,40 @@ import { ref } from 'vue'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useToast } from './useToast'
-import { useValidation } from './useValidation'
+import { useCrud } from './useCrud'
 
+/**
+ * Composable específico para gestionar Marcas.
+ * Utilizamos el composable genérico useCrud para las operaciones básicas
+ * y añadimos funciones específicas como 'getBrandProducts'.
+ */
 export default function useBrands() {
-    const brands = ref([])
-    const brandList = ref([])
-    const initialBrand = { id: null, name: '', slug: '', logo_url: '', description: '' }
-    const brand = ref({ ...initialBrand })
-    const isLoading = ref(false)
     const toast = useToast()
 
+    // 1. Extraemos la lógica CRUD genérica
     const {
+        items: brands,
+        itemList: brandList,
+        isLoading,
         errors,
-        validate,
-        handleRequestError,
-        clearErrors,
         hasError,
-        getError
-    } = useValidation()
+        getError,
+        clearErrors,
+        handleRequestError,
+        withLoading,
+        upsertRecord,
+        getItems,
+        getItemList,
+        createItem,
+        updateItem,
+        deleteItem
+    } = useCrud('/api/brands', 'Marca', 'marcas')
 
+    // 2. Estado local y configuración inicial
+    const initialBrand = { id: null, name: '', slug: '', logo_url: '', description: '' }
+    const brand = ref({ ...initialBrand })
+
+    // 3. Reglas de validación exclusivas para Marcas
     const brandSchema = yup.object({
         name: yup
             .string()
@@ -34,16 +49,7 @@ export default function useBrands() {
             .matches(/^[a-z0-9-]+$/, 'Formato de slug inválido'),
     })
 
-    const withLoading = async (fn) => {
-        if (isLoading.value) throw new Error('Operación en curso')
-        isLoading.value = true
-        try {
-            return await fn()
-        } finally {
-            isLoading.value = false
-        }
-    }
-
+    // 4. Funciones auxiliares para el formulario
     const resetBrand = () => {
         brand.value = { ...initialBrand }
         clearErrors()
@@ -60,14 +66,9 @@ export default function useBrands() {
         clearErrors()
     }
 
-    const upsertBrandRecord = (record) => {
-        if (!record?.id) return
-        brands.value = [
-            record,
-            ...brands.value.filter(item => item.id !== record.id)
-        ]
-    }
+    const upsertBrandRecord = (record) => upsertRecord(record)
 
+    // 5. Adaptadores para las funciones genéricas de obtener, crear y actualizar
     const getBrands = async (params = {}) => {
         const defaultParams = {
             page: 1,
@@ -75,91 +76,25 @@ export default function useBrands() {
             order_column: 'created_at',
             order_direction: 'desc'
         }
-
-        const query = new URLSearchParams({ ...defaultParams, ...params }).toString()
-        const response = await axios.get(`/api/brands?${query}`)
-        brands.value = response.data?.data ?? []
-        return response
+        return getItems(params, defaultParams)
     }
 
-    const getBrandList = async () => {
-        try {
-            const response = await axios.get('/api/brand-list')
-            brandList.value = response.data?.data ?? response.data ?? []
-            return response
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo obtener la lista de marcas',
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
+    const getBrandList = async () => getItemList('/api/brand-list')
 
     const createBrand = async () => {
-        const { isValid } = await validate(brandSchema, brand.value)
-        if (!isValid) {
-            toast.error('Error de validación', 'Revisa los campos resaltados.')
-            throw new Error('Validación')
-        }
-
-        try {
-            const response = await withLoading(() =>
-                axios.post('/api/brands', brand.value)
-            )
-            const data = response.data?.data ?? response.data
-            toast.crud.created('Marca')
-            return data
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo crear la marca',
-                onValidationError: () =>
-                    toast.error('Error de validación', 'Revisa los campos resaltados.'),
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
+        return createItem(brandSchema, brand.value)
     }
 
     const updateBrand = async () => {
-        const { isValid } = await validate(brandSchema, brand.value)
-        if (!isValid) {
-            toast.error('Error de validación', 'Revisa los campos resaltados.')
-            throw new Error('Validación')
-        }
-
-        try {
-            const response = await withLoading(() =>
-                axios.put(`/api/brands/${brand.value.id}`, brand.value)
-            )
-            const data = response.data?.data ?? response.data
-            toast.crud.updated('Marca')
-            return data
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo actualizar la marca',
-                onValidationError: () =>
-                    toast.error('Error de validación', 'Revisa los campos resaltados.'),
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
+        return updateItem(brand.value.id, brandSchema, brand.value)
     }
 
-    const deleteBrand = async (id) => {
-        try {
-            const response = await withLoading(() => axios.delete(`/api/brands/${id}`))
-            brands.value = brands.value.filter(item => item.id !== id)
-            toast.crud.deleted('Marca')
-            return response
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo eliminar la marca',
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
-
-    /**
-     * Obtener productos asociados a una marca
-     */
+    // 6. FUNCIONES ESPECÍFICAS DE MARCAS
+    // Estas no se pueden abstraer en useCrud porque son únicas para este recurso.
+    
+    
+    // Obtenemos productos asociados a una marca
+    
     const getBrandProducts = async (brandId) => {
         try {
             const response = await withLoading(() => axios.get(`/api/brands/${brandId}/products`))
@@ -173,9 +108,9 @@ export default function useBrands() {
         }
     }
 
-    /**
-     * Reasignar un producto a una marca diferente
-     */
+    
+    //  Reasignamos un producto a una marca diferente
+    
     const updateProductBrand = async (originBrandId, productId, targetBrandId) => {
         try {
             const response = await withLoading(() => 
@@ -194,6 +129,7 @@ export default function useBrands() {
     }
 
     return {
+        // Variables
         brands,
         brand,
         brandList,
@@ -201,14 +137,20 @@ export default function useBrands() {
         errors,
         hasError,
         getError,
+        
+        // Métodos de formulario
         resetBrand,
         setBrand,
         upsertBrandRecord,
+        
+        // Métodos CRUD
         getBrands,
         getBrandList,
         createBrand,
         updateBrand,
-        deleteBrand,
+        deleteBrand: deleteItem,
+        
+        // Métodos específicos
         getBrandProducts,
         updateProductBrand
     }

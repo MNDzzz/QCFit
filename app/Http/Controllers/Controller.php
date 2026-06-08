@@ -28,4 +28,30 @@ class Controller extends BaseController
             'data' => null
         ], $code);
     }
+
+    /**
+     * Obtenemos y validamos la columna de ordenación para las tablas.
+     * Por defecto usamos 'created_at'.
+     *
+     * @param array $allowedColumns Columnas por las que se permite ordenar
+     * @param string $default Columna por defecto
+     * @return string
+     */
+    protected function getOrderColumn(array $allowedColumns = ['id', 'name', 'created_at'], string $default = 'created_at'): string
+    {
+        $column = request('order_column', $default);
+        return in_array($column, $allowedColumns) ? $column : $default;
+    }
+
+    /**
+     * Obtenemos y validamos la dirección de ordenación (asc o desc)
+     *
+     * @param string $default Dirección por defecto
+     * @return string
+     */
+    protected function getOrderDirection(string $default = 'desc'): string
+    {
+        $direction = strtolower(request('order_direction', $default));
+        return in_array($direction, ['asc', 'desc']) ? $direction : $default;
+    }
 }

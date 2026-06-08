@@ -256,53 +256,59 @@ const closeDialog = () => {
     resetPermission();
 };
 
-const submitCreate = () => {
+const submitCreate = async () => {
     if (isSubmitting.value) return;
-
-    createPermission()
-        .then(createdPermission => {
-            if (createdPermission) {
-                upsertPermissionRecord(createdPermission);
-                closeDialog();
-            }
-        });
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await
+    try {
+        const createdPermission = await createPermission();
+        if (createdPermission) {
+            upsertPermissionRecord(createdPermission);
+            closeDialog();
+        }
+    } catch (error) {
+        console.error("No se pudo crear", error);
+    }
 };
 
-const submitUpdate = () => {
+const submitUpdate = async () => {
     if (isSubmitting.value) return;
-
-    updatePermission()
-        .then(updatedPermission => {
-            if (updatedPermission) {
-                upsertPermissionRecord(updatedPermission);
-                closeDialog();
-            }
-        });
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await
+    try {
+        const updatedPermission = await updatePermission();
+        if (updatedPermission) {
+            upsertPermissionRecord(updatedPermission);
+            closeDialog();
+        }
+    } catch (error) {
+        console.error("No se pudo actualizar", error);
+    }
 };
 
 const performDelete = (id) => {
     deletePermission(id);
 };
 
-const confirmDeletePermission = (currentPermission) => {
+const confirmDeletePermission = async (currentPermission) => {
     if (!swal) {
-        performDelete(currentPermission.id);
+        // USO DE FUNCIONES JAVASCRIPT AVANZADAS: Encadenamiento opcional
+        performDelete(currentPermission?.id);
         return;
     }
 
-    swal({
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await y fallback
+    const result = await swal({
         icon: 'warning',
         title: 'Delete permission?',
-        text: `The permission "${currentPermission.name}" will be permanently deleted.`,
+        text: `The permission "${currentPermission?.name || 'seleccionado'}" will be permanently deleted.`,
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            performDelete(currentPermission.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        performDelete(currentPermission?.id);
+    }
 };
 
 const formatDate = (dateString) => {

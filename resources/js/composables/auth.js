@@ -3,6 +3,7 @@ import { useRouter } from "vue-router";
 import { AbilityBuilder, createMongoAbility } from '@casl/ability';
 import { ABILITY_TOKEN } from '@casl/vue';
 import { authStore } from "../store/auth";
+import axios from 'axios';
 
 let user = reactive({
     name: '',
@@ -41,31 +42,32 @@ export default function useAuth() {
         password_confirmation: ''
     })
 
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await y try/catch/finally en lugar de promesas anidadas
     const submitLogin = async () => {
         if (processing.value) return
 
         processing.value = true
         validationErrors.value = {}
 
-        await axios.post('/login', loginForm)
-            .then(async response => {
-                await auth.getUser()
-                //await store.dispatch('auth/getUser')
-                await loginUser()
-                swal({
-                    icon: 'success',
-                    title: 'Login correcto',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                await router.push({ name: 'public.home' })
+        try {
+            await axios.post('/login', loginForm)
+            await auth.getUser()
+            await loginUser()
+            swal({
+                icon: 'success',
+                title: 'Login correcto',
+                showConfirmButton: false,
+                timer: 1500
             })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
+            await router.push({ name: 'public.home' })
+        } catch (error) {
+            // USO DE FUNCIONES JAVASCRIPT AVANZADAS: encadenamiento opcional
+            if (error?.response?.data?.errors) {
+                validationErrors.value = error.response.data.errors
+            }
+        } finally {
+            processing.value = false
+        }
     }
 
     const submitRegister = async () => {
@@ -74,24 +76,22 @@ export default function useAuth() {
         processing.value = true
         validationErrors.value = {}
 
-        await axios.post('/register', registerForm)
-            .then(async response => {
-                // await store.dispatch('auth/getUser')
-                // await loginUser()
-                swal({
-                    icon: 'success',
-                    title: 'Registration successfully',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                await router.push({ name: 'auth.login' })
+        try {
+            await axios.post('/register', registerForm)
+            swal({
+                icon: 'success',
+                title: 'Registration successfully',
+                showConfirmButton: false,
+                timer: 1500
             })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
+            await router.push({ name: 'auth.login' })
+        } catch (error) {
+            if (error?.response?.data?.errors) {
+                validationErrors.value = error.response.data.errors
+            }
+        } finally {
+            processing.value = false
+        }
     }
 
     const submitForgotPassword = async () => {
@@ -100,22 +100,21 @@ export default function useAuth() {
         processing.value = true
         validationErrors.value = {}
 
-        await axios.post('/api/forget-password', forgotForm)
-            .then(async response => {
-                swal({
-                    icon: 'success',
-                    title: 'We have emailed your password reset link! Please check your mail inbox.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                // await router.push({ name: 'admin.index' })
+        try {
+            await axios.post('/api/forget-password', forgotForm)
+            swal({
+                icon: 'success',
+                title: 'We have emailed your password reset link! Please check your mail inbox.',
+                showConfirmButton: false,
+                timer: 1500
             })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
+        } catch (error) {
+            if (error?.response?.data?.errors) {
+                validationErrors.value = error.response.data.errors
+            }
+        } finally {
+            processing.value = false
+        }
     }
 
     const submitResetPassword = async () => {
@@ -124,29 +123,27 @@ export default function useAuth() {
         processing.value = true
         validationErrors.value = {}
 
-        await axios.post('/api/reset-password', resetForm)
-            .then(async response => {
-                swal({
-                    icon: 'success',
-                    title: 'Password successfully changed.',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                await router.push({ name: 'auth.login' })
+        try {
+            await axios.post('/api/reset-password', resetForm)
+            swal({
+                icon: 'success',
+                title: 'Password successfully changed.',
+                showConfirmButton: false,
+                timer: 1500
             })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => processing.value = false)
+            await router.push({ name: 'auth.login' })
+        } catch (error) {
+            if (error?.response?.data?.errors) {
+                validationErrors.value = error.response.data.errors
+            }
+        } finally {
+            processing.value = false
+        }
     }
 
     const loginUser = () => {
-        //const auth = authStore(); //TODO test
         console.log('GettingUserSignIn: loginUser')
         user = auth.user
-        // Cookies.set('loggedIn', true)
         getAbilities()
     }
 
@@ -175,35 +172,29 @@ export default function useAuth() {
 
         processing.value = true
 
-        axios.post('/logout')
-            .then(response => {
-                user.name = ''
-                user.email = ''
-                auth.logout()
-                //store.dispatch('auth/logout')
-                router.push({ name: 'auth.login' })
-            })
-            .catch(error => {
-                // swal({
-                //     icon: 'error',
-                //     title: error.response.status,
-                //     text: error.response.statusText
-                // })
-            })
-            .finally(() => {
-                processing.value = false
-                // Cookies.remove('loggedIn')
-            })
+        try {
+            await axios.post('/logout')
+            user.name = ''
+            user.email = ''
+            auth.logout()
+            router.push({ name: 'auth.login' })
+        } catch (error) {
+            // Manejo de errores omitido intencionadamente como en original
+        } finally {
+            processing.value = false
+        }
     }
 
     const getAbilities = async () => {
-        await axios.get('/api/abilities')
-            .then(response => {
-                const permissions = response.data
-                const { can, rules } = new AbilityBuilder(createMongoAbility)
-                can(permissions)
-                ability.update(rules)
-            })
+        try {
+            const response = await axios.get('/api/abilities')
+            const permissions = response.data
+            const { can, rules } = new AbilityBuilder(createMongoAbility)
+            can(permissions)
+            ability.update(rules)
+        } catch (error) {
+            console.error('Error fetching abilities', error)
+        }
     }
 
     return {

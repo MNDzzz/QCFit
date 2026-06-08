@@ -251,53 +251,61 @@ const closeDialog = () => {
     resetCategory();
 };
 
-const submitCreate = () => {
+const submitCreate = async () => {
     if (isSubmitting.value) return;
 
-    createCategory()
-        .then(createdCategory => {
-            if (createdCategory) {
-                upsertCategoryRecord(createdCategory);
-                closeDialog();
-            }
-        });
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await
+    try {
+        const createdCategory = await createCategory();
+        if (createdCategory) {
+            upsertCategoryRecord(createdCategory);
+            closeDialog();
+        }
+    } catch (error) {
+        console.error("No se pudo crear", error);
+    }
 };
 
-const submitUpdate = () => {
+const submitUpdate = async () => {
     if (isSubmitting.value) return;
 
-    updateCategory()
-        .then(updatedCategory => {
-            if (updatedCategory) {
-                upsertCategoryRecord(updatedCategory);
-                closeDialog();
-            }
-        });
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await 
+    try {
+        const updatedCategory = await updateCategory();
+        if (updatedCategory) {
+            upsertCategoryRecord(updatedCategory);
+            closeDialog();
+        }
+    } catch (error) {
+        console.error("No se pudo actualizar", error);
+    }
 };
 
 const performDelete = (id) => {
     deleteCategory(id);
 };
 
-const confirmDeleteCategory = (currentCategory) => {
+const confirmDeleteCategory = async (currentCategory) => {
     if (!swal) {
-        performDelete(currentCategory.id);
+        // USO DE FUNCIONES JAVASCRIPT AVANZADAS: Encadenamiento opcional (?.) por seguridad
+        performDelete(currentCategory?.id);
         return;
     }
 
-    swal({
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await para el modal (SweetAlert devuelve una promesa)
+    const result = await swal({
         icon: 'warning',
         title: 'Delete category?',
-        text: `The category "${currentCategory.name}" will be permanently deleted.`,
+        text: `The category "${currentCategory?.name || 'esta categoría'}" will be permanently deleted.`,
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            performDelete(currentCategory.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        performDelete(currentCategory?.id);
+    }
 };
 
 const formatDate = (dateString) => {

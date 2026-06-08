@@ -199,20 +199,26 @@ const submitUpdate = async () => {
     }
 };
 
-const confirmDeleteSource = (data) => {
-    swal({
+const confirmDeleteSource = async (data) => {
+    if (!swal) {
+        deleteSource(data?.id);
+        return;
+    }
+
+    // USO DE JAVASCRIPT MODERNO: async/await y encadenamiento opcional
+    const result = await swal({
         title: 'Delete marketplace?',
-        text: `The marketplace "${data.name}" will be permanently deleted.`,
+        text: `The marketplace "${data?.name || 'seleccionado'}" will be permanently deleted.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteSource(data.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        deleteSource(data?.id);
+    }
 };
 
 onMounted(() => {
