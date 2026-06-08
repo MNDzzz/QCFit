@@ -1,14 +1,27 @@
 import { ref, inject } from 'vue'
 import * as yup from 'yup'
+import axios from 'axios'
 import { useToast } from './useToast'
 import { useValidation } from './useValidation'
-import axios from 'axios'
+import { useCrud } from './useCrud'
 
 export default function useUsers() {
-    const users = ref([])
-    const isLoading = ref(false)
     const toast = useToast()
     const swal = inject('$swal')
+
+    const {
+        items: users,
+        isLoading,
+        errors,
+        hasError,
+        getError,
+        clearErrors,
+        handleRequestError,
+        withLoading,
+        upsertRecord
+    } = useCrud('/api/users', 'Usuario', 'usuarios')
+
+    const { validate } = useValidation()
 
     const initialUser = {
         id: null,
@@ -21,31 +34,12 @@ export default function useUsers() {
 
     const user = ref({ ...initialUser })
 
-    const {
-        errors,
-        validate,
-        clearErrors,
-        hasError,
-        getError
-    } = useValidation()
-
     const userSchema = yup.object({
         name: yup.string().required('El nombre es obligatorio'),
         email: yup.string().email('Email inválido').required('El email es obligatorio'),
         password: yup.string().min(8, 'La contraseña debe tener al menos 8 caracteres').nullable(),
         role_id: yup.array().min(1, 'Debe seleccionar al menos un rol').nullable()
     })
-
-
-    const withLoading = async (fn) => {
-        if (isLoading.value) throw new Error('Operación en curso')
-        isLoading.value = true
-        try {
-            return await fn()
-        } finally {
-            isLoading.value = false
-        }
-    }
 
     const resetUser = () => { user.value = { ...initialUser }; clearErrors() }
 
@@ -71,9 +65,12 @@ export default function useUsers() {
             } else {
                 users.value.data.unshift(userRecord)
             }
+        } else {
+            upsertRecord(userRecord)
         }
     }
 
+    // Mantenemos getUsers específico porque inyecta la paginación directamente en users.value
     const getUsers = async (
         page = 1,
         search_id = '',
@@ -82,20 +79,11 @@ export default function useUsers() {
         order_column = 'created_at',
         order_direction = 'desc'
     ) => {
-        const params = {
-            page,
-            search_id,
-            search_title,
-            search_global,
-            order_column,
-            order_direction
-        }
+        const params = { page, search_id, search_title, search_global, order_column, order_direction }
         const query = new URLSearchParams(params).toString()
-        return axios.get(`/api/users?${query}`)
-            .then(response => {
-                users.value = response.data;
-                return response;
-            })
+        const response = await axios.get(`/api/users?${query}`)
+        users.value = response.data
+        return response
     }
 
     const getUser = async (id) => {
@@ -107,7 +95,7 @@ export default function useUsers() {
     }
 
     const createUser = async (userData) => {
-        const { isValid } = validate(userSchema, userData || user.value)
+        const { isValid } = await validate(userSchema, userData || user.value)
         if (!isValid) {
             toast.error('Error de validación', 'Revisa los campos resaltados.')
             throw new Error('Validación')
@@ -115,7 +103,6 @@ export default function useUsers() {
 
         try {
             const payload = { ...user.value }
-
             if (Array.isArray(payload.role_id)) {
                 payload.role_id = payload.role_id.map(r => r.id || r)
             }
@@ -125,9 +112,6 @@ export default function useUsers() {
             toast.crud.created('Usuario')
             return data
         } catch (error) {
-            if (error.response?.data?.errors) {
-                console.log(error.response.data.errors)
-            }
             toast.error('Error', 'No se pudo crear el usuario')
             throw error
         }
@@ -135,12 +119,11 @@ export default function useUsers() {
 
     const updateUser = async (userData) => {
         const dataToValidate = userData || user.value
-
         const schema = userSchema.shape({
             password: yup.string().min(8, 'La contraseña debe tener al menos 8 caracteres').nullable().notRequired()
         })
 
-        const { isValid } = validate(schema, dataToValidate)
+        const { isValid } = await validate(schema, dataToValidate)
         if (!isValid) {
             toast.error('Error de validación', 'Revisa los campos resaltados.')
             throw new Error('Validación')
@@ -162,17 +145,17 @@ export default function useUsers() {
         }
     }
 
+    // Mantenemos deleteUser específico porque incluye confirmación con SweetAlert
     const deleteUser = async (id, index) => {
         if (!swal) {
-            // Fallback if swal not injected
             if (!confirm('¿Estás seguro?')) return
             await axios.delete('/api/users/' + id)
-            users.value.data.splice(index, 1)
+            if (users.value.data) users.value.data.splice(index, 1)
             toast.crud.deleted('Usuario')
             return
         }
 
-        swal({
+        const result = await swal({
             title: '¿Estás seguro?',
             text: '¡No podrás revertir esto!',
             icon: 'warning',
@@ -181,19 +164,19 @@ export default function useUsers() {
             cancelButtonText: 'Cancelar',
             confirmButtonColor: '#ef4444',
             reverseButtons: true
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    await withLoading(() => axios.delete('/api/users/' + id))
-                    if (users.value.data) {
-                        users.value.data.splice(index, 1);
-                    }
-                    toast.crud.deleted('Usuario')
-                } catch (error) {
-                    toast.error('Error', 'No se pudo eliminar el usuario')
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await withLoading(() => axios.delete('/api/users/' + id))
+                if (users.value.data) {
+                    users.value.data.splice(index, 1);
                 }
+                toast.crud.deleted('Usuario')
+            } catch (error) {
+                toast.error('Error', 'No se pudo eliminar el usuario')
             }
-        })
+        }
     }
 
     return {

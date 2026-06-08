@@ -16,18 +16,13 @@ use Illuminate\Http\Request;
 class BrandController extends Controller
 {
     /**
-     * Listar marcas con filtrado y paginación
+     * Listamos marcas con filtrado y paginación
      */
     public function index()
     {
-        $orderColumn = request('order_column', 'created_at');
-        if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
-            $orderColumn = 'created_at';
-        }
-        $orderDirection = request('order_direction', 'desc');
-        if (!in_array($orderDirection, ['asc', 'desc'])) {
-            $orderDirection = 'desc';
-        }
+        // HERENCIA: Usamos los métodos del Controlador Base
+        $orderColumn = $this->getOrderColumn(['id', 'name', 'created_at']);
+        $orderDirection = $this->getOrderDirection();
 
         $brands = Brand::when(request('search_global'), function ($query) {
                 $query->where(function($q) {
@@ -41,9 +36,9 @@ class BrandController extends Controller
         return BrandResource::collection($brands);
     }
 
-    /**
-     * Crear una nueva marca
-     */
+    
+    // Creamos una nueva marca
+     
     public function store(StoreBrandRequest $request)
     {
         $this->authorize('brand-create');
@@ -52,18 +47,15 @@ class BrandController extends Controller
         return new BrandResource($brand);
     }
 
-    /**
-     * Mostrar detalle de una marca
-     */
+    // Mostramos detalle de una marca
     public function show(Brand $brand)
     {
         $this->authorize('brand-edit');
         return new BrandResource($brand);
     }
 
-    /**
-     * Actualizar una marca
-     */
+    
+    // Actualizamos una marca
     public function update(Brand $brand, StoreBrandRequest $request)
     {
         $this->authorize('brand-edit');
@@ -72,9 +64,7 @@ class BrandController extends Controller
         return new BrandResource($brand);
     }
 
-    /**
-     * Eliminar una marca
-     */
+    // Eliminamos una marca
     public function destroy(Brand $brand)
     {
         $this->authorize('brand-delete');
@@ -83,17 +73,15 @@ class BrandController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * Obtener lista simple de marcas para selects
-     */
+    
+    // Obtener lista simple de marcas para selects
     public function getList()
     {
         return BrandResource::collection(Brand::all());
     }
 
-    /**
-     * Listar productos asociados a una marca específica
-     */
+    
+    // Listar productos asociados a una marca específica
     public function products(Brand $brand)
     {
         $this->authorize('brand-edit'); // Se requiere permiso de edición para gestionar sus productos
@@ -101,9 +89,8 @@ class BrandController extends Controller
         return ProductResource::collection($products);
     }
 
-    /**
-     * Reasignar un producto a otra marca (Desencajar)
-     */
+    
+    // Reasignamos un producto a otra marca
     public function updateProductBrand(Request $request, Brand $brand, Product $product)
     {
         $this->authorize('brand-edit');

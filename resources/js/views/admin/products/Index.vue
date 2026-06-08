@@ -377,20 +377,26 @@ const saveProduct = async () => {
     }
 };
 
-const confirmDeleteProduct = (data) => {
-    swal({
+const confirmDeleteProduct = async (data) => {
+    if (!swal) {
+        deleteProduct(data?.id);
+        return;
+    }
+
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await para el modal y encadenamiento opcional
+    const result = await swal({
         title: 'Delete product?',
-        text: `"${data.name}" will be removed from the system.`,
+        text: `"${data?.name || 'Este producto'}" will be removed from the system.`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteProduct(data.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        deleteProduct(data?.id);
+    }
 };
 
 onMounted(() => {

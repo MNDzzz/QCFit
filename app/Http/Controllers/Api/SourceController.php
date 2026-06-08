@@ -18,14 +18,9 @@ class SourceController extends Controller
      */
     public function index()
     {
-        $orderColumn = request('order_column', 'created_at');
-        if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
-            $orderColumn = 'created_at';
-        }
-        $orderDirection = request('order_direction', 'desc');
-        if (!in_array($orderDirection, ['asc', 'desc'])) {
-            $orderDirection = 'desc';
-        }
+        // HERENCIA: Usamos los métodos del Controlador Base
+        $orderColumn = $this->getOrderColumn(['id', 'name', 'created_at']);
+        $orderDirection = $this->getOrderDirection();
 
         $sources = Source::when(request('search_global'), function ($query) {
                 $query->where(function($q) {

@@ -1,26 +1,37 @@
 import { ref } from 'vue'
 import * as yup from 'yup'
-import axios from 'axios'
-import { useToast } from './useToast'
-import { useValidation } from './useValidation'
+import { useCrud } from './useCrud'
+
+
+// Composable específico para gestionar las Categorías.
+// Fíjate cómo gracias a `useCrud.js`, este archivo ahora solo contiene
+// la lógica que es *exclusiva* de las categorías, no la fontanería de Axios.
 
 export default function useCategories() {
-  const categories = ref([])
-  const categoryList = ref([])
-  const initialCategory = { id: null, name: '' }
-  const category = ref({ ...initialCategory })
-  const isLoading = ref(false)
-  const toast = useToast()
-
+  // 1. Inicializamos nuestro composable maestro pasándole los datos de esta entidad.
+  // sacamos las herramientas que nos da useCrud y
+  // renombramos 'items' a 'categories' para que quede más claro al leerlo.
   const {
+    items: categories,
+    itemList: categoryList,
+    isLoading,
     errors,
-    validate,
-    handleRequestError,
-    clearErrors,
     hasError,
-    getError
-  } = useValidation()
+    getError,
+    clearErrors,
+    upsertRecord,
+    getItems,
+    getItemList,
+    createItem,
+    updateItem,
+    deleteItem
+  } = useCrud('/api/categories', 'Categoría', 'categorías')
 
+  // 2. Estado local específico de Categorías
+  const initialCategory = { id: null, name: '' }
+  const category = ref({ ...initialCategory }) // Objeto que conectaremos al formulario de crear/editar
+
+  // 3. Reglas de validación (Yup). Esto es único de cada entidad.
   const categorySchema = yup.object({
     name: yup
       .string()
@@ -29,37 +40,25 @@ export default function useCategories() {
       .min(3, 'Debe tener al menos 3 caracteres')
   })
 
-  const withLoading = async (fn) => {
-    if (isLoading.value) throw new Error('Operación en curso')
-    isLoading.value = true
-    try {
-      return await fn()
-    } finally {
-      isLoading.value = false
-    }
-  }
-
+  // 4. Funciones auxiliares para el formulario
   const resetCategory = () => {
     category.value = { ...initialCategory }
-    clearErrors()
+    clearErrors() // Limpia los mensajes en rojo del formulario
   }
 
   const setCategory = (data = {}) => {
     category.value = {
-      id: data.id ?? null,
+      id: data.id ?? null, // El ?? significa "si id no existe o es null, pon null" (encadenamiento opcional)
       name: data.name ?? ''
     }
     clearErrors()
   }
 
   const upsertCategoryRecord = (categoryRecord) => {
-    if (!categoryRecord?.id) return
-    categories.value = [
-      categoryRecord,
-      ...categories.value.filter(item => item.id !== categoryRecord.id)
-    ]
+    upsertRecord(categoryRecord)
   }
 
+  // 5. Envoltorios (Wrappers) para adaptar las funciones genéricas a nuestras necesidades
   const getCategories = async (params = {}) => {
     const defaultParams = {
       page: 1,
@@ -69,90 +68,24 @@ export default function useCategories() {
       order_column: 'created_at',
       order_direction: 'desc'
     }
-
-    const query = new URLSearchParams({ ...defaultParams, ...params }).toString()
-    const response = await axios.get(`/api/categories?${query}`)
-    categories.value = response.data?.data ?? response.data.data ?? []
-    return response
+    // Llamamos al getItems del crud pasándole nuestros parámetros por defecto
+    return getItems(params, defaultParams)
   }
 
   const getCategoryList = async () => {
-    try {
-      const response = await axios.get('/api/category-list')
-      categoryList.value = response.data?.data ?? response.data ?? []
-      return response
-    } catch (error) {
-      handleRequestError(error, {
-        fallbackMessage: 'No se pudo obtener la lista de categorías',
-        onGenericError: (message) => toast.error('Error', message)
-      })
-    }
+    return getItemList('/api/category-list')
   }
 
   const createCategory = async () => {
-    const { isValid } = await validate(categorySchema, category.value)
-    if (!isValid) {
-      toast.error('Error de validación', 'Revisa los campos resaltados.')
-      throw new Error('Validación')
-    }
-
-    try {
-      const response = await withLoading(() =>
-        axios.post('/api/categories', { name: category.value.name })
-      )
-      const data = response.data?.data ?? response.data
-      toast.crud.created('Categoría')
-      return data
-    } catch (error) {
-      handleRequestError(error, {
-        fallbackMessage: 'No se pudo crear la categoría',
-        onValidationError: () =>
-          toast.error('Error de validación', 'Revisa los campos resaltados.'),
-        onGenericError: (message) => toast.error('Error', message)
-      })
-    }
+    // Le pasamos nuestro esquema de validación y los datos del formulario al crud maestro
+    return createItem(categorySchema, { name: category.value.name })
   }
 
   const updateCategory = async () => {
-    const { isValid } = await validate(categorySchema, category.value)
-    if (!isValid) {
-      toast.error('Error de validación', 'Revisa los campos resaltados.')
-      throw new Error('Validación')
-    }
-
-    try {
-      const response = await withLoading(() =>
-        axios.put(`/api/categories/${category.value.id}`, {
-          name: category.value.name
-        })
-      )
-      const data = response.data?.data ?? response.data
-      toast.crud.updated('Categoría')
-      return data
-    } catch (error) {
-      handleRequestError(error, {
-        fallbackMessage: 'No se pudo actualizar la categoría',
-        onValidationError: () =>
-          toast.error('Error de validación', 'Revisa los campos resaltados.'),
-        onGenericError: (message) => toast.error('Error', message)
-      })
-    }
+    return updateItem(category.value.id, categorySchema, { name: category.value.name })
   }
 
-  const deleteCategory = async (id) => {
-    try {
-      const response = await withLoading(() => axios.delete(`/api/categories/${id}`))
-      categories.value = categories.value.filter(item => item.id !== id)
-      toast.crud.deleted('Categoría')
-      return response
-    } catch (error) {
-      handleRequestError(error, {
-        fallbackMessage: 'No se pudo eliminar la categoría',
-        onGenericError: (message) => toast.error('Error', message)
-      })
-    }
-  }
-
+  // 6. Exportamos lo que los componentes (las vistas de Vue) van a usar
   return {
     categories,
     category,
@@ -168,6 +101,6 @@ export default function useCategories() {
     getCategoryList,
     createCategory,
     updateCategory,
-    deleteCategory
+    deleteCategory: deleteItem // Exportamos directamente el del crud, pero le cambiamos el nombre
   }
 }

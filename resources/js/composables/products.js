@@ -2,10 +2,27 @@ import { ref } from 'vue'
 import * as yup from 'yup'
 import axios from 'axios'
 import { useToast } from './useToast'
-import { useValidation } from './useValidation'
+import { useCrud } from './useCrud'
 
 export default function useProducts() {
-    const products = ref([])
+    const toast = useToast()
+
+    // 1. Extraemos la lógica base
+    const {
+        items: products,
+        isLoading,
+        errors,
+        hasError,
+        getError,
+        clearErrors,
+        handleRequestError,
+        getItems,
+        createItem,
+        updateItem,
+        deleteItem
+    } = useCrud('/api/products', 'Producto', 'productos')
+
+    // 2. Estado específico de productos
     const initialProduct = {
         id: null,
         name: '',
@@ -19,33 +36,13 @@ export default function useProducts() {
         remove_image_ids: []
     }
     const product = ref({ ...initialProduct })
-    const isLoading = ref(false)
-    const toast = useToast()
 
-    const {
-        errors,
-        validate,
-        handleRequestError,
-        clearErrors,
-        hasError,
-        getError
-    } = useValidation()
-
+    // 3. Validación
     const productSchema = yup.object({
-        name: yup.string().required('Product name is required'),
+        name: yup.string().required('El nombre del producto es obligatorio'),
         external_id: yup.string().nullable(),
-        original_link: yup.string().url('Invalid URL format').nullable(),
+        original_link: yup.string().url('Formato de URL inválido').nullable(),
     })
-
-    const withLoading = async (fn) => {
-        if (isLoading.value) throw new Error('Operation in progress')
-        isLoading.value = true
-        try {
-            return await fn()
-        } finally {
-            isLoading.value = false
-        }
-    }
 
     const resetProduct = () => {
         product.value = { ...initialProduct, images: [], images_upload: [], remove_image_ids: [] }
@@ -69,7 +66,7 @@ export default function useProducts() {
     }
 
     /**
-     * Build FormData from product data to support file uploads.
+     * Construye un objeto FormData para poder subir imágenes junto con los datos
      */
     const buildFormData = () => {
         const fd = new FormData()
@@ -80,14 +77,12 @@ export default function useProducts() {
         if (product.value.brand_id) fd.append('brand_id', product.value.brand_id)
         if (product.value.source_id) fd.append('source_id', product.value.source_id)
 
-        // Append uploaded files
         if (product.value.images_upload?.length) {
             product.value.images_upload.forEach(file => {
                 fd.append('images_upload[]', file)
             })
         }
 
-        // Append IDs of images to remove (for update)
         if (product.value.remove_image_ids?.length) {
             product.value.remove_image_ids.forEach(id => {
                 fd.append('remove_image_ids[]', id)
@@ -106,64 +101,32 @@ export default function useProducts() {
             order_column: 'created_at',
             order_direction: 'desc'
         }
-
-        const query = new URLSearchParams({ ...defaultParams, ...params }).toString()
-        const response = await axios.get(`/api/products?${query}`)
-        products.value = response.data?.data ?? []
-        return response.data
+        return getItems(params, defaultParams)
     }
 
+    // Usamos el 'customRequestFn' de useCrud para pasarle nuestra petición FormData
     const createProduct = async () => {
-        const { isValid } = await validate(productSchema, product.value)
-        if (!isValid) return
-
-        try {
-            const fd = buildFormData()
-            const response = await withLoading(() =>
-                axios.post('/api/products', fd, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                })
-            )
-            toast.crud.created('Product')
-            return response.data.data
-        } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'Could not create the product' })
-        }
+        const fd = buildFormData()
+        return createItem(productSchema, product.value, () => 
+            axios.post('/api/products', fd, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+        )
     }
 
+    // Para PUT con FormData en Laravel hay que enviar un POST y añadir _method = 'PUT'
     const updateProduct = async () => {
-        const { isValid } = await validate(productSchema, product.value)
-        if (!isValid) return
-
-        try {
-            const fd = buildFormData()
-            fd.append('_method', 'PUT') // Laravel needs this for PUT with FormData
-            const response = await withLoading(() =>
-                axios.post(`/api/products/${product.value.id}`, fd, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                })
-            )
-            toast.crud.updated('Product')
-            return response.data.data
-        } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'Could not update the product' })
-        }
-    }
-
-    const deleteProduct = async (id) => {
-        try {
-            const response = await withLoading(() => axios.delete(`/api/products/${id}`))
-            products.value = products.value.filter(p => p.id !== id)
-            toast.crud.deleted('Product')
-            return response
-        } catch (error) {
-            handleRequestError(error, { fallbackMessage: 'Could not delete the product' })
-        }
+        const fd = buildFormData()
+        fd.append('_method', 'PUT') 
+        return updateItem(product.value.id, productSchema, product.value, () => 
+            axios.post(`/api/products/${product.value.id}`, fd, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            })
+        )
     }
 
     /**
-     * Toggle favorite (Wardrobe)
-     * @param {number|string} id - Product ID
+     * Alternar favorito (Armario)
      */
     const toggleFavorite = async (id) => {
         try {
@@ -171,25 +134,21 @@ export default function useProducts() {
             const isFavorite = response.data.is_favorite
             
             if (isFavorite) {
-                toast.success('Added to Favourites')
+                toast.success('Añadido a Favoritos')
             } else {
-                toast.info('Removed from Favourites')
+                toast.info('Eliminado de Favoritos')
             }
             
             return response.data
         } catch (error) {
             console.error('Error toggling favorite:', error)
-            toast.error('Could not update Wardrobe')
+            toast.error('No se pudo actualizar el Armario')
             throw error
         }
     }
 
     /**
-     * Public product search via /api/search.
-     * Reusable in both Admin Panel and Web Client (CanvasSidebar).
-     * @param {string} query - Search term
-     * @param {Object} extraParams - Additional params (limit, etc.)
-     * @returns {Array} - Array of found products
+     * Búsqueda pública de productos
      */
     const searchProducts = async (query, extraParams = {}) => {
         if (!query || !query.trim()) {
@@ -228,6 +187,6 @@ export default function useProducts() {
         toggleFavorite,
         createProduct,
         updateProduct,
-        deleteProduct
+        deleteProduct: deleteItem
     }
 }

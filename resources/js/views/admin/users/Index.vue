@@ -169,11 +169,14 @@ const userFilters = ref({
     
 });
 
-const refreshUsers = () => {
+const refreshUsers = async () => {
     loading.value = true;
-    getUsers().finally(() => {
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await y try/finally
+    try {
+        await getUsers();
+    } finally {
         loading.value = false;
-    });
+    }
 };
 
 const getRoleSeverity = (roleName) => {
@@ -204,10 +207,13 @@ const formatDate = (dateString) => {
     });
 };
 
-onMounted(() => {
+onMounted(async () => {
     loading.value = true;
-    getUsers().finally(() => {
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await
+    try {
+        await getUsers();
+    } finally {
         loading.value = false;
-    });
+    }
 });
 </script>

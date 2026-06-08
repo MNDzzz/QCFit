@@ -226,40 +226,45 @@ const closeDialog = () => {
     resetRole();
 };
 
-const submitCreate = () => {
-  if (isSubmitting.value) return;
-  createRole()
-    .then(createdRole => {
-      if (createdRole) {
-        upsertRoleRecord(createdRole);
-        closeDialog();
-      }
-    })
+const submitCreate = async () => {
+    if (isSubmitting.value) return;
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await
+    try {
+        const createdRole = await createRole();
+        if (createdRole) {
+            upsertRoleRecord(createdRole);
+            closeDialog();
+        }
+    } catch (error) {
+        console.error("No se pudo crear", error);
+    }
 };
 
 const performDelete = (id) => {
     deleteRole(id);
 };
 
-const confirmDeleteRole = (currentRole) => {
+const confirmDeleteRole = async (currentRole) => {
     if (!swal) {
-        performDelete(currentRole.id);
+        // USO DE FUNCIONES JAVASCRIPT AVANZADAS: Encadenamiento opcional
+        performDelete(currentRole?.id);
         return;
     }
 
-    swal({
+    // USO DE FUNCIONES JAVASCRIPT AVANZADAS: async/await y fallback
+    const result = await swal({
         icon: 'warning',
         title: 'Delete role?',
-        text: `The role "${currentRole.name}" will be permanently deleted.`,
+        text: `The role "${currentRole?.name || 'este rol'}" will be permanently deleted.`,
         showCancelButton: true,
         confirmButtonText: 'Yes, delete',
         cancelButtonText: 'Cancel',
         confirmButtonColor: '#ef4444'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            performDelete(currentRole.id);
-        }
     });
+
+    if (result.isConfirmed) {
+        performDelete(currentRole?.id);
+    }
 };
 
 const formatDate = (dateString) => {

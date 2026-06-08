@@ -1,25 +1,26 @@
 import { ref } from 'vue'
 import * as yup from 'yup'
-import axios from 'axios'
-import { useToast } from './useToast'
-import { useValidation } from './useValidation'
+import { useCrud } from './useCrud'
 
 export default function useSources() {
-    const sources = ref([])
-    const sourceList = ref([])
+    const {
+        items: sources,
+        itemList: sourceList,
+        isLoading,
+        errors,
+        hasError,
+        getError,
+        clearErrors,
+        upsertRecord,
+        getItems,
+        getItemList,
+        createItem,
+        updateItem,
+        deleteItem
+    } = useCrud('/api/sources', 'Marketplace', 'marketplaces')
+
     const initialSource = { id: null, name: '', slug: '', logo_url: '', base_url: '' }
     const source = ref({ ...initialSource })
-    const isLoading = ref(false)
-    const toast = useToast()
-
-    const {
-        errors,
-        validate,
-        handleRequestError,
-        clearErrors,
-        hasError,
-        getError
-    } = useValidation()
 
     const sourceSchema = yup.object({
         name: yup
@@ -33,16 +34,6 @@ export default function useSources() {
             .required('El slug es obligatorio')
             .matches(/^[a-z0-9-]+$/, 'Formato de slug inválido'),
     })
-
-    const withLoading = async (fn) => {
-        if (isLoading.value) throw new Error('Operación en curso')
-        isLoading.value = true
-        try {
-            return await fn()
-        } finally {
-            isLoading.value = false
-        }
-    }
 
     const resetSource = () => {
         source.value = { ...initialSource }
@@ -60,13 +51,7 @@ export default function useSources() {
         clearErrors()
     }
 
-    const upsertSourceRecord = (record) => {
-        if (!record?.id) return
-        sources.value = [
-            record,
-            ...sources.value.filter(item => item.id !== record.id)
-        ]
-    }
+    const upsertSourceRecord = (record) => upsertRecord(record)
 
     const getSources = async (params = {}) => {
         const defaultParams = {
@@ -75,87 +60,14 @@ export default function useSources() {
             order_column: 'created_at',
             order_direction: 'desc'
         }
-
-        const query = new URLSearchParams({ ...defaultParams, ...params }).toString()
-        const response = await axios.get(`/api/sources?${query}`)
-        sources.value = response.data?.data ?? []
-        return response
+        return getItems(params, defaultParams)
     }
 
-    const getSourceList = async () => {
-        try {
-            const response = await axios.get('/api/source-list')
-            sourceList.value = response.data?.data ?? response.data ?? []
-            return response
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo obtener la lista de marketplaces',
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
+    const getSourceList = async () => getItemList('/api/source-list')
 
-    const createSource = async () => {
-        const { isValid } = await validate(sourceSchema, source.value)
-        if (!isValid) {
-            toast.error('Error de validación', 'Revisa los campos resaltados.')
-            throw new Error('Validación')
-        }
-
-        try {
-            const response = await withLoading(() =>
-                axios.post('/api/sources', source.value)
-            )
-            const data = response.data?.data ?? response.data
-            toast.crud.created('Marketplace')
-            return data
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo crear el marketplace',
-                onValidationError: () =>
-                    toast.error('Error de validación', 'Revisa los campos resaltados.'),
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
-
-    const updateSource = async () => {
-        const { isValid } = await validate(sourceSchema, source.value)
-        if (!isValid) {
-            toast.error('Error de validación', 'Revisa los campos resaltados.')
-            throw new Error('Validación')
-        }
-
-        try {
-            const response = await withLoading(() =>
-                axios.put(`/api/sources/${source.value.id}`, source.value)
-            )
-            const data = response.data?.data ?? response.data
-            toast.crud.updated('Marketplace')
-            return data
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo actualizar el marketplace',
-                onValidationError: () =>
-                    toast.error('Error de validación', 'Revisa los campos resaltados.'),
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
-
-    const deleteSource = async (id) => {
-        try {
-            const response = await withLoading(() => axios.delete(`/api/sources/${id}`))
-            sources.value = sources.value.filter(item => item.id !== id)
-            toast.crud.deleted('Marketplace')
-            return response
-        } catch (error) {
-            handleRequestError(error, {
-                fallbackMessage: 'No se pudo eliminar el marketplace',
-                onGenericError: (message) => toast.error('Error', message)
-            })
-        }
-    }
+    const createSource = async () => createItem(sourceSchema, source.value)
+    
+    const updateSource = async () => updateItem(source.value.id, sourceSchema, source.value)
 
     return {
         sources,
@@ -172,6 +84,6 @@ export default function useSources() {
         getSourceList,
         createSource,
         updateSource,
-        deleteSource
+        deleteSource: deleteItem
     }
 }
