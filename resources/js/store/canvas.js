@@ -46,23 +46,22 @@ export const useCanvasStore = defineStore('canvas', () => {
 
         // Procesar cada item del outfit
         if (outfitData.items && Array.isArray(outfitData.items)) {
-            outfitData.items.forEach((item) => {
+            //JS AVANZADO: .map() transforma el array que viene de la API a un nuevo array con el formato exacto que necesita el Canvas
+            const mappedItems = outfitData.items.map((item) => {
                 // Buscar la imagen correcta del producto
                 let imageUrl = '';
                 if (item.product && item.product.images && item.product.images.length > 0) {
-                    // Si hay imageId, buscar esa imagen específica
                     if (item.imageId) {
                         const selectedImage = item.product.images.find(img => img.id === item.imageId);
                         imageUrl = selectedImage ? selectedImage.url : item.product.images[0].url;
                     } else {
-                        // Sino, usar la primera imagen QC o la primera disponible
                         const qcImage = item.product.images.find(img => img.type === 'qc');
                         imageUrl = qcImage ? qcImage.url : item.product.images[0].url;
                     }
                 }
 
-                // Crear el item con los datos pivote del outfit original
-                const canvasItem = {
+                // Devolver el nuevo objeto estructurado
+                return {
                     id: `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
                     productId: item.product_id,
                     productName: item.product?.name || 'Producto',
@@ -78,14 +77,14 @@ export const useCanvasStore = defineStore('canvas', () => {
                     zIndex: item.zIndex || nextZIndex.value++,
                     isFlipped: item.isFlipped || false,
                 };
-
-                canvasItems.value.push(canvasItem);
-
-                // Actualizar el máximo z-index
-                if (canvasItem.zIndex >= nextZIndex.value) {
-                    nextZIndex.value = canvasItem.zIndex + 1;
-                }
             });
+
+            // Insertamos todos los items mapeados al canvas de golpe
+            canvasItems.value.push(...mappedItems);
+
+            //JS AVANZADO: .reduce() para iterar sobre los items y quedarnos con el valor zIndex más alto
+            const highestZIndex = mappedItems.reduce((max, item) => Math.max(max, item.zIndex), nextZIndex.value);
+            nextZIndex.value = highestZIndex + 1;
         }
     }
 

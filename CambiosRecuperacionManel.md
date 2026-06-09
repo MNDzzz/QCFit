@@ -30,5 +30,13 @@ He optado por aplicar metodos de herencia de la Programación Orientada a Objeto
 **Archivos afectados:**
 `Controller.php`, `CategoryController.php`, `BrandController.php`, `ProductController.php`, `UserController.php`, `RoleController.php`, `PermissionController.php` y `SourceController.php`.
 
-## 4. Comentarios
-He añadido comenatarios en el código que he añadido
+## 4. Programación Funcional Avanzada y Uso de Vue
+
+* **`map` y `reduce`**: He refactorizado el flujo de carga del Canvas para transformar los datos de la API utilizando `.map()` y calcular dinámicamente el orden de las capas (`zIndex`) usando `.reduce()`. También he implementado un `.reduce()` en la vista de Outfits para iterar de manera eficiente y extraer marcas únicas sin duplicados.
+* **`filter` y Propiedades Computadas (`computed`)**: He encapsulado los filtros de búsqueda en la página principal y otras lógicas de iteración dentro de propiedades `computed` utilizando `.filter()`. De esta manera, garantizo un "buen uso de Vue", ya que el filtrado se realiza aprovechando la caché interna de reactividad, sin necesidad de recalcular ineficientemente ni hacer peticiones repetitivas al servidor.
+
+**Archivos afectados:**
+`store/canvas.js`, `views/public/outfits/Show.vue` y `views/public/home/index.vue`.
+
+## 5. COmentarios
+He añadido comentarios en el código explicando lo que he añadido

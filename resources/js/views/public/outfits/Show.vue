@@ -131,6 +131,23 @@ const formattedDate = computed(() => {
         day: 'numeric'
     });
 });
+
+//JS AVANZADO: .reduce() para iterar los items y extraer un array de marcas únicas.
+// lo hacemos en una 'computed property' reactiva para que solo se recalcule si cambian los items.
+const uniqueBrands = computed(() => {
+    if (!outfit.value?.items?.length) return [];
+    
+    return outfit.value.items.reduce((acc, item) => {
+        // Obtenemos el nombre de la marca de forma segura
+        const brandName = item.product?.brand?.name || item.product?.brand;
+        
+        // Si hay marca y no está ya en el acumulador (acc), la añadimos
+        if (brandName && typeof brandName === 'string' && !acc.includes(brandName)) {
+            acc.push(brandName);
+        }
+        return acc; // Siempre debemos retornar el acumulador en un reduce
+    }, []);
+});
 </script>
 
 <template>
@@ -237,12 +254,24 @@ const formattedDate = computed(() => {
                         </p>
 
                         <!-- Stats -->
-                        <div class="flex gap-6 mb-8">
+                        <div class="flex gap-6 mb-8 items-center">
                             <div class="text-center">
                                 <span class="block text-2xl font-bold text-violet-600">
                                     {{ outfit.items_count || outfit.items?.length || 0 }}
                                 </span>
                                 <span class="text-xs text-slate-500 uppercase tracking-wide">Products</span>
+                            </div>
+                            
+                            <!-- BUEN USO DE VUE: Uso de v-if y v-for con variables computadas -->
+                            <div v-if="uniqueBrands.length > 0" class="text-left border-l border-slate-200 pl-6 flex-1">
+                                <span class="block text-xs text-slate-400 uppercase tracking-wide mb-1">
+                                    Featured Brands
+                                </span>
+                                <div class="flex flex-wrap gap-1">
+                                    <span v-for="brand in uniqueBrands" :key="brand" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">
+                                        {{ brand }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 

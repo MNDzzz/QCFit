@@ -36,8 +36,11 @@ const brandList = [
 ];
 
 // Productos filtrados por categoría seleccionada
+//JS AVANZADO: .filter() iteraramos todos los productos y devolvemos un nuevo array solo con los que cumplan la condición
+// esta es una variable computada, Vue la cacheará y solo la volverá a calcular si cambia 'activeCategory' o 'products'
 const filteredProducts = computed(() => {
     if (activeCategory.value === 'all') return products.value;
+    
     return products.value.filter(p => {
         const catName = p.category?.name || '';
         
